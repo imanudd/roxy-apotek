@@ -215,8 +215,4 @@ public class SupplierManagementGUI extends JFrame {
         }
         return true;
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(SupplierManagementGUI::new);
-    }
 }
