@@ -11,13 +11,40 @@ package repository;
 import config.DatabaseConfig;
 import model.items;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class itemsRepo {
     Connection conn = DatabaseConfig.connect();
+    
+        public List<items> getAllItems() {
+        List<items> list = new ArrayList<>();
+        String query = "SELECT * FROM items";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                items itm = new items(
+                    rs.getString("item_name"),
+                    rs.getInt("brand_id"),
+                    rs.getInt("price"),
+                    rs.getTimestamp("created_at").toLocalDateTime(),
+                    rs.getInt("created_by"),
+                    rs.getTimestamp("updated_at").toLocalDateTime(),
+                    rs.getInt("updated_by")
+                );
+                itm.setId(rs.getInt("id")); // jika kamu punya setter ID
+                list.add(itm);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error getAllItems: " + e.getMessage());
+        }
+
+        return list;
+    }
     
     public boolean createItem(items itm){
         String query="INSERT INTO items(item_name, brand_id, sell_price, created_at, created_by, updated_at, updated_by)"+"VALUES(?, ?, ?, ?, ?, ?, ?)";

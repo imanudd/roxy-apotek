@@ -1,21 +1,12 @@
 package ui;
 
-import config.DatabaseConfig;
 import repository.supplierRepo;
 import model.suppliers;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 import java.time.LocalDateTime;
 
 public class SupplierManagementGUI extends JFrame {
@@ -93,7 +84,7 @@ public class SupplierManagementGUI extends JFrame {
                 JOptionPane.showMessageDialog(this, "Nama supplier tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (isSupplierNameExists(name, -1)) {
+            if (SupplierNameExists(name, -1)) {
                 JOptionPane.showMessageDialog(this, "Nama supplier sudah ada.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -129,7 +120,7 @@ public class SupplierManagementGUI extends JFrame {
                 JOptionPane.showMessageDialog(this, "Nama supplier tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (isSupplierNameExists(name, id)) {
+            if (SupplierNameExists(name, id)) {
                 JOptionPane.showMessageDialog(this, "Nama supplier sudah ada.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -193,19 +184,17 @@ public class SupplierManagementGUI extends JFrame {
 
     private void loadSuppliers() {
         tableModel.setRowCount(0);
-        try (Connection conn = DatabaseConfig.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM suppliers")) {
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("supplier_name"); // Adjust column name
-                String address = rs.getString("address");
-                String phone = rs.getString("phone");
-                tableModel.addRow(new Object[]{id, name, address, phone});
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error retrieving suppliers: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+        supplierRepo repo = new supplierRepo(); // pastikan objek repo tersedia
+
+        List<suppliers> supplierList = repo.getList(); // memanggil method getList()
+
+        for (suppliers s : supplierList) {
+            tableModel.addRow(new Object[]{
+                s.getId(),
+                s.getSupplierName(),
+                s.getAddress(),
+                s.getPhone()
+            });
         }
     }
 
@@ -217,26 +206,14 @@ public class SupplierManagementGUI extends JFrame {
      * @param excludeId supplier id to exclude from check (-1 for create)
      * @return true if name exists, false otherwise
      */
-    private boolean isSupplierNameExists(String name, int excludeId) {
-        String sql = "SELECT COUNT(*) AS count FROM suppliers WHERE supplier_name = ?" + 
-                     (excludeId > 0 ? " AND id <> ?" : "");
-        try (Connection conn = DatabaseConfig.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, name);
-            if (excludeId > 0) {
-                ps.setInt(2, excludeId);
-            }
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("count") > 0;
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error checking supplier name: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+    private boolean SupplierNameExists(String name, int excludeId) {
+        supplierRepo repo = new supplierRepo();
+        
+        if (repo.isSupplierNameExists(name, excludeId)) {
+            JOptionPane.showMessageDialog(this, "Nama supplier sudah ada.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return false;
         }
-        return false;
+        return true;
     }
 
     public static void main(String[] args) {

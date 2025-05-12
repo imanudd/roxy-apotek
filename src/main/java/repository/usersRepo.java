@@ -7,11 +7,11 @@ import java.sql.*;
 
 public class usersRepo {
 
+    Connection conn = DatabaseConfig.connect();
     //create user
     public boolean insertUser(user u) throws SQLException {
         String sql = "INSERT INTO users(username, email, password, phone_number, created_at, created_by, updated_at, updated_by) VALUES(?,?,?,?,?,?,?,?)";
-        try (Connection conn = DatabaseConfig.connect();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, u.getUserName());
             stmt.setString(2, u.getEmail());
             stmt.setString(3, u.getPassword()); // Sudah di-hash oleh usecase
@@ -23,7 +23,6 @@ public class usersRepo {
             return stmt.executeUpdate() > 0;
         }
     }
-
     //Get user by email
     public user findUserByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM users WHERE email = ?";
@@ -47,12 +46,10 @@ public class usersRepo {
         }
         return null;
     }
-
     //login by email
     public boolean isEmailExist(String email) throws SQLException {
         String sql = "SELECT 1 FROM users WHERE email = ?";
-        try (Connection conn = DatabaseConfig.connect();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, email);
             return stmt.executeQuery().next();
         }
@@ -61,8 +58,7 @@ public class usersRepo {
     //get user by no hp
     public boolean isPhoneNumberExist(String phoneNumber) throws SQLException {
         String sql = "SELECT 1 FROM users WHERE phone_number = ?";
-        try (Connection conn = DatabaseConfig.connect();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, phoneNumber);
             return stmt.executeQuery().next();
         }

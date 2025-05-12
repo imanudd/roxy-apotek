@@ -11,14 +11,39 @@ package repository;
 import config.DatabaseConfig;
 import model.brands;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class brandsRepo {
     Connection conn = DatabaseConfig.connect();
     
+    public List<brands> getAllBrands() {
+    List<brands> list = new ArrayList<>();
+    String query = "SELECT * FROM brands";
+
+    try (PreparedStatement stmt = conn.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            brands b = new brands(
+                rs.getString("brand_name"),
+                rs.getInt("supplier_id"),
+                rs.getTimestamp("created_at").toLocalDateTime(),
+                rs.getInt("created_by"),
+                rs.getTimestamp("updated_at").toLocalDateTime(),
+                rs.getInt("updated_by")
+            );
+            b.setId(rs.getInt("id"));
+            list.add(b);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error getAllBrands: " + e.getMessage());
+    }
+    return list;
+}
+
     public boolean createBrands(brands brd){
         String query ="INSERT INTO brands(brand_name, supplier_id, created_at, created_by, updated_at, updated_by)"+"VALUES(?, ?, ?, ?, ?, ?)";
         
