@@ -2,6 +2,11 @@ package ui;
 
 
 import model.user;
+import repository.supplierRepo;
+import repository.usersRepo;
+import usecase.supplierUc;
+import usecase.userUc;
+
 import org.jfree.chart.*;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -11,17 +16,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class Dashboard extends JFrame {
     JPanel content = buildMainContent();
+    private final supplierUc supplierUc;
     
-    public Dashboard(user currentUser) {
+    public Dashboard(Connection conn) {
+        supplierUc = new supplierUc(new supplierRepo(conn));
+
         setTitle("Dashboard - Apotek Roxy");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        JPanel sidebar = buildSidebar();
+        JPanel sidebar = buildSidebar(conn);
                
 
         add(sidebar, BorderLayout.WEST);
@@ -31,7 +40,7 @@ public class Dashboard extends JFrame {
         setVisible(true);
     }
 
-    private JPanel buildSidebar() {
+    private JPanel buildSidebar(Connection conn) {
         JPanel panel = new JPanel();
         panel.setBackground(new Color(45, 45, 45));
         panel.setLayout(new GridLayout(0, 1));
@@ -58,7 +67,7 @@ public class Dashboard extends JFrame {
                         content.setVisible(true);
                     } if (menu.equals("Manajemen Supplier")) {
                         // Aksi yang ingin dilakukan saat tombol "Manajemen Supplier" ditekan               
-                        SupplierManagementGUI supplierManagementGUI = new SupplierManagementGUI();
+                        SupplierManagementGUI supplierManagementGUI = new SupplierManagementGUI(conn);
                         add(supplierManagementGUI);;
                         content.setVisible(false);
                     } else {

@@ -4,6 +4,8 @@
  */
 package ui;
 
+import java.sql.Connection;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -12,7 +14,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import repository.supplierRepo;
+import usecase.supplierUc;
 import model.suppliers;
+import repository.supplierRepo;
 
 /**
  *
@@ -20,20 +24,21 @@ import model.suppliers;
  */
 public class SupplierManagementGUI extends javax.swing.JPanel {
     
-    private supplierRepo repo;
-    private JTable supplierTable;
+    private final supplierUc uc;
     private DefaultTableModel tableModel;
     private int userId = 1;
         
     
-    public SupplierManagementGUI() {
+    public SupplierManagementGUI(Connection conn) {
         initComponents();
-        repo = new supplierRepo();
+        uc = new supplierUc(new supplierRepo(conn));
+        this.tableModel = (DefaultTableModel) jTable2.getModel();
+        loadSuppliers();
         
             
         // Initialize the table model
         tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Nama", "Alamat", "Telepon"});
-        supplierTable = new JTable(tableModel);
+        new JTable(tableModel);
         
         loadSuppliers();
         
@@ -256,18 +261,19 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Nama supplier tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (repo.isSupplierNameExists(name, -1)) {
-                JOptionPane.showMessageDialog(this, "Nama supplier sudah ada.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            // if (repo.isSupplierNameExists(name, -1)) {
+            //     JOptionPane.showMessageDialog(this, "Nama supplier sudah ada.", "Error", JOptionPane.ERROR_MESSAGE);
+            //     return;
+            // }
 
             suppliers newSupplier = new suppliers(
                     name, address, phone,
                     LocalDateTime.now(), userId,
-                    LocalDateTime.now(), userId
+                    null, 0, 
+                    null, 0
             );
             
-            boolean created = repo.createSupplier(newSupplier);
+            boolean created = uc.createSupplier(newSupplier);
             JOptionPane.showMessageDialog(this, "CREATE: " + (created ? "Berhasil" : "Gagal"));
             if(created) {
                 clearInputFields();
@@ -293,20 +299,21 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Nama supplier tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (repo.isSupplierNameExists(name, id)) {
-                JOptionPane.showMessageDialog(this, "Nama supplier sudah ada.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            // if (repo.isSupplierNameExists(name, id)) {
+            //     JOptionPane.showMessageDialog(this, "Nama supplier sudah ada.", "Error", JOptionPane.ERROR_MESSAGE);
+            //     return;
+            // }
 
             suppliers updateSupplier = new suppliers(
                     name, address, phone,
-                    null, 0,
-                    LocalDateTime.now(), userId
+                    LocalDateTime.now(), userId,
+                    LocalDateTime.now(), userId, 
+                    null, 0
             );
             updateSupplier.setId(id);
             
             
-            boolean updated = repo.updateSupplier(updateSupplier);
+            boolean updated = uc.updateSupplier(updateSupplier);
             JOptionPane.showMessageDialog(this, "UPDATE: " + (updated ? "Berhasil" : "Gagal"));
             if(updated) {               
                 loadSuppliers();
@@ -323,10 +330,10 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
                 return;
             }
             int id = Integer.parseInt(idText);
-            suppliers delSupplier = new suppliers(null, null, null, null, 0, null, 0);
+            suppliers delSupplier = new suppliers(null, null, null, null, 0, null, 0, LocalDateTime.now(), userId);
             delSupplier.setId(id);
 
-            boolean deleted = repo.deleteSuplier(delSupplier);
+            boolean deleted = uc.deleteSupplier(delSupplier);
             JOptionPane.showMessageDialog(this, "DELETE: " + (deleted ? "Berhasil" : "Gagal"));
             if(deleted) {
                 clearInputFields();
@@ -350,9 +357,8 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
     }
     private void loadSuppliers() {
         tableModel.setRowCount(0);
-        supplierRepo repo = new supplierRepo(); // pastikan objek repo tersedia
 
-        List<suppliers> supplierList = repo.getList(); // memanggil method getList()
+        List<suppliers> supplierList = uc.getSuppliersList(); // memanggil method getList()
 
         for (suppliers s : supplierList) {
             tableModel.addRow(new Object[]{

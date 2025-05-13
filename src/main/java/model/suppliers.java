@@ -19,8 +19,10 @@ public class suppliers {
     private int createdBy;
     private LocalDateTime updatedAt;
     private int updatedBy;
+    private LocalDateTime deletedAt;
+    private int deletedBy;
     
-    public suppliers(String supplierName, String address, String phone,LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy){
+    public suppliers(String supplierName, String address, String phone,LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, LocalDateTime deletedAt, int deletedBy){
         this.supplierName=supplierName;
         this.address=address;
         this.phone=phone;
@@ -28,6 +30,8 @@ public class suppliers {
         this.createdBy=createdBy;
         this.updatedAt=updatedAt;
         this.updatedBy=updatedBy;
+        this.deletedAt=deletedAt;
+        this.deletedBy=deletedBy;
     }
     public int getId(){
         return id;
@@ -76,5 +80,11 @@ public class suppliers {
     }
     public void setUpdatedBy(int updatedBy) {
         this.updatedBy = updatedBy;
+    }
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+    public void setDeletedBy(int deletedBy) {
+        this.deletedBy = deletedBy;
     }
 }

@@ -12,7 +12,7 @@ public class userUc {
     private final usersRepo userRepo;
 
     public userUc(usersRepo userRepo) {
-        this.userRepo = new usersRepo();
+        this.userRepo = userRepo;
     }
 
     public boolean register(user u) {

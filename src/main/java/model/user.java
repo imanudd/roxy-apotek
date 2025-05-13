@@ -20,8 +20,10 @@ public class user {
     private LocalDateTime updatedAt;
     private int createdBy;
     private int updatedBy;
+    private LocalDateTime deletedAt;
+    private int deletedBy;
     
-    public user(int id,String username, String email, String password, String phoneNumber, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy){
+    public user(int id,String username, String email, String password, String phoneNumber, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, LocalDateTime deletedAt, int deletedBy){
         this.id=id;
         this.email=email;
         this.password=password;
@@ -31,6 +33,8 @@ public class user {
         this.createdBy=createdBy;
         this.updatedAt=updatedAt;
         this.updatedBy=updatedBy;
+        this.deletedAt=deletedAt;
+        this.deletedBy=deletedBy;
     }
     public int getId() {
         return id;
@@ -63,5 +67,13 @@ public class user {
     
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getDeletedBy() {
+        return deletedBy;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
     }
 }

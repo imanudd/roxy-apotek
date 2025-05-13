@@ -4,6 +4,8 @@
  */
 package ui;
 
+import java.sql.Connection;
+
 import javax.swing.JOptionPane;
 import model.user;
 import usecase.userUc;
@@ -18,9 +20,10 @@ public class Login extends javax.swing.JPanel {
     /**
      * Creates new form Login
      */
-    public Login() {
-        uc = new userUc(new usersRepo());
-        initComponents();
+    // Constructor yang menerima koneksi database
+    public Login(Connection conn) {
+        uc = new userUc(new usersRepo(conn));  // Kirim koneksi ke usersRepo
+        initComponents(conn);
     }
 
     /**
@@ -30,7 +33,7 @@ public class Login extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents(Connection conn) {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -64,7 +67,7 @@ public class Login extends javax.swing.JPanel {
         jButton1.setText("LOGIN");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButton1ActionPerformed(evt, conn);
             }
         });
 
@@ -136,7 +139,7 @@ public class Login extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt, Connection conn) {//GEN-FIRST:event_jButton1ActionPerformed
         String email = jTextField1.getText();
         String password = new String(jPasswordField1.getPassword());
 
@@ -146,7 +149,7 @@ public class Login extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this,
                 "Login succes. Welcome, " + result.getUserName() + "!");
             // TODO: lanjut ke halaman utama
-            Dashboard dahsboard = new Dashboard(result); 
+            Dashboard dahsboard = new Dashboard(conn); 
             dahsboard.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Email and password doesn't match!");
