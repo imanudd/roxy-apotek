@@ -10,6 +10,7 @@ package repository;
  */
 import config.DatabaseConfig;
 import model.suppliers;
+import helper.currentUser;
 
 import java.sql.*;
 import java.util.List;
@@ -45,7 +46,7 @@ public class supplierRepo {
     }
     
     public boolean createSupplier(suppliers spl){
-        String query = "INSERT INTO suppliers(supplier_name, address, phone, created_at, created_by, updated_at, updated_by)"+"VALUES(?,?,?,?,?,?,?)";
+        String query = "INSERT INTO suppliers(supplier_name, address, phone, created_at, created_by)"+"VALUES(?,?,?,?,?,)";
         try(PreparedStatement stmt=conn.prepareStatement(query)){
             if(conn == null){
                 System.out.println("Koneksi null. Gagal menyimpan Supplier.");
@@ -55,9 +56,7 @@ public class supplierRepo {
             stmt.setString(2, spl.getAddress());
             stmt.setString(3, spl.getPhone());
             stmt.setTimestamp(4, Timestamp.valueOf(spl.getCreatedAt()));
-            stmt.setInt(5, spl.getCreatedBy());
-            stmt.setTimestamp(6, Timestamp.valueOf(spl.getUpdatedAt()));
-            stmt.setInt(7, spl.getUpdatedBy());
+            stmt.setInt(5, currentUser.getId());
             
             int rows = stmt.executeUpdate();
             return rows>0;
@@ -74,7 +73,7 @@ public class supplierRepo {
             stmt.setString(2, spl.getAddress());
             stmt.setString(3, spl.getPhone());
             stmt.setTimestamp(4, Timestamp.valueOf(spl.getUpdatedAt()));
-            stmt.setInt(5, spl.getUpdatedBy());
+            stmt.setInt(5, currentUser.getId());
             stmt.setInt(6,spl.getId());
             
             int rows = stmt.executeUpdate();
@@ -84,7 +83,7 @@ public class supplierRepo {
             return false;
         }
     }
-    
+//delete Supplier  
     public boolean deleteSuplier(suppliers spl){
         String query ="DELETE FROM suppliers WHERE id=?";
         try(PreparedStatement stmt = conn.prepareStatement(query)){
@@ -96,28 +95,26 @@ public class supplierRepo {
             return false; 
         }
     }
-    
+ //validasi nama supplier     
     public boolean isSupplierNameExists(String name, int excludeId) {
-    String sql = excludeId > 0 
-        ? "SELECT COUNT(*) AS count FROM suppliers WHERE supplier_name = ? AND id <> ?"
-        : "SELECT COUNT(*) AS count FROM suppliers WHERE supplier_name = ?";
+        String sql = excludeId > 0 
+            ? "SELECT COUNT(*) AS count FROM suppliers WHERE supplier_name = ? AND id <> ?"
+            : "SELECT COUNT(*) AS count FROM suppliers WHERE supplier_name = ?";
 
-    try (Connection conn = DatabaseConfig.connect();  // ini penting!
-         PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
          
-        ps.setString(1, name);
-        if (excludeId > 0) ps.setInt(2, excludeId);
+            ps.setString(1, name);
+            if (excludeId > 0) ps.setInt(2, excludeId);
 
-        try (ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt("count") > 0;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count") > 0;
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return false;
     }
-    return false;
-}
 
 }

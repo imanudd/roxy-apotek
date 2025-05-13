@@ -10,6 +10,7 @@ package repository;
  */
 import config.DatabaseConfig;
 import model.brands;
+import helper.currentUser;
 
 import java.sql.*;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 public class brandsRepo {
     Connection conn = DatabaseConfig.connect();
-    
+//menampilkan list brand    
     public List<brands> getAllBrands() {
     List<brands> list = new ArrayList<>();
     String query = "SELECT * FROM brands";
@@ -43,9 +44,9 @@ public class brandsRepo {
     }
     return list;
 }
-
+//inputan brand
     public boolean createBrands(brands brd){
-        String query ="INSERT INTO brands(brand_name, supplier_id, created_at, created_by, updated_at, updated_by)"+"VALUES(?, ?, ?, ?, ?, ?)";
+        String query ="INSERT INTO brands(brand_name, supplier_id, created_at, created_by)"+"VALUES(?, ?, ?, ?)";
         
         try(PreparedStatement stmt=conn.prepareStatement(query)){
             if(conn == null){
@@ -55,9 +56,7 @@ public class brandsRepo {
             stmt.setString(1, brd.getBrandName());
             stmt.setInt(2, brd.getSupplierId());
             stmt.setTimestamp(3, Timestamp.valueOf(brd.getCreatedAt()));
-            stmt.setInt(4, brd.getCreatedBy());
-            stmt.setTimestamp(5, Timestamp.valueOf(brd.getUpdatedAt()));
-            stmt.setInt(6, brd.getUpdatedBy());
+            stmt.setInt(4, currentUser.getId());
             
             int rows = stmt.executeUpdate();
             return rows>0;
@@ -66,7 +65,7 @@ public class brandsRepo {
             return false;
         }
     }
-    
+//update brand    
     public boolean updateBrand(brands brd){
         String query = "UPDATE brands SET brand_name=?, supplier_id=?, updated_at=?, updated_by=? WHERE id=?";
         try(PreparedStatement stmt=conn.prepareStatement(query)){
@@ -76,7 +75,7 @@ public class brandsRepo {
             stmt.setString(1, brd.getBrandName());
             stmt.setInt(2, brd.getSupplierId());
             stmt.setTimestamp(3, Timestamp.valueOf(brd.getUpdatedAt()));
-            stmt.setInt(4, brd.getUpdatedBy());
+            stmt.setInt(4, currentUser.getId());
             stmt.setInt(5,brd.getId());
             int rows=stmt.executeUpdate();
             return rows>0;
@@ -85,7 +84,7 @@ public class brandsRepo {
             return false;
         }    
     }
-    
+//delete brand    
     public boolean deleteBrand(brands brd){
         String query ="DELETE FROM brands WHERE id=?";
         try(PreparedStatement stmt=conn.prepareStatement(query)){
@@ -99,5 +98,26 @@ public class brandsRepo {
             System.out.println("Error query: "+ e.getMessage());
             return false;
         }
+    }
+//validasi brand
+    public boolean isBrandNameExists(String name, int excludeId){
+    String query = excludeId>0
+            ? "SELECT COUNT (*) AS count FROM brands WHERE brand_name=? AND id<>?"
+            : "SELECT COUNT (*) AS count FROM brands WHERE brand_name=?";
+            
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+         
+            ps.setString(1, name);
+            if (excludeId > 0) ps.setInt(2, excludeId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count") > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

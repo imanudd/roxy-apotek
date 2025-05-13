@@ -10,6 +10,7 @@ package repository;
  */
 import config.DatabaseConfig;
 import model.items;
+import helper.currentUser;
 
 import java.sql.*;
 import java.util.List;
@@ -45,17 +46,15 @@ public class itemsRepo {
 
         return list;
     }
-    
+    //create item dan validasi stock untuk CRUD stock by intputan dari itemsRepo    
     public boolean createItem(items itm){
-        String query="INSERT INTO items(item_name, brand_id, sell_price, created_at, created_by, updated_at, updated_by)"+"VALUES(?, ?, ?, ?, ?, ?, ?)";
+        String query="INSERT INTO items(item_name, brand_id, sell_price, created_at, created_by)"+"VALUES(?, ?, ?, ?, ?)";
         try(PreparedStatement stmt=conn.prepareStatement(query)){
             stmt.setString(1, itm.getItemName());
             stmt.setInt(2, itm.getBrandId());
             stmt.setInt(3, itm.getPrice());
             stmt.setTimestamp(4, Timestamp.valueOf(itm.getCreatedAt()));
-            stmt.setInt(5, itm.getCreatedBy());
-            stmt.setTimestamp(6, Timestamp.valueOf(itm.getUpdatedAt()));
-            stmt.setInt(7, itm.getUpdatedBy());
+            stmt.setInt(5, currentUser.getId());
             
             int rows=stmt.executeUpdate();
             return rows>0;
@@ -72,7 +71,7 @@ public class itemsRepo {
             stmt.setInt(2, itm.getBrandId());
             stmt.setInt(3, itm.getPrice());
             stmt.setTimestamp(4, Timestamp.valueOf(itm.getUpdatedAt()));
-            stmt.setInt(5, itm.getUpdatedBy());
+            stmt.setInt(5, currentUser.getId());
             stmt.setInt(6, itm.getId());
             
             int rows=stmt.executeUpdate();
@@ -94,4 +93,26 @@ public class itemsRepo {
             return false;
         }
     }
+    
+    public boolean isItemsNameExists(String name, int excludeId){
+    String query = excludeId>0
+            ? "SELECT COUNT (*) AS count FROM items WHERE item_name=? AND id<>?"
+            : "SELECT COUNT (*) AS count FROM items WHERE item_name=?";
+            
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+         
+            ps.setString(1, name);
+            if (excludeId > 0) ps.setInt(2, excludeId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count") > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
 }

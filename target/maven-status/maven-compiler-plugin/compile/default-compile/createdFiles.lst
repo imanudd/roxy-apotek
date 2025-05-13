@@ -1,4 +1,5 @@
 ui\Login$2.class
+ui\SupplierManagementGUI$9.class
 ui\SupplierManagementGUI$2.class
 repository\itemsRepo.class
 helper\currentUser.class
@@ -13,7 +14,9 @@ ui\SupplierManagementGUI$3.class
 ui\SupplierManagementGUI.class
 config\DatabaseConfig.class
 ui\SupplierManagementGUI$8.class
+repository\stocksRepo.class
 repository\supplierRepo.class
+model\stock.class
 model\user.class
 ui\Login$1.class
 ui\Login.class
