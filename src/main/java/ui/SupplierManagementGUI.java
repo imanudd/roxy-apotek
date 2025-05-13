@@ -123,6 +123,11 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
                 jTextField3ActionPerformed(evt);
             }
         });
+        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField3KeyTyped(evt);
+            }
+        });
 
         jTextField4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -329,6 +334,13 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
             }
         });
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTextField3KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyTyped
+        char character = evt.getKeyChar();
+        if(!Character.isDigit(character) || jTextField3.getText().length() > 13){
+            evt.consume();
+        }
+    }//GEN-LAST:event_jTextField3KeyTyped
     
     private void clearInputFields() {
         jTextField4.setText("");
