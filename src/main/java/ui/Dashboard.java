@@ -1,5 +1,6 @@
 package ui;
 
+
 import model.user;
 import org.jfree.chart.*;
 import org.jfree.chart.plot.PlotOrientation;
@@ -12,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Dashboard extends JFrame {
+    JPanel content = buildMainContent();
+    
     public Dashboard(user currentUser) {
         setTitle("Dashboard - Apotek Roxy");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -19,10 +22,11 @@ public class Dashboard extends JFrame {
         setLayout(new BorderLayout());
 
         JPanel sidebar = buildSidebar();
-        JPanel content = buildMainContent();
+               
 
         add(sidebar, BorderLayout.WEST);
         add(content, BorderLayout.CENTER);
+               
 
         setVisible(true);
     }
@@ -49,11 +53,14 @@ public class Dashboard extends JFrame {
             btn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (menu.equals("Manajemen Supplier")) {
+                    if (menu.equals("Dashboard")) {
                         // Aksi yang ingin dilakukan saat tombol "Manajemen Supplier" ditekan
-                        JOptionPane.showMessageDialog(panel, "Anda memilih Manajemen Supplier");
-                        SupplierManagementGUI dahsboard = new SupplierManagementGUI(); 
-                        dahsboard.setVisible(true);
+                        content.setVisible(true);
+                    } if (menu.equals("Manajemen Supplier")) {
+                        // Aksi yang ingin dilakukan saat tombol "Manajemen Supplier" ditekan               
+                        SupplierManagementGUI supplierManagementGUI = new SupplierManagementGUI();
+                        add(supplierManagementGUI);;
+                        content.setVisible(false);
                     } else {
                         // Aksi untuk tombol lainnya jika diperlukan
                         System.out.println("Tombol " + menu + " ditekan");
@@ -134,4 +141,6 @@ public class Dashboard extends JFrame {
         JFreeChart chart = ChartFactory.createPieChart("Jenis Produk", dataset, true, true, false);
         return new ChartPanel(chart);
     }
+    
+    
 }

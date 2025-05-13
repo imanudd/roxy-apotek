@@ -1,16 +1,16 @@
-G:\roxy-apotek\roxy-apotek\src\main\java\model\items.java
-G:\roxy-apotek\roxy-apotek\src\main\java\model\suppliers.java
-G:\roxy-apotek\roxy-apotek\src\main\java\ui\SupplierManagementGUI.java
-G:\roxy-apotek\roxy-apotek\src\main\java\model\user.java
-G:\roxy-apotek\roxy-apotek\src\main\java\usecase\userUc.java
-G:\roxy-apotek\roxy-apotek\src\main\java\repository\supplierRepo.java
-G:\roxy-apotek\roxy-apotek\src\main\java\ui\Login.java
-G:\roxy-apotek\roxy-apotek\src\main\java\Main.java
-G:\roxy-apotek\roxy-apotek\src\main\java\repository\itemsRepo.java
-G:\roxy-apotek\roxy-apotek\src\main\java\ui\Dashboard.java
-G:\roxy-apotek\roxy-apotek\src\main\java\config\DatabaseConfig.java
-G:\roxy-apotek\roxy-apotek\src\main\java\repository\usersRepo.java
-G:\roxy-apotek\roxy-apotek\src\main\java\model\brands.java
-G:\roxy-apotek\roxy-apotek\src\main\java\helper\currentUser.java
-G:\roxy-apotek\roxy-apotek\src\main\java\helper\validasi.java
-G:\roxy-apotek\roxy-apotek\src\main\java\repository\brandsRepo.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\config\DatabaseConfig.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\helper\currentUser.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\helper\validasi.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\Main.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\model\brands.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\model\items.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\model\suppliers.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\model\user.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\repository\brandsRepo.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\repository\itemsRepo.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\repository\supplierRepo.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\repository\usersRepo.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\ui\Dashboard.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\ui\Login.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\ui\SupplierManagementGUI.java
+C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\roxy-apotek-develop\src\main\java\usecase\userUc.java
