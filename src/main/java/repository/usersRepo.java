@@ -2,6 +2,7 @@ package repository;
 
 import model.user;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class usersRepo {
 
     //create user
     public boolean insertUser(user u, int currentUser) throws SQLException {
-        String sql = "INSERT INTO users(username, email, password, phone_number, created_at, created_by, status) VALUES(?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO users(username, email, password, phone_number, created_at, created_by, status) VALUES(?,?,?,?,?,?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, u.getUserName());
             stmt.setString(2, u.getEmail());
@@ -25,7 +26,8 @@ public class usersRepo {
             stmt.setString(4, u.getPhoneNumber());
             stmt.setTimestamp(5, Timestamp.valueOf(u.getCreatedAt()));
             stmt.setInt(6, currentUser);
-            stmt.setBoolean(11, true);
+            stmt.setBoolean(7, true); // status aktif saat register
+
             return stmt.executeUpdate() > 0;
         }
     }
@@ -159,6 +161,7 @@ public class usersRepo {
     }
 
     public boolean softDeleteUser(int id, int currentUser) throws SQLException {
+        
         String sql = "UPDATE users SET status = false, deleted_at = now(), deleted_by = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, currentUser); // perbaikan di sini

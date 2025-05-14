@@ -54,6 +54,7 @@ public class userUc {
             // Hash password
             String hashedPassword = BCrypt.hashpw(u.getPassword(), BCrypt.gensalt());
             u.setPassword(hashedPassword);
+            u.setCretedAt(LocalDateTime.now());
 
             return userRepo.insertUser(u, currentUser.getId());
 

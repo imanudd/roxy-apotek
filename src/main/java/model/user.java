@@ -23,6 +23,9 @@ public class user {
     private LocalDateTime deletedAt;
     private int deletedBy;
     private boolean status;
+
+    public user() {
+    }
     
     public user(int id,String username, String email, String password, String phoneNumber, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, LocalDateTime deletedAt, int deletedBy, boolean status) {
         this.id=id;
@@ -102,6 +105,13 @@ public class user {
 
     public void setUpdatedBy(int updatedBy) {
         this.updatedBy = updatedBy;
+    }
+    public void setCretedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setCreatedBy(int createdBy) {
+        this.createdBy = createdBy;
     }
 
     public void setId(int id) {
