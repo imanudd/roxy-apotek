@@ -55,7 +55,7 @@ public class userUc {
             String hashedPassword = BCrypt.hashpw(u.getPassword(), BCrypt.gensalt());
             u.setPassword(hashedPassword);
 
-            return userRepo.insertUser(u);
+            return userRepo.insertUser(u, currentUser.getId());
 
         } catch (SQLException e) {
             System.err.println("Register error: " + e.getMessage());
@@ -147,79 +147,96 @@ public class userUc {
     }
 
     public boolean updateUser(int id, user u) {
-    try {
-        // Ambil data user yang sudah ada berdasarkan id
-        user existingUser = userRepo.findUserById(id);
-        
-        if (existingUser == null) {
-            System.out.println("User not found!");
+        try {
+            // Ambil data user yang sudah ada berdasarkan id
+            user existingUser = userRepo.findUserById(id);
+            
+            if (existingUser == null) {
+                System.out.println("User not found!");
+                return false;
+            }
+
+            // validasi nomor telepon
+            if (u.getPhoneNumber() != null && !u.getPhoneNumber().isEmpty()) {
+                if (!validasi.isValidPhoneNumber(u.getPhoneNumber())) {
+                    System.out.println("Phone number must be at least 11 digits!");
+                    return false;
+                }
+
+                // hanya validasi unik jika user mengganti nomor telepon
+                if (!u.getPhoneNumber().equals(existingUser.getPhoneNumber()) &&
+                    userRepo.isPhoneNumberExist(u.getPhoneNumber())) {
+                    System.out.println("Phone number already registered by another user!");
+                    return false;
+                }
+            }
+
+            // validasi email
+            if (u.getEmail() != null && !u.getEmail().isEmpty()) {
+                if (!validasi.isValidGmail(u.getEmail())) {
+                    System.out.println("Email is not valid!");
+                    return false;
+                }
+
+                // hanya validasi unik jika email diubah
+                if (!u.getEmail().equals(existingUser.getEmail()) &&
+                    userRepo.isEmailExist(u.getEmail())) {
+                    System.out.println("Email already registered by another user!");
+                    return false;
+                }
+            }
+
+            // Menggunakan nilai existing jika input kosong
+            if (u.getUserName() == null || u.getUserName().isEmpty()) {
+                u.setUserName(existingUser.getUserName());
+            }
+
+            if (u.getEmail() == null || u.getEmail().isEmpty()) {
+                u.setEmail(existingUser.getEmail());
+            }
+
+            if (u.getPhoneNumber() == null || u.getPhoneNumber().isEmpty()) {
+                u.setPhoneNumber(existingUser.getPhoneNumber());
+            }
+
+            // Cek jika password diinput, jika tidak, biarkan password lama
+            if (u.getPassword() == null || u.getPassword().isEmpty()) {
+                u.setPassword(existingUser.getPassword());
+            } else {
+                // Hash password baru jika ada perubahan
+                String hashedPassword = BCrypt.hashpw(u.getPassword(), BCrypt.gensalt());
+                u.setPassword(hashedPassword);
+            }
+
+            // Set tanggal update
+            u.setUpdatedAt(LocalDateTime.now()); // Set updated time
+            u.setUpdatedBy(existingUser.getUpdatedBy()); // Set updated by
+
+            // Update user data
+            u.setId(id); // Set id ke user yang akan diupdate
+            return userRepo.updateUser(u, currentUser.getId());
+
+        } catch (SQLException e) {
+            System.err.println("Update user error: " + e.getMessage());
             return false;
         }
-
-        // validasi nomor telepon
-        if (u.getPhoneNumber() != null && !u.getPhoneNumber().isEmpty()) {
-            if (!validasi.isValidPhoneNumber(u.getPhoneNumber())) {
-                System.out.println("Phone number must be at least 11 digits!");
-                return false;
-            }
-
-            // hanya validasi unik jika user mengganti nomor telepon
-            if (!u.getPhoneNumber().equals(existingUser.getPhoneNumber()) &&
-                userRepo.isPhoneNumberExist(u.getPhoneNumber())) {
-                System.out.println("Phone number already registered by another user!");
-                return false;
-            }
-        }
-
-        // validasi email
-        if (u.getEmail() != null && !u.getEmail().isEmpty()) {
-            if (!validasi.isValidGmail(u.getEmail())) {
-                System.out.println("Email is not valid!");
-                return false;
-            }
-
-            // hanya validasi unik jika email diubah
-            if (!u.getEmail().equals(existingUser.getEmail()) &&
-                userRepo.isEmailExist(u.getEmail())) {
-                System.out.println("Email already registered by another user!");
-                return false;
-            }
-        }
-
-        // Menggunakan nilai existing jika input kosong
-        if (u.getUserName() == null || u.getUserName().isEmpty()) {
-            u.setUserName(existingUser.getUserName());
-        }
-
-        if (u.getEmail() == null || u.getEmail().isEmpty()) {
-            u.setEmail(existingUser.getEmail());
-        }
-
-        if (u.getPhoneNumber() == null || u.getPhoneNumber().isEmpty()) {
-            u.setPhoneNumber(existingUser.getPhoneNumber());
-        }
-
-        // Cek jika password diinput, jika tidak, biarkan password lama
-        if (u.getPassword() == null || u.getPassword().isEmpty()) {
-            u.setPassword(existingUser.getPassword());
-        } else {
-            // Hash password baru jika ada perubahan
-            String hashedPassword = BCrypt.hashpw(u.getPassword(), BCrypt.gensalt());
-            u.setPassword(hashedPassword);
-        }
-
-        // Set tanggal update
-        u.setUpdatedAt(LocalDateTime.now()); // Set updated time
-        u.setUpdatedBy(existingUser.getUpdatedBy()); // Set updated by
-
-        // Update user data
-        u.setId(id); // Set id ke user yang akan diupdate
-        return userRepo.updateUser(u);
-
-    } catch (SQLException e) {
-        System.err.println("Update user error: " + e.getMessage());
-        return false;
     }
-}
+
+    // Soft delete user
+    public boolean softDeleteUser(int id) {
+        try {
+            user existingUser = userRepo.findUserById(id);
+
+            if (existingUser == null) {
+                System.out.println("User not found!");
+                return false;
+            }
+
+            return userRepo.softDeleteUser(id, currentUser.getId());
+        } catch (SQLException e) {
+            System.err.println("Soft delete user error: " + e.getMessage());
+            return false;
+        }
+    }
 
 }
