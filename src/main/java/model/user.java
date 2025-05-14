@@ -76,4 +76,29 @@ public class user {
     public LocalDateTime getDeletedAt() {
         return deletedAt;
     }
+
+     // Setters added for update operations
+    public void setUserName(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setUpdatedBy(int updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }
