@@ -22,8 +22,12 @@ public class user {
     private int updatedBy;
     private LocalDateTime deletedAt;
     private int deletedBy;
+    private boolean status;
+
+    public user() {
+    }
     
-    public user(int id,String username, String email, String password, String phoneNumber, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, LocalDateTime deletedAt, int deletedBy){
+    public user(int id,String username, String email, String password, String phoneNumber, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, LocalDateTime deletedAt, int deletedBy, boolean status) {
         this.id=id;
         this.email=email;
         this.password=password;
@@ -35,6 +39,7 @@ public class user {
         this.updatedBy=updatedBy;
         this.deletedAt=deletedAt;
         this.deletedBy=deletedBy;
+        this.status=status;
     }
     public int getId() {
         return id;
@@ -75,5 +80,41 @@ public class user {
 
     public LocalDateTime getDeletedAt() {
         return deletedAt;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+     // Setters added for update operations
+    public void setUserName(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setUpdatedBy(int updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+    public void setCretedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setCreatedBy(int createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
