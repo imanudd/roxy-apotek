@@ -21,8 +21,13 @@ public class suppliers {
     private int updatedBy;
     private LocalDateTime deletedAt;
     private int deletedBy;
+    private boolean status;
+
+    public suppliers() {
+    }
     
-    public suppliers(String supplierName, String address, String phone,LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, LocalDateTime deletedAt, int deletedBy){
+    public suppliers(int id,String supplierName, String address, String phone,LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, LocalDateTime deletedAt, int deletedBy, boolean status){
+        this.id=id;
         this.supplierName=supplierName;
         this.address=address;
         this.phone=phone;
@@ -32,7 +37,13 @@ public class suppliers {
         this.updatedBy=updatedBy;
         this.deletedAt=deletedAt;
         this.deletedBy=deletedBy;
+        this.status=status;
     }
+    public suppliers(Object object, String name, String address2, String phone2, int i, Object object2, int j,
+            LocalDateTime now, int userId) {
+        //TODO Auto-generated constructor stub
+    }
+
     public int getId(){
         return id;
     }
@@ -56,6 +67,15 @@ public class suppliers {
     }
     public int getUpdatedBy(){
         return updatedBy;
+    }
+    public LocalDateTime getDeletedAt(){
+        return deletedAt;
+    }
+    public int getDeletedBy(){
+        return deletedBy;
+    }
+    public boolean getStatus(){
+        return status;
     }
     public void setId(int id){
         this.id=id;
@@ -86,5 +106,8 @@ public class suppliers {
     }
     public void setDeletedBy(int deletedBy) {
         this.deletedBy = deletedBy;
+    }
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

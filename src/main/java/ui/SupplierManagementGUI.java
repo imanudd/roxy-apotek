@@ -266,14 +266,15 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
             //     return;
             // }
 
-            suppliers newSupplier = new suppliers(
-                    name, address, phone,
-                    LocalDateTime.now(), userId,
-                    null, 0, 
-                    null, 0
-            );
+//             suppliers newSupplier = new suppliers(
+//     0, name, address, phone,
+//     LocalDateTime.now(), userId,
+//     null, 0,
+//     null, 0
+// );
+
             
-            boolean created = uc.createSupplier(newSupplier);
+            boolean created = uc.createSupplier(null);
             JOptionPane.showMessageDialog(this, "CREATE: " + (created ? "Berhasil" : "Gagal"));
             if(created) {
                 clearInputFields();
@@ -304,16 +305,16 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
             //     return;
             // }
 
-            suppliers updateSupplier = new suppliers(
-                    name, address, phone,
-                    LocalDateTime.now(), userId,
-                    LocalDateTime.now(), userId, 
-                    null, 0
-            );
-            updateSupplier.setId(id);
+            // suppliers updateSupplier = new suppliers(
+            //         id, name, address, phone,
+            //         LocalDateTime.now(), userId,
+            //         LocalDateTime.now(), userId, 
+            //         null, 0, autoscrolls
+            // );
+            // updateSupplier.setId(id);
             
             
-            boolean updated = uc.updateSupplier(updateSupplier);
+            boolean updated = uc.updateSupplier(null);
             JOptionPane.showMessageDialog(this, "UPDATE: " + (updated ? "Berhasil" : "Gagal"));
             if(updated) {               
                 loadSuppliers();
@@ -333,7 +334,7 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
             suppliers delSupplier = new suppliers(null, null, null, null, 0, null, 0, LocalDateTime.now(), userId);
             delSupplier.setId(id);
 
-            boolean deleted = uc.deleteSupplier(delSupplier);
+            boolean deleted = uc.DeleteSupplier(id);
             JOptionPane.showMessageDialog(this, "DELETE: " + (deleted ? "Berhasil" : "Gagal"));
             if(deleted) {
                 clearInputFields();
@@ -358,7 +359,7 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
     private void loadSuppliers() {
         tableModel.setRowCount(0);
 
-        List<suppliers> supplierList = uc.getSuppliersList(); // memanggil method getList()
+        List<suppliers> supplierList = uc.getSuppliersList(null); // memanggil method getList()
 
         for (suppliers s : supplierList) {
             tableModel.addRow(new Object[]{

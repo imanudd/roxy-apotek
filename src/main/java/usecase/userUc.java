@@ -102,7 +102,7 @@ public class userUc {
 
             // Header
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"ID", "Username", "Email", "Phone Number"};
+            String[] columns = {"ID", "Username", "Email", "Phone Number", "Status"};
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -116,6 +116,7 @@ public class userUc {
                 row.createCell(1).setCellValue(u.getUserName());
                 row.createCell(2).setCellValue(u.getEmail());
                 row.createCell(3).setCellValue(u.getPhoneNumber());
+                row.createCell(4).setCellValue(u.isStatus() ? "Aktif" : "Nonaktif"); // Status ditampilkan sebagai teks
             }
 
             // Autosize kolom

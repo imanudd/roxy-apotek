@@ -18,14 +18,24 @@ public class brands {
     private int createdBy;
     private LocalDateTime updatedAt;
     private int updatedBy;
+    private LocalDateTime deletedAt;
+    private int deletedBy;
+    private boolean status;
+
+    public brands() {
+    }
     
-    public brands(String brandName, int supplierId, LocalDateTime createdAt, int createdBy,  LocalDateTime updatedAt, int updatedBy){
+    public brands(int id, String brandName, int supplierId, LocalDateTime createdAt, int createdBy,  LocalDateTime updatedAt, int updatedBy, LocalDateTime deletedAt, int deletedBy, boolean status) {
+        this.id=id;
         this.brandName=brandName;
         this.supplierId=supplierId;
         this.createdAt=createdAt;
         this.createdBy=createdBy;
         this.updatedAt=updatedAt;
         this.updatedBy=updatedBy;
+        this.deletedAt=deletedAt;
+        this.deletedBy=deletedBy;
+        this.status=status;
     }
     
     public int getId(){
@@ -69,5 +79,23 @@ public class brands {
     }
     public void setUpdatedBy(int updatedBy) {
         this.updatedBy = updatedBy;
+    }
+    public LocalDateTime getDeletedAt(){
+        return deletedAt;
+    }
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+    public int getDeletedBy(){
+        return deletedBy;
+    }
+    public void setDeletedBy(int deletedBy) {
+        this.deletedBy = deletedBy;
+    }
+    public boolean getStatus(){
+        return status;
+    }
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

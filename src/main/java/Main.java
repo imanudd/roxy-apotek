@@ -1,7 +1,11 @@
 import config.DatabaseConfig;
+import repository.brandsRepo;
+import repository.supplierRepo;
 import repository.usersRepo;
 import ui.Login;
+import usecase.supplierUc;
 import usecase.userUc;
+import model.suppliers;
 import model.user;
 
 import javax.swing.*;
@@ -19,6 +23,14 @@ public class Main {
         System.out.println("3. Export List User ke PDF (Terminal)");
         System.out.println("4. Get user by ID (Terminal)");
         System.out.println("5. Update User (Terminal)");
+        System.out.println("6. Soft Delete User (Terminal)");
+        System.out.println("7. Register (Terminal)");
+        System.out.println("8. create supplier (Terminal)");
+        System.out.println("9. update supplier (Terminal)");
+        System.out.println("10. list supplier (Terminal)");
+        System.out.println("11. delete supplier (Terminal)");
+        System.out.println("12. delete supplier (Terminal)");
+        System.out.println("13. export supplier (Terminal)");
         System.out.print("Pilih mode : ");
         String choice = input.nextLine();
 
@@ -144,6 +156,126 @@ public class Main {
                 System.out.println("User berhasil dihapus.");
             } else {
                 System.out.println("Gagal menghapus user.");
+            }
+        }else if (choice.equals("7")) {
+            usersRepo userRepo = new usersRepo(conn);
+            userUc userUseCase = new userUc(userRepo);
+
+            //register
+            user u = new user();
+            System.out.println("Masukkan username: ");
+            u.setUserName(input.nextLine());
+            System.out.println("Masukkan email: ");
+            u.setEmail(input.nextLine());
+            System.out.println("Masukkan phone number: ");
+            u.setPhoneNumber(input.nextLine());
+            System.out.println("Masukkan password: ");
+            u.setPassword(input.nextLine());
+            boolean success = userUseCase.register(u);
+            if (success) {
+                System.out.println("Registrasi berhasil!");
+            } else {
+                System.out.println("Registrasi gagal!");
+            }
+        }else if (choice.equals("8")) {
+            supplierRepo supplierRepo = new supplierRepo(conn);
+            brandsRepo brandRepo = new brandsRepo(conn);
+            supplierUc supplierUseCase = new supplierUc(supplierRepo, brandRepo);
+
+            //register supplier
+            suppliers spl = new suppliers();
+            System.out.println("Masukkan nama supplier: ");
+            spl.setSupplierName(input.nextLine());
+            System.out.println("Masukkan address: ");
+            spl.setAddress(input.nextLine());
+            System.out.println("Masukkan phone number: ");
+            spl.setPhone(input.nextLine());
+            boolean success = supplierUseCase.createSupplier(spl);
+            if (success) {
+                System.out.println("Registrasi supplier berhasil!");
+            } else {
+                System.out.println("Registrasi supplier gagal!");
+            }
+        }else if (choice.equals("9")) {
+            supplierRepo supplierRepo = new supplierRepo(conn);
+            brandsRepo brandRepo = new brandsRepo(conn);
+            supplierUc supplierUseCase = new supplierUc(supplierRepo, brandRepo);
+
+            //update supplier
+            suppliers spl = new suppliers();
+            System.out.println("Masukkan ID supplier: ");
+            spl.setId(Integer.parseInt(input.nextLine()));
+            System.out.println("Masukkan nama supplier: ");
+            spl.setSupplierName(input.nextLine());
+            System.out.println("Masukkan address: ");
+            spl.setAddress(input.nextLine());
+            System.out.println("Masukkan phone number: ");
+            spl.setPhone(input.nextLine());
+            boolean success = supplierUseCase.updateSupplier(spl);
+            if (success) {
+                System.out.println("Update supplier berhasil!");
+            } else {
+                System.out.println("Update supplier gagal!");
+            }
+        }else if (choice.equals("10")) {
+            supplierRepo supplierRepo = new supplierRepo(conn);
+            brandsRepo brandRepo = new brandsRepo(conn);
+            supplierUc supplierUseCase = new supplierUc(supplierRepo, brandRepo);
+
+            //list supplier
+            System.out.println("Masukkan nama supplier: ");
+            String search = input.nextLine();
+
+            List<suppliers> supplierList = supplierUseCase.getSuppliersList(search);
+            if (supplierList.isEmpty()) {
+                System.out.println("Tidak ada supplier yang ditemukan.");
+            }else {
+                for (suppliers supplier : supplierList) {
+                    System.out.println("ID: " + supplier.getId() + ", Nama Supplier: " + supplier.getSupplierName() + ", Alamat: " + supplier.getAddress() + ", Nomor Telepon: " + supplier.getPhone());
+                }
+            }
+        }else if (choice.equals("11")) {
+            supplierRepo supplierRepo = new supplierRepo(conn);
+            brandsRepo brandRepo = new brandsRepo(conn);
+            supplierUc supplierUseCase = new supplierUc(supplierRepo, brandRepo);
+
+            // delete supplier
+            System.out.println("Masukkan ID supplier: ");
+            int id = Integer.parseInt(input.nextLine());
+            boolean deleted = supplierUseCase.DeleteSupplier(id);
+            if (deleted) {
+                System.out.println("Supplier berhasil dihapus.");
+            } else {
+                System.out.println("Gagal menghapus supplier.");
+            }
+        }else if (choice.equals("12")) {
+            supplierRepo supplierRepo = new supplierRepo(conn);
+            brandsRepo brandsRepo = new brandsRepo(conn);
+            supplierUc supplierUseCase = new supplierUc(supplierRepo, brandsRepo);
+
+            //get supplier by id
+            System.out.println("Masukkan ID supplier: ");
+            int id = Integer.parseInt(input.nextLine());
+            suppliers supplier = supplierUseCase.getSupplierById(id);
+            if (supplier != null) {
+                System.out.println("ID: " + supplier.getId() + ", Nama Supplier: " + supplier.getSupplierName() + ", Alamat: " + supplier.getAddress() + ", Nomor Telepon: " + supplier.getPhone());
+            }else {
+                System.out.println("Supplier tidak ditemukan.");
+            }
+        }else if (choice.equals("13")) {
+            supplierRepo supplierRepo = new supplierRepo(conn);
+            brandsRepo brandsRepo = new brandsRepo(conn);
+            supplierUc supplierUseCase = new supplierUc(supplierRepo, brandsRepo);
+
+            //export list supplier
+            System.out.println("Masukkan nama supplier: ");
+            String search = input.nextLine();
+            supplierUseCase.exportSupplierList(search);
+
+            if (true) {
+                System.out.println("Export supplier berhasil!");
+            }else {
+                System.out.println("Export supplier gagal!");
             }
         }else {
                 System.out.println("Pilihan tidak valid!");

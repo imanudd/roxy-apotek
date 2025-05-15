@@ -2,7 +2,11 @@ package usecase;
 
 import model.brands;
 import repository.brandsRepo;
+import helper.currentUser;
 
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BrandUseCase {
@@ -12,37 +16,96 @@ public class BrandUseCase {
         this.brandRepo = brandRepo;
     }
 
-    public List<brands> getAllBrands() {
-        return brandRepo.getAllBrands();
+    // List semua brand
+    public List<brands> listBrands(String search) {
+        try {
+            return brandRepo.listBrands(search);
+        } catch (SQLException e) {
+            System.err.println("List brands error: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
+    // Create brand baru
     public boolean createBrand(brands brd) {
-        // Contoh validasi sederhana
-        if (brd.getBrandName() == null || brd.getBrandName().isEmpty()) {
-            System.out.println("Brand name tidak boleh kosong");
+        try {
+            // Validasi nama brand
+            if (brd.getBrandName() == null || brd.getBrandName().isEmpty()) {
+                System.out.println("Brand name tidak boleh kosong");
+                return false;
+            }
+
+            // Set created info
+            brd.setCreatedAt(LocalDateTime.now());
+
+            return brandRepo.insertBrand(brd, currentUser.getId());
+        } catch (SQLException e) {
+            System.err.println("Create brand error: " + e.getMessage());
             return false;
         }
-
-        return brandRepo.createBrands(brd);
     }
 
-    public boolean updateBrand(brands brd) {
-        if (brd.getId() <= 0) {
-            System.out.println("ID tidak valid");
+    public boolean updateBrand(int id, brands brd) {
+        try {
+            // Validasi ID
+            if (brd.getId() <= 0) {
+                System.out.println("ID tidak valid");
+                return false;
+            }
+
+            // Ambil data existing berdasarkan ID
+            brands existingBrand = brandRepo.getBrandById(id);
+
+            if (existingBrand == null) {
+                System.out.println("Brand tidak ditemukan");
+                return false;
+            }
+
+            // Jika nama brand kosong, gunakan data lama
+            if (brd.getBrandName() == null || brd.getBrandName().isEmpty()) {
+                brd.setBrandName(existingBrand.getBrandName());
+            }
+
+            // Set waktu update dan user
+            brd.setUpdatedAt(LocalDateTime.now());
+
+            return brandRepo.updateBrand(brd, currentUser.getId());
+        } catch (SQLException e) {
+            System.err.println("Update brand error: " + e.getMessage());
             return false;
         }
-
-        return brandRepo.updateBrand(brd);
     }
 
+
+    // Delete brand (soft delete)
     public boolean deleteBrand(int id) {
-        if (id <= 0) {
-            System.out.println("ID tidak valid");
+        try {
+            if (id <= 0) {
+                System.out.println("ID tidak valid");
+                return false;
+            }
+
+            brands existingBrand = brandRepo.getBrandById(id);
+
+            if (existingBrand == null) {
+                System.out.println("Brand tidak ditemukan");
+                return false;
+            }
+
+            return brandRepo.softDeleteBrand(id, currentUser.getId());
+        } catch (SQLException e) {
+            System.err.println("Delete brand error: " + e.getMessage());
             return false;
         }
+    }
 
-        brands brd = new brands(null, id, null, id, null, id); // hanya butuh id untuk hapus
-        brd.setId(id);
-        return brandRepo.deleteBrand(brd);
+    // Get brand by ID
+    public brands getBrandById(int id) {
+        try {
+            return brandRepo.getBrandById(id);
+        } catch (SQLException e) {
+            System.err.println("Get brand by ID error: " + e.getMessage());
+            return null;
+        }
     }
 }

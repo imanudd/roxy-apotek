@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import helper.currentUser;
+
 public class supplierRepo {
     private final Connection conn;
 
@@ -15,15 +17,28 @@ public class supplierRepo {
     }
 
     // Mendapatkan list supplier yang belum dihapus
-    public List<suppliers> getList() {
-        List<suppliers> list = new ArrayList<>();
-        String query = "SELECT * FROM suppliers WHERE deleted_at IS NULL";
+    public List<suppliers> ListSupplier(String search) throws SQLException {
+        String sql;
+        boolean hasSearch = search != null && !search.isEmpty();
 
-        try (PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+        if (hasSearch) {
+            sql = "SELECT * FROM suppliers WHERE supplier_name ILIKE ? order by id asc";
+        } else {
+            sql = "SELECT * FROM suppliers order by id asc";
+        }
+
+        List<suppliers> suppliers = new ArrayList<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)){
+            if (hasSearch) {
+                stmt.setString(1, "%" + search.trim() + "%");
+            }
+
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 suppliers spl = new suppliers(
+                        rs.getInt("id"),
                         rs.getString("supplier_name"),
                         rs.getString("address"),
                         rs.getString("phone"),
@@ -32,75 +47,62 @@ public class supplierRepo {
                         rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
                         rs.getInt("updated_by"),
                         rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null,
-                        rs.getInt("deleted_by")
+                        rs.getInt("deleted_by"),
+                        rs.getBoolean("status")
                 );
-                spl.setId(rs.getInt("id"));
-                Timestamp deletedTs = rs.getTimestamp("deleted_at");
-                if (deletedTs != null) {
-                    spl.setDeletedAt(deletedTs.toLocalDateTime());
-                }
-                list.add(spl);
+                suppliers.add(spl);
             }
-        } catch (SQLException e) {
-            System.out.println("Error getAllSuppliers: " + e.getMessage());
+        
         }
-        return list;
+        return suppliers;
     }
 
-    // Menambahkan supplier baru
-    public boolean createSupplier(suppliers spl) {
-        String query = "INSERT INTO suppliers(supplier_name, address, phone, created_at, created_by, updated_at, updated_by) VALUES(?,?,?,?,?,?,?)";
+    // create supplier 
+    public boolean createSupplier(suppliers spl,int currentUser) throws SQLException {
+        String query = "INSERT INTO suppliers(supplier_name, address, phone, created_at, created_by, status) VALUES(?,?,?,?,?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, spl.getSupplierName());
             stmt.setString(2, spl.getAddress());
             stmt.setString(3, spl.getPhone());
             stmt.setTimestamp(4, Timestamp.valueOf(spl.getCreatedAt()));
-            stmt.setInt(5, spl.getCreatedBy());
-            stmt.setTimestamp(6, Timestamp.valueOf(spl.getUpdatedAt()));
-            stmt.setInt(7, spl.getUpdatedBy());
+            stmt.setInt(5, currentUser);
+            stmt.setBoolean(6, true);
 
-            int rows = stmt.executeUpdate();
-            return rows > 0;
-        } catch (SQLException e) {
-            System.out.println("Error query: " + e.getMessage());
-            return false;
+            return stmt.executeUpdate() > 0;    
         }
     }
 
-    // Memperbarui data supplier
-    public boolean updateSupplier(suppliers spl) {
-        String query = "UPDATE suppliers SET supplier_name=?, address=?, phone=?, updated_at=?, updated_by=? WHERE id=? AND deleted_at IS NULL";
+    // Update supplier
+    public boolean updateSupplier(suppliers spl, int currentUser) throws SQLException {
+        String query = "UPDATE suppliers SET supplier_name=?, address=?, phone=?, updated_at=?, updated_by=? WHERE id=?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, spl.getSupplierName());
             stmt.setString(2, spl.getAddress());
             stmt.setString(3, spl.getPhone());
             stmt.setTimestamp(4, Timestamp.valueOf(spl.getUpdatedAt()));
-            stmt.setInt(5, spl.getUpdatedBy());
+            stmt.setInt(5, currentUser);
             stmt.setInt(6, spl.getId());
 
             int rows = stmt.executeUpdate();
             return rows > 0;
-        } catch (SQLException e) {
-            System.out.println("Error query: " + e.getMessage());
-            return false;
         }
     }
 
-    // Soft delete supplier (hanya update deleted_at)
-    public boolean deleteSupplier(suppliers spl) {
-        String query = "UPDATE suppliers SET deleted_at = ? WHERE id = ?";
+    // Soft delete supplier
+    public boolean deleteSupplier(suppliers spl, int currentUser) throws SQLException {
+        String query = "UPDATE suppliers SET deleted_at = ?, deleted_by = ?, status = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-            stmt.setInt(2, spl.getId());
+            stmt.setInt(2, currentUser);
+            stmt.setBoolean(3, false);
+            stmt.setInt(4, spl.getId());
+
             int rows = stmt.executeUpdate();
             return rows > 0;
-        } catch (SQLException e) {
-            System.out.println("Error soft delete supplier: " + e.getMessage());
-            return false;
-        }
+        } 
     }
 
-    // Cek nama supplier sudah digunakan (tidak termasuk yang sudah dihapus)
+    // Cek nama supplier sudah digunakan
     public boolean isSupplierNameExists(String name, int excludeId) {
         String sql = excludeId > 0
                 ? "SELECT COUNT(*) AS count FROM suppliers WHERE supplier_name = ? AND id <> ? AND deleted_at IS NULL"
@@ -119,5 +121,31 @@ public class supplierRepo {
             e.printStackTrace();
         }
         return false;
+    }
+
+    //get supplier by id
+    public suppliers getSupplierById(int id) throws SQLException {
+        String sql = "SELECT * FROM suppliers WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new suppliers(
+                            rs.getInt("id"),
+                            rs.getString("supplier_name"),
+                            rs.getString("address"),
+                            rs.getString("phone"),
+                            rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
+                            rs.getInt("created_by"),
+                            rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
+                            rs.getInt("updated_by"),
+                            rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null,
+                            rs.getInt("deleted_by"),
+                            rs.getBoolean("status")
+                    );
+                }
+            }
+        }    
+        return null;
     }
 }

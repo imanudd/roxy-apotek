@@ -149,8 +149,8 @@ public class Login extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this,
                 "Login succes. Welcome, " + result.getUserName() + "!");
             // TODO: lanjut ke halaman utama
-            Dashboard dahsboard = new Dashboard(conn); 
-            dahsboard.setVisible(true);
+            // Dashboard dahsboard = new Dashboard(conn); 
+            // dahsboard.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Email and password doesn't match!");
         }

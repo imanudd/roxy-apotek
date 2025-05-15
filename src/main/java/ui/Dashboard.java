@@ -2,6 +2,7 @@ package ui;
 
 
 import model.user;
+import repository.brandsRepo;
 import repository.supplierRepo;
 import repository.usersRepo;
 import usecase.supplierUc;
@@ -23,7 +24,7 @@ public class Dashboard extends JFrame {
     private final supplierUc supplierUc;
     
     public Dashboard(Connection conn) {
-        supplierUc = new supplierUc(new supplierRepo(conn));
+        supplierUc = new supplierUc(new supplierRepo(conn), new brandsRepo(conn));
 
         setTitle("Dashboard - Apotek Roxy");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -67,8 +68,8 @@ public class Dashboard extends JFrame {
                         content.setVisible(true);
                     } if (menu.equals("Manajemen Supplier")) {
                         // Aksi yang ingin dilakukan saat tombol "Manajemen Supplier" ditekan               
-                        SupplierManagementGUI supplierManagementGUI = new SupplierManagementGUI(conn);
-                        add(supplierManagementGUI);;
+                        // SupplierManagementGUI supplierManagementGUI = new SupplierManagementGUI(conn);
+                        // add(supplierManagementGUI);;
                         content.setVisible(false);
                     } else {
                         // Aksi untuk tombol lainnya jika diperlukan
