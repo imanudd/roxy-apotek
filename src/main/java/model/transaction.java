@@ -1,32 +1,32 @@
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class items {
+public class transaction {
     private int id;
-    private String itemName;
-    private int brandId;
-    private double price;
+    private LocalDate date;
+    private double grandTotal;
+    private int totalItem;
     private LocalDateTime createdAt;
     private int createdBy;
     private LocalDateTime updatedAt;
     private int updatedBy;
 
-    // Constructor kosong
-    public items() {}
-
-    // Constructor lengkap
-    public items(String itemName, int brandId, double price, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy) {
-        setItemName(itemName);
-        setBrandId(brandId);
-        setPrice(price);
+    // Constructor
+    public transaction() {}
+    
+    public transaction(LocalDate date, double grandTotal, int totalItem, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy) {
+        setDate(date);
+        setGrandTotal(grandTotal);
+        setTotalItem(totalItem);
         setCreatedAt(createdAt);
         setCreatedBy(createdBy);
         setUpdatedAt(updatedAt);
         setUpdatedBy(updatedBy);
     }
 
-    // Getter dan Setter dengan validasi
+    // Getter & Setter dengan validasi
     public int getId() {
         return id;
     }
@@ -36,33 +36,31 @@ public class items {
         this.id = id;
     }
 
-    public String getItemName() {
-        return itemName;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setItemName(String itemName) {
-        if (itemName == null || itemName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Nama item tidak boleh kosong");
-        }
-        this.itemName = itemName;
+    public void setDate(LocalDate date) {
+        if (date == null) throw new IllegalArgumentException("Tanggal tidak boleh null");
+        this.date = date;
     }
 
-    public int getBrandId() {
-        return brandId;
+    public double getGrandTotal() {
+        return grandTotal;
     }
 
-    public void setBrandId(int brandId) {
-        if (brandId <= 0) throw new IllegalArgumentException("Brand ID harus lebih dari 0");
-        this.brandId = brandId;
+    public void setGrandTotal(double grandTotal) {
+        if (grandTotal < 0) throw new IllegalArgumentException("Grand total tidak boleh negatif");
+        this.grandTotal = grandTotal;
     }
 
-    public double getPrice() {
-        return price;
+    public int getTotalItem() {
+        return totalItem;
     }
 
-    public void setPrice(double price) {
-        if (price < 0) throw new IllegalArgumentException("Harga tidak boleh negatif");
-        this.price = price;
+    public void setTotalItem(int totalItem) {
+        if (totalItem < 0) throw new IllegalArgumentException("Total item tidak boleh negatif");
+        this.totalItem = totalItem;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -103,27 +101,27 @@ public class items {
 
     // Validasi keseluruhan data
     public boolean isValid() {
-        return itemName != null && !itemName.trim().isEmpty() &&
-               brandId > 0 &&
-               price >= 0 &&
+        return date != null &&
+               grandTotal >= 0 &&
+               totalItem >= 0 &&
                createdAt != null &&
-               createdBy > 0 &&
                updatedAt != null &&
+               createdBy > 0 &&
                updatedBy > 0;
     }
 
-    // toString() untuk debugging
+    // toString() untuk debug
     @Override
     public String toString() {
-        return "Items{" +
-                "id=" + id +
-                ", itemName='" + itemName + '\'' +
-                ", brandId=" + brandId +
-                ", price=" + price +
-                ", createdAt=" + createdAt +
-                ", createdBy=" + createdBy +
-                ", updatedAt=" + updatedAt +
-                ", updatedBy=" + updatedBy +
-                '}';
+        return "Transaction{" +
+               "id=" + id +
+               ", date=" + date +
+               ", grandTotal=" + grandTotal +
+               ", totalItem=" + totalItem +
+               ", createdAt=" + createdAt +
+               ", createdBy=" + createdBy +
+               ", updatedAt=" + updatedAt +
+               ", updatedBy=" + updatedBy +
+               '}';
     }
 }
