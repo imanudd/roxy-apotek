@@ -12,10 +12,9 @@ public class items {
     private LocalDateTime updatedAt;
     private int updatedBy;
 
-    // Constructor kosong
+    // Constructor
     public items() {}
-
-    // Constructor lengkap
+    
     public items(String itemName, int brandId, double price, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy) {
         setItemName(itemName);
         setBrandId(brandId);
