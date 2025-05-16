@@ -146,4 +146,25 @@ public class brandsRepo {
         }
         return null;
     }
+//validasi brand
+    public boolean isBrandNameExists(String name, int excludeId){
+    String query = excludeId>0
+            ? "SELECT COUNT (*) AS count FROM brands WHERE brand_name=? AND id<>?"
+            : "SELECT COUNT (*) AS count FROM brands WHERE brand_name=?";
+            
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+         
+            ps.setString(1, name);
+            if (excludeId > 0) ps.setInt(2, excludeId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count") > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
