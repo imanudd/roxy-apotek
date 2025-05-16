@@ -1,6 +1,5 @@
 package repository;
 
-import config.DatabaseConfig;
 import model.items;
 import helper.currentUser;
 
@@ -18,7 +17,9 @@ public class itemsRepo {
     // Ambil semua data item
     public List<items> getAllItems() {
         List<items> list = new ArrayList<>();
-        String query = "SELECT * FROM items";
+        String query = "SELECT i.item_name, b.id, i.sell_price, i.created_at, i.created_by, i.updated_at, i.updated_by, i.status, i.deleted_by, i.deleted_at"+
+                "FROM items i"+
+                "JOIN brands b ON i.brand_id=b.id";
 
         try (PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
@@ -27,11 +28,14 @@ public class itemsRepo {
                 items itm = new items(
                     rs.getString("item_name"),
                     rs.getInt("brand_id"),
-                    rs.getDouble("sell_price"), // perbaikan di sini
+                    rs.getDouble("sell_price"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
                     rs.getInt("created_by"),
                     rs.getTimestamp("updated_at").toLocalDateTime(),
-                    rs.getInt("updated_by")
+                    rs.getInt("updated_by"),
+                    rs.getBoolean("status"),
+                    rs.getInt("deleted_by"),
+                    rs.getTimestamp("deteled_at").toLocalDateTime()
                 );
                 itm.setId(rs.getInt("id"));
                 list.add(itm);
@@ -137,7 +141,10 @@ public class itemsRepo {
                         rs.getTimestamp("created_at").toLocalDateTime(),
                         rs.getInt("created_by"),
                         rs.getTimestamp("updated_at").toLocalDateTime(),
-                        rs.getInt("updated_by")
+                        rs.getInt("updated_by"),
+                        rs.getBoolean("status"),
+                        rs.getInt("deleted_by"),
+                        rs.getTimestamp("deteled_at").toLocalDateTime()
                     );
                     itm.setId(rs.getInt("id"));
                     list.add(itm);

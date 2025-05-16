@@ -23,7 +23,7 @@ public class stocksRepo {
         List<stock> list = new ArrayList<>();
         String query = "SELECT s.id, i.item_name, s.first_stock, s.stock_in, s.stock_out, s.remaining_stock"+
                 "FROM stocks s"+
-                "JOINT items i ON s.item_id=i.id";
+                "JOIN items i ON s.item_id=i.id";
         try (PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()){
             stock sItem = new stock(
@@ -46,7 +46,7 @@ public class stocksRepo {
     }
     //create stock
     public boolean createStock(stock sItem, int itemId) {
-    String query = "INSERT INTO stocks (item_id, first_stock, remaining_stock, created_at, created_by,) " +
+    String query = "INSERT INTO stocks (item_id, first_stock, remaining_stock, created_at, created_by) " +
                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     try (PreparedStatement stmt = conn.prepareStatement(query)) {

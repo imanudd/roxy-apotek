@@ -11,11 +11,14 @@ public class items {
     private int createdBy;
     private LocalDateTime updatedAt;
     private int updatedBy;
+    private boolean status;
+    private int deletedBy;
+    private LocalDateTime deletedAt;
 
     // Constructor
     public items() {}
     
-    public items(String itemName, int brandId, double price, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy) {
+    public items( String itemName, int brandId, double price, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, boolean status, int deleteBy, LocalDateTime deletedAt) {
         setItemName(itemName);
         setBrandId(brandId);
         setPrice(price);
@@ -23,6 +26,9 @@ public class items {
         setCreatedBy(createdBy);
         setUpdatedAt(updatedAt);
         setUpdatedBy(updatedBy);
+        setStatus(status);
+        setDeletedBy(deletedBy);
+        setDeleteAt(deletedAt);
     }
 
     // Getter dan Setter dengan validasi
@@ -99,7 +105,34 @@ public class items {
         if (updatedBy <= 0) throw new IllegalArgumentException("UpdatedBy harus lebih dari 0");
         this.updatedBy = updatedBy;
     }
+    
+    public boolean getStatus(){
+        return status;
+    }
+    
+    
+    public void setStatus(boolean status){
+        this.status=status;
+    }
+    
+    public int getDeletedBy() {
+        return deletedBy;
+    }
 
+    public void setDeletedBy(int deletedBy) {
+        if (deletedBy <= 0) throw new IllegalArgumentException("DeletedBy harus lebih dari 0");
+        this.deletedBy = deletedBy;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeleteAt(LocalDateTime deleteAt) {
+        if (deletedAt == null) throw new IllegalArgumentException("UpdatedAt tidak boleh null");
+        this.deletedAt = deletedAt;
+    }
+    
     // Validasi keseluruhan data
     public boolean isValid() {
         return itemName != null && !itemName.trim().isEmpty() &&
@@ -108,7 +141,9 @@ public class items {
                createdAt != null &&
                createdBy > 0 &&
                updatedAt != null &&
-               updatedBy > 0;
+               updatedBy > 0 &&
+               deletedBy >0 &&
+               deletedAt != null;
     }
 
     // toString() untuk debugging
@@ -123,6 +158,8 @@ public class items {
                 ", createdBy=" + createdBy +
                 ", updatedAt=" + updatedAt +
                 ", updatedBy=" + updatedBy +
+                ", deletedBy=" + deletedBy +
+                ", deletedAt=" + deletedAt +
                 '}';
     }
 }
