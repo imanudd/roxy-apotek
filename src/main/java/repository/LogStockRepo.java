@@ -22,7 +22,9 @@ public class LogStockRepo {
     // Get list
     public List<LogStock> getList() {
         List<LogStock> list = new ArrayList<>();
-        String query = "SELECT * FROM log_stocks";
+        String query = "SELECT ls.id, ls.activity_name, i.id, ls.ref_id, ls.qty, ls.created_at, ls.created_by, ls.updated_at, ls.updated_by" + 
+                "FROM log_stocks ls"+
+                "JOIN items i ON ls.item_id=i.id";
 
         try (PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
