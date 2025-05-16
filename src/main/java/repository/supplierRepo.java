@@ -1,13 +1,13 @@
 package repository;
 
+import model.optionSupplier;
 import model.suppliers;
+import helper.currentUser;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import helper.currentUser;
 
 public class supplierRepo {
     private final Connection conn;
@@ -55,6 +55,27 @@ public class supplierRepo {
         
         }
         return suppliers;
+    }
+    public List<optionSupplier> OptionSupplier() throws SQLException {
+        String sql;
+        sql = "SELECT * FROM suppliers where status = true order by id asc";
+
+        List<optionSupplier> optionSupplier = new ArrayList<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                optionSupplier op = new optionSupplier(
+                        rs.getInt("id"),
+                        rs.getString("supplier_name")
+                );
+                optionSupplier.add(op);
+            }
+        
+        }
+        return optionSupplier;  
     }
 
     // create supplier 

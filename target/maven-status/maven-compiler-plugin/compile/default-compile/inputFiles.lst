@@ -1,22 +1,31 @@
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\config\DatabaseConfig.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\helper\currentUser.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\helper\meta.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\helper\pagination.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\helper\validasi.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\Main.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\model\brands.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\model\items.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\model\suppliers.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\model\user.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\repository\brandsRepo.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\repository\itemsRepo.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\repository\supplierRepo.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\repository\usersRepo.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\ui\aDashboard.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\ui\aMainFrame.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\ui\Login.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\ui\SupplierManagementGUI.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\usecase\BrandUseCase.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\usecase\itemsUc.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\usecase\supplierUc.java
-C:\Users\ADMINPUSING-PC\Documents\New folder\roxy-apotek-develop\src\main\java\usecase\userUc.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\config\DatabaseConfig.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\helper\currentUser.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\helper\meta.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\helper\pagination.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\helper\validasi.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\Main.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\brands.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\items.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\LogStock.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\optionBrands.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\optionSupplier.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\stock.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\suppliers.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\transaction.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\TransactionDetail.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\user.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\brandsRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\itemsRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\LogStockRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\stocksRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\supplierRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\TransactionDetailRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\transactionsRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\usersRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\ui\Dashboard.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\ui\Login.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\ui\SupplierManagementGUI.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\BrandUC.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\itemsUc.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\supplierUc.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\userUc.java

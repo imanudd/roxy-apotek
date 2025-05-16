@@ -14,6 +14,7 @@ public class brands {
     private int id;
     private String brandName;
     private int supplierId;
+    private String supplierName;
     private LocalDateTime createdAt;
     private int createdBy;
     private LocalDateTime updatedAt;
@@ -25,10 +26,11 @@ public class brands {
     public brands() {
     }
     
-    public brands(int id, String brandName, int supplierId, LocalDateTime createdAt, int createdBy,  LocalDateTime updatedAt, int updatedBy, LocalDateTime deletedAt, int deletedBy, boolean status) {
+    public brands(int id, String brandName, int supplierId, String supplierName, LocalDateTime createdAt, int createdBy,  LocalDateTime updatedAt, int updatedBy, LocalDateTime deletedAt, int deletedBy, boolean status) {
         this.id=id;
         this.brandName=brandName;
         this.supplierId=supplierId;
+        this.supplierName=supplierName; 
         this.createdAt=createdAt;
         this.createdBy=createdBy;
         this.updatedAt=updatedAt;
@@ -55,6 +57,12 @@ public class brands {
     }
     public void setSupplierId(int supplierId){
         this.supplierId=supplierId;
+    }
+    public String getSupplierName(){
+        return supplierName;
+    }
+    public void setSupplierName(String supplierName){
+        this.supplierName=supplierName;
     }
     public LocalDateTime getCreatedAt(){
         return createdAt;
