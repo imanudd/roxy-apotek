@@ -54,7 +54,7 @@ public class supplierUc {
             return false;
         }
 
-        if (supplierRepo.isSupplierNameExists(spl.getSupplierName(), -1)) {
+        if (supplierRepo.isSupplierNameExists(spl.getSupplierName(), 0)) {
             System.out.println("Supplier name already exists.");
             return false;
         }
