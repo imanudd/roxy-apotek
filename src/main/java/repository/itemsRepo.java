@@ -9,7 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class itemsRepo {
-    Connection conn = DatabaseConfig.connect();
+    private final Connection conn;
+
+    public itemsRepo(Connection conn) {
+        this.conn = conn;
+    }
 
     // Ambil semua data item
     public List<items> getAllItems() {
@@ -77,16 +81,13 @@ public class itemsRepo {
         }
     }
 
-    // Hapus item
-    public boolean deleteItem(items itm) {
+    // Hapus item berdasarkan ID
+    public boolean deleteItem(int id) throws SQLException {
         String query = "DELETE FROM items WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, itm.getId());
+            stmt.setInt(1, id);
             int rows = stmt.executeUpdate();
             return rows > 0;
-        } catch (SQLException e) {
-            System.out.println("Error deleteItem: " + e.getMessage());
-            return false;
         }
     }
 
@@ -110,4 +111,40 @@ public class itemsRepo {
         }
         return false;
     }
+
+    //delete item by brand
+    public boolean deleteItemsByBrand(int brandId)throws SQLException {
+        String query = "DELETE FROM items WHERE brand_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, brandId);
+            int rows = stmt.executeUpdate();
+            return rows > 0;
+        } 
+    }
+
+    // Get items by brand ID
+    public List<items> getItemByBrandId(int brandId) throws SQLException {
+        String query = "SELECT * FROM items WHERE brand_id = ?";
+        List<items> list = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, brandId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    items itm = new items(
+                        rs.getString("item_name"),
+                        rs.getInt("brand_id"),
+                        rs.getDouble("sell_price"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getInt("created_by"),
+                        rs.getTimestamp("updated_at").toLocalDateTime(),
+                        rs.getInt("updated_by")
+                    );
+                    itm.setId(rs.getInt("id"));
+                    list.add(itm);
+                }
+            }
+        }
+        return list; 
+    }
+
 }

@@ -2,12 +2,16 @@ import config.DatabaseConfig;
 import repository.brandsRepo;
 import repository.supplierRepo;
 import repository.usersRepo;
+import repository.itemsRepo;
 import ui.Login;
+import usecase.BrandUC;
 import usecase.supplierUc;
 import usecase.userUc;
 import model.optionSupplier;
 import model.suppliers;
 import model.user;
+import model.brands;
+import model.optionBrands;
 
 import javax.swing.*;
 import java.sql.Connection;
@@ -33,6 +37,13 @@ public class Main {
         System.out.println("12. delete supplier (Terminal)");
         System.out.println("13. export supplier (Terminal)");
         System.out.println("14. option supplier (Terminal)");
+        System.out.println("15. create brand (Terminal)");
+        System.out.println("16. update brand (Terminal)");
+        System.out.println("17. delete brand (Terminal)");
+        System.out.println("18. get brand by id (Terminal)");
+        System.out.println("19. list brand (Terminal)");
+        System.out.println("20. option brand (Terminal)");
+        System.out.println("21. export brand (Terminal)");
         System.out.print("Pilih mode : ");
         String choice = input.nextLine();
 
@@ -290,6 +301,110 @@ public class Main {
                 for (optionSupplier optionSupplier : optionSupplierList) {
                     System.out.println("ID: " + optionSupplier.getId() + ", Nama Supplier: " + optionSupplier.getSupplierName());
                 }
+            }
+        }else if (choice.equals("15")) {
+            brandsRepo brandsRepo = new brandsRepo(conn);
+            itemsRepo itemRepo = new itemsRepo(conn);
+            BrandUC brandUseCase = new BrandUC(brandsRepo, itemRepo);
+
+            //create brand
+            brands brd = new brands();
+            System.out.println("Masukkan nama brand: ");
+            brd.setBrandName(input.nextLine());
+            System.out.println("Masukkan id supplier: ");
+            brd.setSupplierId(Integer.parseInt(input.nextLine()));
+            boolean success = brandUseCase.createBrand(brd);
+            if (success) {
+                System.out.println("Create brand berhasil!");
+            }else {
+                System.out.println("Create brand gagal!");
+            }
+        }else if (choice.equals("16")){
+            brandsRepo brandsRepo = new brandsRepo(conn);
+            itemsRepo itemRepo = new itemsRepo(conn);
+            BrandUC brandUseCase = new BrandUC(brandsRepo, itemRepo);
+
+            //update brand
+            System.out.println("Masukkan ID brand: ");
+            int id = Integer.parseInt(input.nextLine());
+            brands brd = new brands();
+            System.out.println("Masukkan nama brand: ");
+            brd.setBrandName(input.nextLine());
+            System.out.println("Masukkan id supplier: ");
+            brd.setSupplierId(Integer.parseInt(input.nextLine()));
+            boolean success = brandUseCase.updateBrand(id, brd);
+            if (success) {
+                System.out.println("Update brand berhasil!");
+            }else {
+                System.out.println("Update brand gagal!");
+            }
+        }else if (choice.equals("17")) {
+            brandsRepo brandsRepo = new brandsRepo(conn);
+            itemsRepo itemRepo = new itemsRepo(conn);
+            BrandUC brandUseCase = new BrandUC(brandsRepo, itemRepo);
+
+            //delete brand
+            System.out.println("Masukkan ID brand: ");
+            int id = Integer.parseInt(input.nextLine());
+            boolean deleted = brandUseCase.deleteBrand(id);
+            if (deleted) {
+                System.out.println("Brand berhasil dihapus.");
+            } else {
+                System.out.println("Gagal menghapus brand.");
+            }
+        }else if (choice.equals("18")) {
+            brandsRepo brandsRepo = new brandsRepo(conn);
+            itemsRepo itemRepo = new itemsRepo(conn);
+            BrandUC brandUseCase = new BrandUC(brandsRepo, itemRepo);
+
+            //get brand by id
+            System.out.println("Masukkan ID brand: ");
+            int id = Integer.parseInt(input.nextLine());
+            brands brand = brandUseCase.getBrandById(id);
+            if (brand != null) {
+                System.out.printf("ID: " + brand.getId() + ", Nama Brand: " + brand.getBrandName() + ", ID Supplier: " + brand.getSupplierId() +",Supplier: " + brand.getSupplierName(), ", Status: " + brand.getStatus());
+            }else {
+                System.out.println("Brand tidak ditemukan.");
+            }
+        } else if (choice.equals("19")){
+            brandsRepo brandsRepo = new brandsRepo(conn);
+            itemsRepo itemRepo = new itemsRepo(conn);
+            BrandUC brandUseCase = new BrandUC(brandsRepo, itemRepo);
+
+            // list brand
+            System.out.println("Masukkan nama brand: ");
+            String search = input.nextLine();
+            List<brands> list = brandUseCase.listBrands(search);
+            if (!list.isEmpty()) {
+                for (brands brand : list) {
+                    System.out.printf("ID: " + brand.getId() + ", Nama Brand: " + brand.getBrandName() + ", ID Supplier: " + brand.getSupplierId() +",Supplier: " + brand.getSupplierName(), ", Status: " + brand.getStatus());
+                }
+            }
+        } else if (choice.equals("20")) {
+            brandsRepo brandsRepo = new brandsRepo(conn);
+            itemsRepo itemRepo = new itemsRepo(conn);
+            BrandUC brandUseCase = new BrandUC(brandsRepo, itemRepo);
+
+            //option brand
+            List<optionBrands> optionBrandsList = brandUseCase.optionBrands();
+            if (!optionBrandsList.isEmpty()) {
+                for (optionBrands optionBrands : optionBrandsList) {
+                    System.out.println("ID: " + optionBrands.getId() + ", Nama Brand: " + optionBrands.getBrandName());
+                }
+            }
+        } else if (choice.equals("21")) {
+            brandsRepo brandsRepo = new brandsRepo(conn);
+            itemsRepo itemRepo = new itemsRepo(conn);
+            BrandUC brandUseCase = new BrandUC(brandsRepo, itemRepo);
+
+            //export brand
+            System.out.println("Masukkan nama brand: ");
+            String search = input.nextLine();
+            boolean success = brandUseCase.exportBrandsList(search);
+            if (success) {
+                System.out.println("Export brand berhasil!");
+            }else {
+                System.out.println("Export brand gagal!");
             }
         }else {
                 System.out.println("Pilihan tidak valid!");

@@ -39,14 +39,14 @@ public class itemsUc {
         return itemRepo.updateItem(itm);
     }
 
-    public boolean deleteItem(int id) {
-        if (id <= 0) {
-            System.out.println("ID item tidak valid");
-            return false;
-        }
+//     public boolean deleteItem(int id) {
+//         if (id <= 0) {
+//             System.out.println("ID item tidak valid");
+//             return false;
+//         }
 
-        items itm = new items(null, id, id, null, id, null, id);
-        itm.setId(id);
-        return itemRepo.deleteItem(itm);
-    }
+//         items itm = new items(null, id, id, null, id, null, id);
+//         itm.setId(id);
+//         return itemRepo.deleteItem(id);
+//     }
 }

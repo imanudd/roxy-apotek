@@ -1,8 +1,8 @@
 package repository;
 
-import config.DatabaseConfig;
 import model.brands;
-import model.user;
+import model.optionBrands;
+import model.optionSupplier;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,9 +21,9 @@ public class brandsRepo {
         boolean hasSearch = search != null && !search.trim().isEmpty();
 
         if (hasSearch) {
-            sql = "SELECT * FROM brands WHERE brand_name ILIKE ? ORDER BY id ASC";
+            sql = "SELECT b.*, s.supplier_name FROM brands b LEFT JOIN suppliers s ON b.supplier_id = s.id WHERE b.brand_name ILIKE ? ORDER BY b.id ASC";
         } else {
-            sql = "SELECT * FROM brands ORDER BY id ASC";
+            sql = "SELECT b.*, s.supplier_name FROM brands b LEFT JOIN suppliers s ON b.supplier_id = s.id ORDER BY b.id ASC";
         }
 
         List<brands> brandList = new ArrayList<>();
@@ -40,6 +40,7 @@ public class brandsRepo {
                     rs.getInt("id"),
                     rs.getString("brand_name"),
                     rs.getInt("supplier_id"),
+                    rs.getString("supplier_name"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
                     rs.getInt("created_by"),
                     rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
@@ -63,7 +64,7 @@ public class brandsRepo {
             stmt.setInt(2, b.getSupplierId());
             stmt.setTimestamp(3, Timestamp.valueOf(b.getCreatedAt()));
             stmt.setInt(4, currentUser);
-            stmt.setBoolean(7, true);
+            stmt.setBoolean(5, true);
             return stmt.executeUpdate() > 0;
         }
     }
@@ -103,7 +104,7 @@ public class brandsRepo {
 
     // get brand by id
     public brands getBrandById(int id) throws SQLException {
-        String sql = "SELECT * FROM brands WHERE id = ? and status = true";
+        String sql = "SELECT b.*, s.supplier_name FROM brands b LEFT JOIN suppliers s ON b.supplier_id = s.id WHERE b.id = ? and b.status = true";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -112,6 +113,7 @@ public class brandsRepo {
                     rs.getInt("id"),
                     rs.getString("brand_name"),
                     rs.getInt("supplier_id"),
+                    rs.getString("supplier_name"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
                     rs.getInt("created_by"),
                     rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
@@ -135,6 +137,7 @@ public class brandsRepo {
                     rs.getInt("id"),
                     rs.getString("brand_name"),
                     rs.getInt("supplier_id"),
+                    rs.getString("supplier_name"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
                     rs.getInt("created_by"),
                     rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
@@ -148,7 +151,7 @@ public class brandsRepo {
         return null;
     }
 //validasi brand
-    public boolean isBrandNameExists(String name, int excludeId){
+    public boolean isBrandNameExists(String name, int excludeId)throws SQLException {
     String query = excludeId>0
             ? "SELECT COUNT (*) AS count FROM brands WHERE brand_name=? AND id<>?"
             : "SELECT COUNT (*) AS count FROM brands WHERE brand_name=?";
@@ -163,9 +166,29 @@ public class brandsRepo {
                     return rs.getInt("count") > 0;
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return false;
+    }
+
+    public List<optionBrands> OptionBrands() throws SQLException{
+        String sql;
+        sql = "SELECT * FROM brands where status = true order by id asc";
+
+        List<optionBrands> optionbBrands = new ArrayList<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                optionBrands ob = new optionBrands(
+                        rs.getInt("id"),
+                        rs.getString("brand_name")
+                );
+                optionbBrands.add(ob);
+            }
+        
+        }
+        return optionbBrands;  
     }
 }

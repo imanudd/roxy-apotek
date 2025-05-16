@@ -7,6 +7,7 @@ C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\Main.
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\brands.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\items.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\LogStock.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\optionBrands.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\optionSupplier.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\stock.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\suppliers.java
@@ -24,7 +25,7 @@ C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repos
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\ui\Dashboard.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\ui\Login.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\ui\SupplierManagementGUI.java
-C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\BrandUseCase.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\BrandUC.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\itemsUc.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\supplierUc.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\userUc.java
