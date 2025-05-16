@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 ui\Login$2.class
 ui\SupplierManagementGUI$9.class
 ui\SupplierManagementGUI$2.class
@@ -31,4 +29,3 @@ model\brands.class
 model\items.class
 ui\SupplierManagementGUI$7.class
 ui\Dashboard.class
->>>>>>> maintenance

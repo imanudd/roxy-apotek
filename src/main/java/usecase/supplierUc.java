@@ -1,6 +1,7 @@
 package usecase;
 
 import model.brands;
+import model.optionSupplier;
 import model.suppliers;
 import repository.supplierRepo;
 import repository.brandsRepo;
@@ -68,6 +69,7 @@ public class supplierUc {
         }
     }
 
+    //update supplier
     public boolean updateSupplier(suppliers spl) {
         try {
             // Ambil data existing
@@ -155,6 +157,7 @@ public class supplierUc {
     }
 
 
+    // export supplier
     public boolean exportSupplierList(String search) {
         try {
             String fileName = "supplier-list-" + System.currentTimeMillis() + ".xlsx";
@@ -201,4 +204,13 @@ public class supplierUc {
         }
     }
 
+    //option supplier
+    public List<optionSupplier> OptionSupplier() {
+        try {
+            return supplierRepo.OptionSupplier();
+        } catch (SQLException e) {
+            System.err.println("List supplier error: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
 }

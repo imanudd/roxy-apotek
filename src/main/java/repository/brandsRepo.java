@@ -15,6 +15,7 @@ public class brandsRepo {
         this.conn = conn;
     }
 
+    // List semua brand
     public List<brands> listBrands(String search) throws SQLException {
         String sql;
         boolean hasSearch = search != null && !search.trim().isEmpty();

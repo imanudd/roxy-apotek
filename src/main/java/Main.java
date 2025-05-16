@@ -5,6 +5,7 @@ import repository.usersRepo;
 import ui.Login;
 import usecase.supplierUc;
 import usecase.userUc;
+import model.optionSupplier;
 import model.suppliers;
 import model.user;
 
@@ -31,6 +32,7 @@ public class Main {
         System.out.println("11. delete supplier (Terminal)");
         System.out.println("12. delete supplier (Terminal)");
         System.out.println("13. export supplier (Terminal)");
+        System.out.println("14. option supplier (Terminal)");
         System.out.print("Pilih mode : ");
         String choice = input.nextLine();
 
@@ -276,6 +278,18 @@ public class Main {
                 System.out.println("Export supplier berhasil!");
             }else {
                 System.out.println("Export supplier gagal!");
+            }
+        }else if (choice.equals("14")) {
+            supplierRepo supplierRepo = new supplierRepo(conn);
+            brandsRepo brandsRepo = new brandsRepo(conn);
+            supplierUc supplierUseCase = new supplierUc(supplierRepo, brandsRepo);
+
+            //option supplier
+            List<optionSupplier> optionSupplierList = supplierUseCase.OptionSupplier();
+            if (!optionSupplierList.isEmpty()) {
+                for (optionSupplier optionSupplier : optionSupplierList) {
+                    System.out.println("ID: " + optionSupplier.getId() + ", Nama Supplier: " + optionSupplier.getSupplierName());
+                }
             }
         }else {
                 System.out.println("Pilihan tidak valid!");
