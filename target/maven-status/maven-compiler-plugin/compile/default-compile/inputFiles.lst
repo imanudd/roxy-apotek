@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\config\DatabaseConfig.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\helper\currentUser.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\helper\meta.java
@@ -19,3 +20,23 @@ C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\useca
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\itemsUc.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\supplierUc.java
 C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\userUc.java
+=======
+G:\roxy-apotek\roxy-apotek\src\main\java\model\items.java
+G:\roxy-apotek\roxy-apotek\src\main\java\model\suppliers.java
+G:\roxy-apotek\roxy-apotek\src\main\java\ui\SupplierManagementGUI.java
+G:\roxy-apotek\roxy-apotek\src\main\java\model\user.java
+G:\roxy-apotek\roxy-apotek\src\main\java\usecase\userUc.java
+G:\roxy-apotek\roxy-apotek\src\main\java\repository\supplierRepo.java
+G:\roxy-apotek\roxy-apotek\src\main\java\model\stock.java
+G:\roxy-apotek\roxy-apotek\src\main\java\ui\Login.java
+G:\roxy-apotek\roxy-apotek\src\main\java\Main.java
+G:\roxy-apotek\roxy-apotek\src\main\java\repository\itemsRepo.java
+G:\roxy-apotek\roxy-apotek\src\main\java\ui\Dashboard.java
+G:\roxy-apotek\roxy-apotek\src\main\java\config\DatabaseConfig.java
+G:\roxy-apotek\roxy-apotek\src\main\java\repository\usersRepo.java
+G:\roxy-apotek\roxy-apotek\src\main\java\repository\stocksRepo.java
+G:\roxy-apotek\roxy-apotek\src\main\java\model\brands.java
+G:\roxy-apotek\roxy-apotek\src\main\java\helper\currentUser.java
+G:\roxy-apotek\roxy-apotek\src\main\java\helper\validasi.java
+G:\roxy-apotek\roxy-apotek\src\main\java\repository\brandsRepo.java
+>>>>>>> maintenance

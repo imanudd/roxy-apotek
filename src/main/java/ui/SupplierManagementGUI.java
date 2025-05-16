@@ -17,6 +17,7 @@ import repository.supplierRepo;
 import usecase.supplierUc;
 import model.suppliers;
 import repository.supplierRepo;
+import repository.brandsRepo;
 
 /**
  *
@@ -31,7 +32,7 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
     
     public SupplierManagementGUI(Connection conn) {
         initComponents();
-        uc = new supplierUc(new supplierRepo(conn));
+        uc = new supplierUc(new supplierRepo(conn), new brandsRepo(conn));
         this.tableModel = (DefaultTableModel) jTable2.getModel();
         loadSuppliers();
         
