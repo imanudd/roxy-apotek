@@ -6,6 +6,7 @@ public class items {
     private int id;
     private String itemName;
     private int brandId;
+    private String brandName;
     private double price;
     private LocalDateTime createdAt;
     private int createdBy;
@@ -18,9 +19,11 @@ public class items {
     // Constructor
     public items() {}
     
-    public items( String itemName, int brandId, double price, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, boolean status, int deleteBy, LocalDateTime deletedAt) {
+    public items( int id, String itemName, int brandId, String brandName, double price, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, boolean status, int deleteBy, LocalDateTime deletedAt) {
+        setId(id);
         setItemName(itemName);
         setBrandId(brandId);
+        setBrandName(brandName);
         setPrice(price);
         setCreatedAt(createdAt);
         setCreatedBy(createdBy);
@@ -59,6 +62,17 @@ public class items {
     public void setBrandId(int brandId) {
         if (brandId <= 0) throw new IllegalArgumentException("Brand ID harus lebih dari 0");
         this.brandId = brandId;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        if (brandName == null || brandName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nama brand tidak boleh kosong");
+        }
+        this.brandName = brandName;
     }
 
     public double getPrice() {

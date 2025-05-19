@@ -15,19 +15,30 @@ public class itemsRepo {
     }
 
     // Ambil semua data item
-    public List<items> getAllItems() {
+    public List<items> getAllItems(String search) throws SQLException{
         List<items> list = new ArrayList<>();
-        String query = "SELECT i.item_name, b.id, i.sell_price, i.created_at, i.created_by, i.updated_at, i.updated_by, i.status, i.deleted_by, i.deleted_at"+
-                "FROM items i"+
-                "JOIN brands b ON i.brand_id=b.id";
+        // String query = "SELECT i.item_name, b.id, i.sell_price, i.created_at, i.created_by, i.updated_at, i.updated_by, i.status, i.deleted_by, i.deleted_at"+
+        //         "FROM items i"+
+        //         "JOIN brands b ON i.brand_id=b.id";
+
+        String query = "SELECT b.*, s.supplier_name FROM brands b LEFT JOIN suppliers s ON b.supplier_id = s.id"; 
+         boolean hasSearch = search != null && !search.trim().isEmpty();
+
+        if (hasSearch) {
+            query += "WHERE b.brand_name ILIKE ?";
+        }
+
+        query += "ORDER BY b.id ASC";
 
         try (PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 items itm = new items(
+                    rs.getInt("id"),
                     rs.getString("item_name"),
                     rs.getInt("brand_id"),
+                    rs.getString("brand_name"),
                     rs.getDouble("sell_price"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
                     rs.getInt("created_by"),
@@ -41,47 +52,67 @@ public class itemsRepo {
                 list.add(itm);
             }
 
-        } catch (SQLException e) {
-            System.out.println("Error getAllItems: " + e.getMessage());
         }
 
         return list;
     }
 
+    //get item by id
+    public items getItemById(int id) throws SQLException {
+        String query = "SELECT * FROM items WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    items itm = new items(
+                        rs.getInt("id"),
+                        rs.getString("item_name"),
+                        rs.getInt("brand_id"),
+                        rs.getString("brand_name"),
+                        rs.getDouble("sell_price"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getInt("created_by"),
+                        rs.getTimestamp("updated_at").toLocalDateTime(),
+                        rs.getInt("updated_by"),
+                        rs.getBoolean("status"),
+                        rs.getInt("deleted_by"),
+                        rs.getTimestamp("deteled_at").toLocalDateTime()
+                    );
+                    return itm;
+                }
+            }
+        }
+        return null;
+    }
+
     // Tambah item baru
-    public boolean createItem(items itm) {
+    public boolean createItem(items itm, int currentUser) throws SQLException {
         String query = "INSERT INTO items (item_name, brand_id, sell_price, created_at, created_by) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, itm.getItemName());
             stmt.setInt(2, itm.getBrandId());
             stmt.setDouble(3, itm.getPrice());
             stmt.setTimestamp(4, Timestamp.valueOf(itm.getCreatedAt()));
-            stmt.setInt(5, currentUser.getId());
+            stmt.setInt(5, currentUser);
 
             int rows = stmt.executeUpdate();
             return rows > 0;
-        } catch (SQLException e) {
-            System.out.println("Error createItem: " + e.getMessage());
-            return false;
-        }
+        } 
     }
 
     // Update item
-    public boolean updateItem(items itm) {
+    public boolean updateItem(items itm, int currentUser, int id) throws SQLException {
         String query = "UPDATE items SET item_name = ?, brand_id = ?, sell_price = ?, updated_at = ?, updated_by = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, itm.getItemName());
             stmt.setInt(2, itm.getBrandId());
             stmt.setDouble(3, itm.getPrice());
             stmt.setTimestamp(4, Timestamp.valueOf(itm.getUpdatedAt()));
-            stmt.setInt(5, currentUser.getId());
-            stmt.setInt(6, itm.getId());
+            stmt.setInt(5, currentUser);
+            stmt.setInt(6, id);
 
             int rows = stmt.executeUpdate();
             return rows > 0;
-        } catch (SQLException e) {
-            System.out.println("Error updateItem: " + e.getMessage());
-            return false;
         }
     }
 
@@ -96,7 +127,7 @@ public class itemsRepo {
     }
 
     // Validasi nama item
-    public boolean isItemsNameExists(String name, int excludeId) {
+    public boolean isItemsNameExists(String name, int excludeId) throws SQLException {
         String query = excludeId > 0
                 ? "SELECT COUNT(*) AS count FROM items WHERE item_name = ? AND id <> ?"
                 : "SELECT COUNT(*) AS count FROM items WHERE item_name = ?";
@@ -110,8 +141,6 @@ public class itemsRepo {
                     return rs.getInt("count") > 0;
                 }
             }
-        } catch (SQLException e) {
-            System.out.println("Error isItemsNameExists: " + e.getMessage());
         }
         return false;
     }
@@ -135,8 +164,10 @@ public class itemsRepo {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     items itm = new items(
+                        rs.getInt("id"),
                         rs.getString("item_name"),
                         rs.getInt("brand_id"),
+                        rs.getString("brand_name"),
                         rs.getDouble("sell_price"),
                         rs.getTimestamp("created_at").toLocalDateTime(),
                         rs.getInt("created_by"),
