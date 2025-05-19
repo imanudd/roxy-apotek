@@ -1,3 +1,29 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\config\DatabaseConfig.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\helper\currentUser.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\helper\meta.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\helper\pagination.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\helper\validasi.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\Main.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\brands.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\items.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\suppliers.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\model\user.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\brandsRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\itemsRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\supplierRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\repository\usersRepo.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\ui\Dashboard.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\ui\Login.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\ui\SupplierManagementGUI.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\BrandUseCase.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\itemsUc.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\supplierUc.java
+C:\Users\PROGRAMER\Documents\NetBeansProjects\INVENTORY_ROXY\src\main\java\usecase\userUc.java
+=======
+>>>>>>> develop
 G:\roxy-apotek\roxy-apotek\src\main\java\model\items.java
 G:\roxy-apotek\roxy-apotek\src\main\java\model\transaction.java
 G:\roxy-apotek\roxy-apotek\src\main\java\ui\aDashboard.java
@@ -39,6 +65,13 @@ G:\roxy-apotek\roxy-apotek\src\main\java\repository\stocksRepo.java
 G:\roxy-apotek\roxy-apotek\src\main\java\helper\meta.java
 G:\roxy-apotek\roxy-apotek\src\main\java\ui\newframe.java
 G:\roxy-apotek\roxy-apotek\src\main\java\model\brands.java
+<<<<<<< HEAD
 G:\roxy-apotek\roxy-apotek\src\main\java\usecase\itemsUc.java
 G:\roxy-apotek\roxy-apotek\src\main\java\usecase\supplierUc.java
 G:\roxy-apotek\roxy-apotek\src\main\java\repository\TransactionDetailRepo.java
+=======
+G:\roxy-apotek\roxy-apotek\src\main\java\helper\currentUser.java
+G:\roxy-apotek\roxy-apotek\src\main\java\helper\validasi.java
+G:\roxy-apotek\roxy-apotek\src\main\java\repository\brandsRepo.java
+>>>>>>> f0778ff63832c5889f79179a7b1f3c55979a3708
+>>>>>>> develop

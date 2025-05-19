@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ui\Laporan_transaksi1$3.class
 ui\stock_barang1$1.class
 testFrame$1.class
@@ -13,6 +14,26 @@ ui\Form_Manajemenbarang1$3.class
 ui\Form_Manajemensupplier1$2.class
 ui\Form_Register1.class
 ui\newframe.class
+=======
+<<<<<<< HEAD
+=======
+ui\Login$2.class
+ui\SupplierManagementGUI$9.class
+ui\SupplierManagementGUI$2.class
+repository\itemsRepo.class
+helper\currentUser.class
+helper\validasi.class
+Main.class
+ui\SupplierManagementGUI$5.class
+ui\SupplierManagementGUI$6.class
+model\suppliers.class
+ui\Login$3.class
+repository\brandsRepo.class
+ui\SupplierManagementGUI$3.class
+ui\SupplierManagementGUI.class
+config\DatabaseConfig.class
+ui\SupplierManagementGUI$8.class
+>>>>>>> develop
 repository\stocksRepo.class
 ui\stock_barang1$2.class
 ui\Form_Login1$1.class
@@ -37,6 +58,7 @@ ui\newframe$1.class
 ui\Laporan_transaksi1$4.class
 ui\Laporan_transaksi1$2.class
 model\stock.class
+<<<<<<< HEAD
 model\TransactionDetail.class
 ui\Form_Login1.class
 ui\Form_ManajemenBrand1$1.class
@@ -45,3 +67,18 @@ ui\Form_Manajemenbarang1$2.class
 ui\Form_Manajemensupplier1$3.class
 model\transaction.class
 usecase\BrandUC.class
+=======
+model\user.class
+ui\Login$1.class
+ui\Login.class
+ui\SupplierManagementGUI$1.class
+usecase\userUc.class
+ui\Dashboard$1.class
+repository\usersRepo.class
+ui\SupplierManagementGUI$4.class
+model\brands.class
+model\items.class
+ui\SupplierManagementGUI$7.class
+ui\Dashboard.class
+>>>>>>> f0778ff63832c5889f79179a7b1f3c55979a3708
+>>>>>>> develop
