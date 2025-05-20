@@ -338,7 +338,7 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        String search = jTextField5.getText().trim();
+        String search = jTextField4.getText().trim();
         boolean success = uc.exportSupplierList(search); // Pastikan uc memiliki metode exportSupplierList
         if (success) {
         JOptionPane.showMessageDialog(this, "Daftar supplier berhasil diekspor.", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -364,7 +364,7 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
     private void loadSuppliers() {
         tableModel.setRowCount(0);
         
-        String search = jTextField5.getText().trim();
+        String search = jTextField4.getText().trim();
         List<suppliers> supplierList = uc.getSuppliersList(search); // memanggil method getList()
 
         for (suppliers s : supplierList) {
