@@ -15,68 +15,76 @@ public class itemsRepo {
     }
 
     // Ambil semua data item
-    public List<items> getAllItems(String search) throws SQLException{
+    public List<items> getAllItems(String search) throws SQLException {
         List<items> list = new ArrayList<>();
-        // String query = "SELECT i.item_name, b.id, i.sell_price, i.created_at, i.created_by, i.updated_at, i.updated_by, i.status, i.deleted_by, i.deleted_at"+
-        //         "FROM items i"+
-        //         "JOIN brands b ON i.brand_id=b.id";
 
-        String query = "SELECT b.*, s.supplier_name FROM brands b LEFT JOIN suppliers s ON b.supplier_id = s.id"; 
-         boolean hasSearch = search != null && !search.trim().isEmpty();
+        String query = "SELECT i.*, b.brand_name FROM items i LEFT JOIN brands b ON i.brand_id=b.id";
+        boolean hasSearch = search != null && !search.trim().isEmpty();
 
         if (hasSearch) {
-            query += "WHERE b.brand_name ILIKE ?";
+            query += " WHERE b.brand_name ILIKE ?";
         }
 
-        query += "ORDER BY b.id ASC";
+        query += " ORDER BY b.id ASC";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+        System.out.println("query: " + query);
 
-            while (rs.next()) {
-                items itm = new items(
-                    rs.getInt("id"),
-                    rs.getString("item_name"),
-                    rs.getInt("brand_id"),
-                    rs.getString("brand_name"),
-                    rs.getDouble("sell_price"),
-                    rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("created_by"),
-                    rs.getTimestamp("updated_at").toLocalDateTime(),
-                    rs.getInt("updated_by"),
-                    rs.getBoolean("status"),
-                    rs.getInt("deleted_by"),
-                    rs.getTimestamp("deteled_at").toLocalDateTime()
-                );
-                itm.setId(rs.getInt("id"));
-                list.add(itm);
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            if (hasSearch) {
+                stmt.setString(1, "%" + search.trim() + "%");
             }
 
-        }
-
-        return list;
-    }
-
-    //get item by id
-    public items getItemById(int id) throws SQLException {
-        String query = "SELECT * FROM items WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
+                    Timestamp createdAtTs = rs.getTimestamp("created_at");
+                    Timestamp updatedAtTs = rs.getTimestamp("updated_at");
+                    Timestamp deletedAtTs = rs.getTimestamp("deleted_at");
+
                     items itm = new items(
                         rs.getInt("id"),
                         rs.getString("item_name"),
                         rs.getInt("brand_id"),
                         rs.getString("brand_name"),
                         rs.getDouble("sell_price"),
-                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        (createdAtTs != null) ? createdAtTs.toLocalDateTime() : null,
                         rs.getInt("created_by"),
-                        rs.getTimestamp("updated_at").toLocalDateTime(),
+                        (updatedAtTs != null) ? updatedAtTs.toLocalDateTime() : null,
                         rs.getInt("updated_by"),
                         rs.getBoolean("status"),
                         rs.getInt("deleted_by"),
-                        rs.getTimestamp("deteled_at").toLocalDateTime()
+                        (deletedAtTs != null) ? deletedAtTs.toLocalDateTime() : null
+                    );
+                    list.add(itm);
+                }
+            }
+        }
+
+    return list;
+}
+
+    //get item by id
+    public items getItemById(int id) throws SQLException {
+        String query = "SELECT i.*, b.brand_name FROM items i LEFT JOIN brands b ON i.brand_id=b.id WHERE i.id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Timestamp createdAtTs = rs.getTimestamp("created_at");
+                    Timestamp updatedAtTs = rs.getTimestamp("updated_at");
+                    Timestamp deletedAtTs = rs.getTimestamp("deleted_at");
+                    items itm = new items(
+                         rs.getInt("id"),
+                        rs.getString("item_name"),
+                        rs.getInt("brand_id"),
+                        rs.getString("brand_name"),
+                        rs.getDouble("sell_price"),
+                        (createdAtTs != null) ? createdAtTs.toLocalDateTime() : null,
+                        rs.getInt("created_by"),
+                        (updatedAtTs != null) ? updatedAtTs.toLocalDateTime() : null,
+                        rs.getInt("updated_by"),
+                        rs.getBoolean("status"),
+                        rs.getInt("deleted_by"),
+                        (deletedAtTs != null) ? deletedAtTs.toLocalDateTime() : null
                     );
                     return itm;
                 }
@@ -116,11 +124,12 @@ public class itemsRepo {
         }
     }
 
-    // Hapus item berdasarkan ID
-    public boolean deleteItem(int id) throws SQLException {
-        String query = "DELETE FROM items WHERE id = ?";
+    // soft delete item berdasarkan ID
+    public boolean deleteItem(int id, int currentUser) throws SQLException {
+        String query = "UPDATE items SET deleted_at = now(), deleted_by = ?, status = false WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, id);
+            stmt.setInt(1, currentUser);
+            stmt.setInt(2, id);
             int rows = stmt.executeUpdate();
             return rows > 0;
         }

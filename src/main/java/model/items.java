@@ -40,7 +40,6 @@ public class items {
     }
 
     public void setId(int id) {
-        if (id < 0) throw new IllegalArgumentException("ID tidak boleh negatif");
         this.id = id;
     }
 
@@ -49,9 +48,6 @@ public class items {
     }
 
     public void setItemName(String itemName) {
-        if (itemName == null || itemName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Nama item tidak boleh kosong");
-        }
         this.itemName = itemName;
     }
 
@@ -60,7 +56,6 @@ public class items {
     }
 
     public void setBrandId(int brandId) {
-        if (brandId <= 0) throw new IllegalArgumentException("Brand ID harus lebih dari 0");
         this.brandId = brandId;
     }
 
@@ -69,9 +64,6 @@ public class items {
     }
 
     public void setBrandName(String brandName) {
-        if (brandName == null || brandName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Nama brand tidak boleh kosong");
-        }
         this.brandName = brandName;
     }
 
@@ -80,7 +72,6 @@ public class items {
     }
 
     public void setPrice(double price) {
-        if (price < 0) throw new IllegalArgumentException("Harga tidak boleh negatif");
         this.price = price;
     }
 
@@ -89,7 +80,6 @@ public class items {
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
-        if (createdAt == null) throw new IllegalArgumentException("CreatedAt tidak boleh null");
         this.createdAt = createdAt;
     }
 
@@ -98,7 +88,6 @@ public class items {
     }
 
     public void setCreatedBy(int createdBy) {
-        if (createdBy <= 0) throw new IllegalArgumentException("CreatedBy harus lebih dari 0");
         this.createdBy = createdBy;
     }
 
@@ -107,7 +96,6 @@ public class items {
     }
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
-        if (updatedAt == null) throw new IllegalArgumentException("UpdatedAt tidak boleh null");
         this.updatedAt = updatedAt;
     }
 
@@ -116,7 +104,6 @@ public class items {
     }
 
     public void setUpdatedBy(int updatedBy) {
-        if (updatedBy <= 0) throw new IllegalArgumentException("UpdatedBy harus lebih dari 0");
         this.updatedBy = updatedBy;
     }
     
@@ -134,7 +121,6 @@ public class items {
     }
 
     public void setDeletedBy(int deletedBy) {
-        if (deletedBy <= 0) throw new IllegalArgumentException("DeletedBy harus lebih dari 0");
         this.deletedBy = deletedBy;
     }
 
@@ -143,7 +129,6 @@ public class items {
     }
 
     public void setDeleteAt(LocalDateTime deleteAt) {
-        if (deletedAt == null) throw new IllegalArgumentException("UpdatedAt tidak boleh null");
         this.deletedAt = deletedAt;
     }
     
@@ -158,22 +143,5 @@ public class items {
                updatedBy > 0 &&
                deletedBy >0 &&
                deletedAt != null;
-    }
-
-    // toString() untuk debugging
-    @Override
-    public String toString() {
-        return "Items{" +
-                "id=" + id +
-                ", itemName='" + itemName + '\'' +
-                ", brandId=" + brandId +
-                ", price=" + price +
-                ", createdAt=" + createdAt +
-                ", createdBy=" + createdBy +
-                ", updatedAt=" + updatedAt +
-                ", updatedBy=" + updatedBy +
-                ", deletedBy=" + deletedBy +
-                ", deletedAt=" + deletedAt +
-                '}';
     }
 }

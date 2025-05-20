@@ -63,12 +63,16 @@ public class itemsUc {
     public boolean updateItem(items itm, int id) {
         System.out.println("ID: " + id);
         try{
-            if (itm.getId() <= 0) {
+            // Set id ke object itm
+            // itm.setId(id);
+
+            if (id <= 0) {
                 System.out.println("ID item tidak valid");
                 return false;
             }
 
             items existingiItems = itemRepo.getItemById(id);
+            System.out.println(existingiItems);
             if (existingiItems == null) {
                 System.out.println("Item tidak ditemukan");
                 return false;
@@ -83,6 +87,8 @@ public class itemsUc {
                 System.out.println("Harga item tidak boleh nol atau negatif");
                 return false;
             }
+
+            itm.setUpdatedAt(LocalDateTime.now());
             return itemRepo.updateItem(itm, currentUser.getId(), id);
         }catch (SQLException e){
             System.err.println("Update item error: " + e.getMessage());
@@ -97,7 +103,7 @@ public class itemsUc {
                 System.out.println("ID item tidak valid");
                 return false;
             }
-            return itemRepo.deleteItem(id);
+            return itemRepo.deleteItem(id, currentUser.getId());
         }catch (SQLException e){
             System.err.println("Delete item error: " + e.getMessage());
             return false;

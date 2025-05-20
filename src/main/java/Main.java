@@ -439,7 +439,7 @@ public class Main {
             //update item
             System.out.println("Masukkan ID item: ");
             int id = Integer.parseInt(input.nextLine());
-            items item = itemsUC.getItemById(id);
+            items item = new items();
             if (item != null) {
                 System.out.println("Masukkan nama item: ");
                 item.setItemName(input.nextLine());
