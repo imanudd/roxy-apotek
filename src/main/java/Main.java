@@ -5,12 +5,14 @@ import repository.usersRepo;
 import repository.itemsRepo;
 import ui.Login;
 import usecase.BrandUC;
+import usecase.itemsUc;
 import usecase.supplierUc;
 import usecase.userUc;
 import model.optionSupplier;
 import model.suppliers;
 import model.user;
 import model.brands;
+import model.items;
 import model.optionBrands;
 
 import javax.swing.*;
@@ -44,6 +46,12 @@ public class Main {
         System.out.println("19. list brand (Terminal)");
         System.out.println("20. option brand (Terminal)");
         System.out.println("21. export brand (Terminal)");
+        System.out.println("22. create item (Terminal)");
+        System.out.println("23. update item (Terminal)");
+        System.out.println("24. delete item (Terminal)");
+        System.out.println("25. get item by id (Terminal)");
+        System.out.println("26. export item (Terminal)");
+        System.out.println("27. list item (Terminal)");
         System.out.print("Pilih mode : ");
         String choice = input.nextLine();
 
@@ -406,7 +414,101 @@ public class Main {
             }else {
                 System.out.println("Export brand gagal!");
             }
-        }else {
+        }else if (choice.equals("22")){
+            itemsRepo itemsRepo = new itemsRepo(conn);
+            itemsUc itemsUC = new itemsUc(itemsRepo);
+
+            //create item
+            items item = new items();
+            System.out.println("Masukkan nama item: ");
+            item.setItemName(input.nextLine());
+            System.out.println("Masukkan harga item: ");
+            item.setPrice(Double.parseDouble(input.nextLine()));
+            System.out.println("Masukkan id brand: ");
+            item.setBrandId(Integer.parseInt(input.nextLine()));
+            boolean success = itemsUC.createItem(item);
+            if (success) {
+                System.out.println("Create item berhasil!");
+            }else {
+                System.out.println("Create item gagal!");
+            }
+        }else if (choice.equals("23")){
+            itemsRepo itemsRepo = new itemsRepo(conn);
+            itemsUc itemsUC = new itemsUc(itemsRepo);
+
+            //update item
+            System.out.println("Masukkan ID item: ");
+            int id = Integer.parseInt(input.nextLine());
+            items item = new items();
+            if (item != null) {
+                System.out.println("Masukkan nama item: ");
+                item.setItemName(input.nextLine());
+                System.out.println("Masukkan harga item: ");
+                item.setPrice(Double.parseDouble(input.nextLine()));
+                System.out.println("Masukkan id brand: ");
+                item.setBrandId(Integer.parseInt(input.nextLine()));
+                boolean success = itemsUC.updateItem(item, id);
+                if (success) {
+                    System.out.println("Update item berhasil!");
+                }else {
+                    System.out.println("Update item gagal!");
+                }
+            }else {
+                System.out.println("ID item tidak valid!");
+        }
+        }else if (choice.equals("24")){
+            itemsRepo itemsRepo = new itemsRepo(conn);
+            itemsUc itemsUC = new itemsUc(itemsRepo);    
+
+            //delete item
+            System.out.println("Masukkan ID item: ");
+            int id = Integer.parseInt(input.nextLine());
+            boolean success = itemsUC.deleteItem(id);
+            if (success) {
+                System.out.println("Delete item berhasil!");
+            }else {
+                System.out.println("Delete item gagal!");
+            }
+        }else if (choice.equals("25")){
+            itemsRepo itemsRepo = new itemsRepo(conn);
+            itemsUc itemsUC = new itemsUc(itemsRepo);
+
+            //get item by id
+            System.out.println("Masukkan ID item: ");
+            int id = Integer.parseInt(input.nextLine());
+            items item = itemsUC.getItemById(id);
+            if (item != null) {
+                System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName() + ", Harga: " + item.getPrice() + ", ID Brand: " + item.getBrandId() + ", Nama Brand: " + item.getBrandName());
+            }
+
+        }else if (choice.equals("26")){
+            itemsRepo itemsRepo = new itemsRepo(conn);
+            itemsUc itemsUC = new itemsUc(itemsRepo);
+
+            //export item
+            System.out.println("Masukkan nama item: ");
+            String search = input.nextLine();
+            boolean success = itemsUC.exportItemsList(search);
+            if (success) {
+                System.out.println("Export item berhasil!");
+            }else {
+                System.out.println("Export item gagal!");
+            }
+        }else if (choice.equals("27")){
+            itemsRepo itemsRepo = new itemsRepo(conn);
+            itemsUc itemsUC = new itemsUc(itemsRepo);
+
+            //list items
+            System.out.println("masukan nama item: ");
+            String search = input.nextLine();
+            List<items> list = itemsUC.getAllItems(search);
+            if (!list.isEmpty()) {
+                for (items item : list) {
+                    System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName() + ", Harga: " + item.getPrice() + ", ID Brand: " + item.getBrandId() + ", Nama Brand: " + item.getBrandName());
+                }
+            }
+        
+        } else {
                 System.out.println("Pilihan tidak valid!");
             }
         } catch (Exception e) {

@@ -110,7 +110,7 @@ public class BrandUC {
             if (itemsWithBrand != null && !itemsWithBrand.isEmpty()) {
                 for (items item : itemsWithBrand) {
                     try {
-                        boolean deleted = itemRepo.deleteItem(item.getId());
+                        boolean deleted = itemRepo.deleteItem(item.getId(), currentUser.getId());
                         if (!deleted) {
                             System.out.println("Gagal menghapus item dengan ID: " + item.getId());
                         }
