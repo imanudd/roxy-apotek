@@ -18,7 +18,7 @@ public class Form_ManajemenBrand1 extends javax.swing.JFrame {
     public Form_ManajemenBrand1() {
         initComponents();
         setExtendedState(MAXIMIZED_BOTH); // Membuat window otomatis fullscreen
-setUndecorated(false);            // True jika ingin tanpa title bar (opsional)
+        setUndecorated(false);            // True jika ingin tanpa title bar (opsional)
 
     }
 
@@ -176,15 +176,15 @@ setUndecorated(false);            // True jika ingin tanpa title bar (opsional)
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(305, 305, 305)
+                .addGap(299, 299, 299)
                 .addComponent(jButton3)
-                .addGap(67, 67, 67)
+                .addGap(73, 73, 73)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(77, 77, 77)
                 .addComponent(jButton5)
                 .addGap(63, 63, 63)
                 .addComponent(jButton6)
-                .addContainerGap(651, Short.MAX_VALUE))
+                .addContainerGap(714, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,7 +221,7 @@ setUndecorated(false);            // True jika ingin tanpa title bar (opsional)
                             .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(35, 35, 35)
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE))
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)

@@ -10,7 +10,7 @@ public class DatabaseConfig {
     public static Connection connect() {
         try {
             Dotenv dotenv = Dotenv.configure()
-            .directory("G:\\roxy-apotek\\roxy-apotek\\src\\main\\java\\")
+            .directory(".env")
             .load();
 
             String dbHost = dotenv.get("DB_HOST");
@@ -25,6 +25,8 @@ public class DatabaseConfig {
             }
 
             String url = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
+            
+            System.out.println("url : "+ url);
 
             return DriverManager.getConnection(url, dbUser, dbPassword);
         } catch (SQLException e) {

@@ -26,7 +26,7 @@ public class Login1 extends javax.swing.JFrame {
         this.conn=conn;
         this.uc = new userUc(new usersRepo(conn));
         initComponents();
-        Login.addActionListener(evt -> LoginActionPerformed(evt));
+//        Login.addActionListener(evt -> LoginActionPerformed(evt));
     }
 
     /**

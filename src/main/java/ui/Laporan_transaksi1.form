@@ -96,7 +96,7 @@
                       <Component id="jButton1" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="526" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="529" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

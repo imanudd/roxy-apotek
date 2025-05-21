@@ -5,6 +5,7 @@
 package ui;
 
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -21,16 +22,18 @@ import repository.brandsRepo;
  *
  * @author ADMINPUSING-PC
  */
-public class SupplierManagementGUI extends javax.swing.JPanel {
+public class BrandManagementGUI extends javax.swing.JPanel {
     
-    private final supplierUc uc;
+    private final supplierUc supplierUc;
     private DefaultTableModel tableModel;
     private int userId = 1;
-        
     
-    public SupplierManagementGUI(Connection conn) {
+     HashMap<String, Integer> supplierMap= new HashMap<String,Integer>();
+   
+    
+    public BrandManagementGUI(Connection conn) {
         initComponents();
-        uc = new supplierUc(new supplierRepo(conn), new brandsRepo(conn));
+        this.supplierUc = new supplierUc(new supplierRepo(conn), new brandsRepo(conn));
         this.tableModel = (DefaultTableModel) jTable2.getModel();
         loadSuppliers();
         
@@ -49,8 +52,6 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
                     int selectedRow = jTable2.getSelectedRow();
                     jTextField4.setText(tableModel.getValueAt(selectedRow, 0).toString());
                     jTextField1.setText(tableModel.getValueAt(selectedRow, 1).toString());
-                    jTextField2.setText(tableModel.getValueAt(selectedRow, 2).toString());
-                    jTextField3.setText(tableModel.getValueAt(selectedRow, 3).toString());
                 }
             }
         });
@@ -59,6 +60,7 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
         jTextField4.setEditable(false);
         setVisible(true); 
     }
+   
     
 
     /**
@@ -74,11 +76,8 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -87,6 +86,7 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
         jTable2 = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -108,38 +108,17 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Gill Sans", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel1.setText("Nama Supplier");
+        jLabel1.setText("Merk");
 
         jLabel2.setFont(new java.awt.Font("Gill Sans", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel2.setText("Alamat");
-
-        jLabel3.setFont(new java.awt.Font("Gill Sans", 0, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel3.setText("No. Telepon");
+        jLabel2.setText("Supplier");
 
         jLabel4.setText("ID Supplier (Auto-filled)");
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
-            }
-        });
-
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
-
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
-            }
-        });
-        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField3KeyTyped(evt);
             }
         });
 
@@ -198,7 +177,13 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
 
         jLabel6.setFont(new java.awt.Font("Gill Sans", 0, 36)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel6.setText("SUPPLIER MANAGEMENT");
+        jLabel6.setText("BRAND MANAGEMENT");
+
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -215,12 +200,9 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
                                 .addComponent(jLabel5)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(6, 6, 6))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -230,14 +212,12 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addGap(46, 46, 46)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField3)
-                                    .addComponent(jTextField2)
+                                    .addComponent(jLabel2))
+                                .addGap(73, 73, 73)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                        .addGap(18, 61, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29))))
         );
@@ -255,13 +235,9 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
-                        .addGap(34, 34, 34)
+                        .addGap(55, 55, 55)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -269,8 +245,7 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
                         .addGap(44, 44, 44)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)))
+                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addContainerGap(113, Short.MAX_VALUE))
@@ -281,14 +256,6 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
-
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField4ActionPerformed
@@ -297,13 +264,10 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
         // TODO add your handling code here:   
         
         String name = jTextField1.getText().trim();
-        String address = jTextField2.getText().trim();
-        String phone = jTextField3.getText().trim();
         
         suppliers spl = new suppliers();
             spl.setSupplierName(name);
-            spl.setAddress(address);
-            spl.setPhone(phone);
+    
             
 
             if (name.isEmpty()) {
@@ -311,7 +275,7 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
                 return;
             }
 
-            boolean success = uc.createSupplier(spl);
+            boolean success = supplierUc.createSupplier(spl);
             JOptionPane.showMessageDialog(this, "CREATE: " + (success ? "Berhasil" : "Gagal"));
             if (success) {
                 clearInputFields();
@@ -331,21 +295,17 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
             int id = Integer.parseInt(idText);
 
             String name = jTextField1.getText().trim();
-            String address = jTextField2.getText().trim();
-            String phone = jTextField3.getText().trim();
             
             suppliers spl = new suppliers();
             spl.setId(id);
-            spl.setSupplierName(name);
-            spl.setAddress(address);
-            spl.setPhone(phone);           
+            spl.setSupplierName(name);      
 
             if (name.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Nama supplier tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
                        
-            boolean success = uc.updateSupplier(spl);
+            boolean success = supplierUc.updateSupplier(spl);
             JOptionPane.showMessageDialog(this, "UPDATE: " + (success ? "Update supplier berhasil!" : "Gagal"));
             if(success) {               
                 loadSuppliers();
@@ -361,7 +321,7 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
             }
             int id = Integer.parseInt(idText);
             // Menggunakan metode deleteSupplier
-            boolean deleted = uc.DeleteSupplier(id); // Pastikan uc memiliki metode deleteSupplier
+            boolean deleted = supplierUc.DeleteSupplier(id); // Pastikan uc memiliki metode deleteSupplier
             if (deleted) {
                 JOptionPane.showMessageDialog(this, "DELETE: " + (deleted ? "Berhasil" : "Gagal"));
                 clearInputFields();
@@ -370,17 +330,10 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
             
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jTextField3KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyTyped
-        char character = evt.getKeyChar();
-        if(!Character.isDigit(character) || jTextField3.getText().length() > 13){
-            evt.consume();
-        }
-    }//GEN-LAST:event_jTextField3KeyTyped
-
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         String search = jTextField4.getText().trim();
-        boolean success = uc.exportSupplierList(search); // Pastikan uc memiliki metode exportSupplierList
+        boolean success = supplierUc.exportSupplierList(search); // Pastikan uc memiliki metode exportSupplierList
         if (success) {
         JOptionPane.showMessageDialog(this, "Daftar supplier berhasil diekspor.", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
@@ -395,20 +348,25 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     
     }//GEN-LAST:event_jTextField5ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
     
     private void clearInputFields() {
         jTextField4.setText("");
         jTextField1.setText("");
-        jTextField2.setText("");
-        jTextField3.setText("");
     }
     private void loadSuppliers() {
         tableModel.setRowCount(0);
         
         String search = jTextField4.getText().trim();
-        List<suppliers> supplierList = uc.getSuppliersList(search); // memanggil method getList()
-
+        List<suppliers> supplierList = supplierUc.getSuppliersList(search); 
+        
         for (suppliers s : supplierList) {
+            supplierMap.put(s.getSupplierName(), s.getId());
+            jComboBox1.addItem(s.getSupplierName());
+            
             tableModel.addRow(new Object[]{
                 s.getId(),
                 s.getSupplierName(),
@@ -424,9 +382,9 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -435,8 +393,6 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 
