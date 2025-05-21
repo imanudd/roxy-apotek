@@ -10,7 +10,7 @@ public class DatabaseConfig {
     public static Connection connect() {
         try {
             Dotenv dotenv = Dotenv.configure()
-            .directory("src/main/java")
+            .directory("G:\\roxy-apotek\\roxy-apotek\\src\\main\\java\\")
             .load();
 
             String dbHost = dotenv.get("DB_HOST");

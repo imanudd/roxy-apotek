@@ -3,7 +3,7 @@ import repository.brandsRepo;
 import repository.supplierRepo;
 import repository.usersRepo;
 import repository.itemsRepo;
-import ui.Login;
+import ui.Login1;
 import usecase.BrandUC;
 import usecase.itemsUc;
 import usecase.supplierUc;
@@ -63,12 +63,9 @@ public class Main {
                 // Mode GUI
                 javax.swing.SwingUtilities.invokeLater(() -> {
                     try {
-                        JFrame frame = new JFrame("LOGIN - INVENTORY APOTEK ROXY");
-                        frame.setContentPane(new Login(conn));
-                        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                        frame.pack();
-                        frame.setLocationRelativeTo(null);
-                        frame.setVisible(true);
+                        Login1 login = new Login1(conn);
+                        login.setLocationRelativeTo(null); // agar di tengah
+                        login.setVisible(true);
                     } catch (Exception e) {
                         e.printStackTrace();
                         JOptionPane.showMessageDialog(null, "Gagal koneksi ke database!");
