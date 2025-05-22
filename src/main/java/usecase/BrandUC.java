@@ -60,24 +60,26 @@ public class BrandUC {
     public boolean updateBrand(int id, brands brd) {
         System.out.println("ID: " + id);
         try {
-            // Validasi ID
             brd.setId(id);
             if (brd.getId() <= 0) {
                 System.out.println("ID tidak valid");
                 return false;
             }
+            
+            if (brd.getBrandName().isEmpty()){
+                System.out.println("Nama Brand tidak boleh kosong");
+                return false;
+            }
 
-            // Ambil data existing berdasarkan ID
             brands existingBrand = brandRepo.getBrandById(id);
-
             if (existingBrand == null) {
                 System.out.println("Brand tidak ditemukan");
                 return false;
             }
-
-            // Jika nama brand kosong, gunakan data lama
-            if (brd.getBrandName() == null || brd.getBrandName().isEmpty()) {
-                brd.setBrandName(existingBrand.getBrandName());
+            
+            if (existingBrand.getStatus() == false){
+                System.out.println("Brand sudah tidak aktif");
+                return false;
             }
 
             // Set waktu update dan user
