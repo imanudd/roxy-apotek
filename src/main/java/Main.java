@@ -428,7 +428,7 @@ public class Main {
             }
         }else if (choice.equals("22")){
             itemsRepo itemsRepo = new itemsRepo(conn);
-            itemsUc itemsUC = new itemsUc(itemsRepo);
+//            itemsUc itemsUC = new itemsUc(itemsRepo);
 
             //create item
             items item = new items();
@@ -438,15 +438,15 @@ public class Main {
             item.setPrice(Double.parseDouble(input.nextLine()));
             System.out.println("Masukkan id brand: ");
             item.setBrandId(Integer.parseInt(input.nextLine()));
-            boolean success = itemsUC.createItem(item);
-            if (success) {
-                System.out.println("Create item berhasil!");
-            }else {
-                System.out.println("Create item gagal!");
-            }
+//            boolean success = itemsUC.createItem(item);
+//            if (success) {
+//                System.out.println("Create item berhasil!");
+//            }else {
+//                System.out.println("Create item gagal!");
+//            }
         }else if (choice.equals("23")){
             itemsRepo itemsRepo = new itemsRepo(conn);
-            itemsUc itemsUC = new itemsUc(itemsRepo);
+//            itemsUc itemsUC = new itemsUc(itemsRepo);
 
             //update item
             System.out.println("Masukkan ID item: ");
@@ -459,66 +459,66 @@ public class Main {
                 item.setPrice(Double.parseDouble(input.nextLine()));
                 System.out.println("Masukkan id brand: ");
                 item.setBrandId(Integer.parseInt(input.nextLine()));
-                boolean success = itemsUC.updateItem(item, id);
-                if (success) {
-                    System.out.println("Update item berhasil!");
-                }else {
-                    System.out.println("Update item gagal!");
-                }
+//                boolean success = itemsUC.updateItem(item, id);
+//                if (success) {
+//                    System.out.println("Update item berhasil!");
+//                }else {
+//                    System.out.println("Update item gagal!");
+//                }
             }else {
                 System.out.println("ID item tidak valid!");
         }
         }else if (choice.equals("24")){
             itemsRepo itemsRepo = new itemsRepo(conn);
-            itemsUc itemsUC = new itemsUc(itemsRepo);    
+//            itemsUc itemsUC = new itemsUc(itemsRepo);    
 
             //delete item
             System.out.println("Masukkan ID item: ");
             int id = Integer.parseInt(input.nextLine());
-            boolean success = itemsUC.deleteItem(id);
-            if (success) {
-                System.out.println("Delete item berhasil!");
-            }else {
-                System.out.println("Delete item gagal!");
-            }
+//            boolean success = itemsUC.deleteItem(id);
+//            if (success) {
+//                System.out.println("Delete item berhasil!");
+//            }else {
+//                System.out.println("Delete item gagal!");
+//            }
         }else if (choice.equals("25")){
             itemsRepo itemsRepo = new itemsRepo(conn);
-            itemsUc itemsUC = new itemsUc(itemsRepo);
+//            itemsUc itemsUC = new itemsUc(itemsRepo);
 
             //get item by id
             System.out.println("Masukkan ID item: ");
             int id = Integer.parseInt(input.nextLine());
-            items item = itemsUC.getItemById(id);
-            if (item != null) {
-                System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName() + ", Harga: " + item.getPrice() + ", ID Brand: " + item.getBrandId() + ", Nama Brand: " + item.getBrandName());
-            }
+//            items item = itemsUC.getItemById(id);
+//            if (item != null) {
+//                System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName() + ", Harga: " + item.getPrice() + ", ID Brand: " + item.getBrandId() + ", Nama Brand: " + item.getBrandName());
+//            }
 
         }else if (choice.equals("26")){
             itemsRepo itemsRepo = new itemsRepo(conn);
-            itemsUc itemsUC = new itemsUc(itemsRepo);
+//            itemsUc itemsUC = new itemsUc(itemsRepo);
 
             //export item
             System.out.println("Masukkan nama item: ");
             String search = input.nextLine();
-            boolean success = itemsUC.exportItemsList(search);
-            if (success) {
-                System.out.println("Export item berhasil!");
-            }else {
-                System.out.println("Export item gagal!");
-            }
+//            boolean success = itemsUC.exportItemsList(search);
+//            if (success) {
+//                System.out.println("Export item berhasil!");
+//            }else {
+//                System.out.println("Export item gagal!");
+//            }
         }else if (choice.equals("27")){
             itemsRepo itemsRepo = new itemsRepo(conn);
-            itemsUc itemsUC = new itemsUc(itemsRepo);
+//            itemsUc itemsUC = new itemsUc(itemsRepo);
 
             //list items
             System.out.println("masukan nama item: ");
             String search = input.nextLine();
-            List<items> list = itemsUC.getAllItems(search);
-            if (!list.isEmpty()) {
-                for (items item : list) {
-                    System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName() + ", Harga: " + item.getPrice() + ", ID Brand: " + item.getBrandId() + ", Nama Brand: " + item.getBrandName());
-                }
-            }
+//            List<items> list = itemsUC.getAllItems(search);
+//            if (!list.isEmpty()) {
+//                for (items item : list) {
+//                    System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName() + ", Harga: " + item.getPrice() + ", ID Brand: " + item.getBrandId() + ", Nama Brand: " + item.getBrandName());
+//                }
+//            }
         
         }else if (choice.equals("28")) {
             stocksRepo stocksRepo = new stocksRepo(conn);
@@ -557,11 +557,12 @@ public class Main {
             }
         }else if (choice.equals("31")){
             itemsRepo itemsRepo = new itemsRepo(conn);
-            itemsUc itemsUC = new itemsUc(itemsRepo);
+//            itemsUc itemsUC = new itemsUc(itemsRepo);
 
             //option item
             System.out.println("Masukkan ID brand: ");
             int brandId = Integer.parseInt(input.nextLine());
+<<<<<<< Updated upstream
             List<optionItems> list = itemsUC.optionItems(brandId);
             if (!list.isEmpty()) {
                 for (optionItems item : list) {
@@ -592,6 +593,14 @@ public class Main {
             if (success) {
                 System.out.println("Export log stock berhasil!");
             }
+=======
+//            List<optionItems> list = itemsUC.optionItems(brandId);
+//            if (!list.isEmpty()) {
+//                for (optionItems item : list) {
+//                    System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName());
+//                }
+//            }
+>>>>>>> Stashed changes
         }else {
                 System.out.println("Pilihan tidak valid!");
             }

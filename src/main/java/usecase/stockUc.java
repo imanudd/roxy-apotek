@@ -1,5 +1,6 @@
 package usecase;
 
+import helper.currentUser;
 import java.io.FileOutputStream;
 import java.sql.SQLException;
 import java.util.List;
@@ -20,7 +21,7 @@ public class stockUc {
     public stockUc(stocksRepo stocksRepo) {
         this.stocksRepo = stocksRepo;
     }
-
+    
     //list stock
     public List<stock> getList(String search){
         try {

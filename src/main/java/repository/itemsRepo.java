@@ -19,7 +19,7 @@ public class itemsRepo {
     public List<items> getAllItems(String search) throws SQLException {
         List<items> list = new ArrayList<>();
 
-        String query = "SELECT i.*, b.brand_name FROM items i LEFT JOIN brands b ON i.brand_id=b.id";
+        String query = "SELECT i.*, b.brand_name, s.first_stock, s.stock_in, s.stock_out, s.remaining_stock FROM items i LEFT JOIN brands b ON i.brand_id=b.id LEFT JOIN stocks s ON i.id = s.item_id";
         boolean hasSearch = search != null && !search.trim().isEmpty();
 
         if (hasSearch) {
@@ -51,7 +51,11 @@ public class itemsRepo {
                         rs.getInt("updated_by"),
                         rs.getBoolean("status"),
                         rs.getInt("deleted_by"),
-                        (deletedAtTs != null) ? deletedAtTs.toLocalDateTime() : null
+                        (deletedAtTs != null) ? deletedAtTs.toLocalDateTime() : null,
+                        rs.getInt("first_stock"),
+                        rs.getInt("stock_in"),
+                        rs.getInt("stock_out"),
+                        rs.getInt("remaining_stock")
                     );
                     list.add(itm);
                 }
@@ -72,7 +76,7 @@ public class itemsRepo {
                     Timestamp updatedAtTs = rs.getTimestamp("updated_at");
                     Timestamp deletedAtTs = rs.getTimestamp("deleted_at");
                     items itm = new items(
-                         rs.getInt("id"),
+                        rs.getInt("id"),
                         rs.getString("item_name"),
                         rs.getInt("brand_id"),
                         rs.getString("brand_name"),
@@ -83,7 +87,11 @@ public class itemsRepo {
                         rs.getInt("updated_by"),
                         rs.getBoolean("status"),
                         rs.getInt("deleted_by"),
-                        (deletedAtTs != null) ? deletedAtTs.toLocalDateTime() : null
+                        (deletedAtTs != null) ? deletedAtTs.toLocalDateTime() : null,
+                        0,
+                        0,
+                        0,
+                        0
                     );
                     return itm;
                 }
@@ -93,18 +101,30 @@ public class itemsRepo {
     }
 
     // Tambah item baru
-    public boolean createItem(items itm, int currentUser) throws SQLException {
-        String query = "INSERT INTO items (item_name, brand_id, sell_price, created_at, created_by) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, itm.getItemName());
-            stmt.setInt(2, itm.getBrandId());
-            stmt.setDouble(3, itm.getPrice());
-            stmt.setTimestamp(4, Timestamp.valueOf(itm.getCreatedAt()));
-            stmt.setInt(5, currentUser);
+    public Integer createItem(items itm, int currentUser) throws SQLException {
+        String query = "INSERT INTO items (item_name, brand_id, sell_price,status, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?)";
+        
+        PreparedStatement stmt = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS); 
+        stmt.setString(1, itm.getItemName());
+        stmt.setInt(2, itm.getBrandId());
+        stmt.setDouble(3, itm.getPrice());
+        stmt.setBoolean(4, itm.getStatus());
+        stmt.setTimestamp(5, Timestamp.valueOf(itm.getCreatedAt()));
+        stmt.setInt(6, currentUser);
 
-            int rows = stmt.executeUpdate();
-            return rows > 0;
-        } 
+        int rows = stmt.executeUpdate();
+        
+         if (rows == 0) {
+            throw new SQLException("Insert failed, no rows affected.");
+        }
+         
+        ResultSet generatedKeys = stmt.getGeneratedKeys();
+        
+        if (generatedKeys.next()) {
+             return generatedKeys.getInt(1); 
+        } else {
+            throw new SQLException("Insert succeeded but no ID obtained.");
+        }
     }
 
     // Update item
@@ -183,7 +203,11 @@ public class itemsRepo {
                         rs.getInt("updated_by"),
                         rs.getBoolean("status"),
                         rs.getInt("deleted_by"),
-                        rs.getTimestamp("deteled_at").toLocalDateTime()
+                        rs.getTimestamp("deteled_at").toLocalDateTime(),
+                        0,
+                        0,
+                        0,
+                        0
                     );
                     itm.setId(rs.getInt("id"));
                     list.add(itm);

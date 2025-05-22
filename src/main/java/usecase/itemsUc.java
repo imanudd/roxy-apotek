@@ -18,12 +18,16 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import helper.currentUser;
+import model.stock;
+import repository.stocksRepo;
 
 public class itemsUc {
     private final itemsRepo itemRepo;
+    private final stocksRepo stockRepo;
 
-    public itemsUc(itemsRepo itemRepo) {
+    public itemsUc(itemsRepo itemRepo, stocksRepo stockRepo) {
         this.itemRepo = itemRepo;
+        this.stockRepo = stockRepo;
     }
 
     //list item
@@ -37,7 +41,7 @@ public class itemsUc {
     }
 
     // create item
-    public boolean createItem(items itm) {
+    public boolean createItem(items itm, stock stc) {
         try{
         if (itm.getItemName() == null || itm.getItemName().isEmpty()) {
             System.out.println("Nama item tidak boleh kosong");
@@ -49,14 +53,25 @@ public class itemsUc {
             return false;
         }
 
-        // Set created info
-            itm.setCreatedAt(LocalDateTime.now());
+        itm.setCreatedAt(LocalDateTime.now());
 
-        return itemRepo.createItem(itm, currentUser.getId());
+        Integer itemId = itemRepo.createItem(itm, currentUser.getId());
+       
+        stc.setItemId(itemId);
+        stc.setCreatedAt(LocalDateTime.now());
+        
+        boolean success = stockRepo.createStock(stc, currentUser.getId());
+        if (!success){
+            System.err.println("create stock error : ");
+            return false;
+        }
+        
         }catch (SQLException e){
             System.err.println("Create item error: " + e.getMessage());
             return false;
         }
+        
+        return true;
     }
 
 

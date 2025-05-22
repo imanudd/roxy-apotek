@@ -67,16 +67,18 @@ public class stocksRepo {
 
     //create stock
     public boolean createStock(stock sItem, int currentUser) throws SQLException {   
-    String query = "INSERT INTO stocks (item_id, first_stock, remaining_stock, created_at, created_by) " +
-                   "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    String query = "INSERT INTO stocks (item_id, first_stock,stock_in, stock_out, remaining_stock, created_at, created_by) " +
+                   "VALUES (?, ?, ? , ?, ?, ?, ?)";
 
     try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, sItem.getItemId());
             stmt.setInt(2, sItem.getFirstStock());
-            stmt.setInt(3, sItem.getFirstStock());
-            stmt.setTimestamp(4, Timestamp.valueOf(sItem.getCreatedAt()));
-            stmt.setInt(5, currentUser);
+            stmt.setInt(3, sItem.getStockIn());
+            stmt.setInt(4, sItem.getStockOut());
+            stmt.setInt(5, sItem.getRemainingStock());
+            stmt.setTimestamp(6, Timestamp.valueOf(sItem.getCreatedAt()));
+            stmt.setInt(7, currentUser);
 
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
@@ -102,6 +104,17 @@ public class stocksRepo {
             return rows > 0;
 
         } 
+    }
+    
+    public boolean deleteStockByItemId(int itemId) throws SQLException {
+
+        String query = "DELETE FROM stocks WHERE item_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, itemId);
+            int rows = stmt.executeUpdate();
+            return rows > 0;
+        }
     }
 
     //delete stock by item id

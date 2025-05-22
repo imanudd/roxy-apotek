@@ -15,11 +15,15 @@ public class items {
     private boolean status;
     private int deletedBy;
     private LocalDateTime deletedAt;
+    private int firstStock;
+    private int stockIn;
+    private int stockOut;
+    private int remainingStock;
 
     // Constructor
     public items() {}
     
-    public items( int id, String itemName, int brandId, String brandName, double price, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, boolean status, int deleteBy, LocalDateTime deletedAt) {
+    public items( int id, String itemName, int brandId, String brandName, double price, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, boolean status, int deleteBy, LocalDateTime deletedAt,int firstStock,int stockIn,int stockOut,int remainingStock) {
         setId(id);
         setItemName(itemName);
         setBrandId(brandId);
@@ -32,6 +36,10 @@ public class items {
         setStatus(status);
         setDeletedBy(deletedBy);
         setDeleteAt(deletedAt);
+        setFirstStock(firstStock);
+        setStockIn(stockIn);
+        setStockOut(stockOut);
+        setRemainingStock(remainingStock);
     }
 
     // Getter dan Setter dengan validasi
@@ -131,6 +139,41 @@ public class items {
     public void setDeleteAt(LocalDateTime deleteAt) {
         this.deletedAt = deletedAt;
     }
+    
+    public int getFirstStock(){
+        return firstStock;
+    }
+    
+    public void setFirstStock(int firstStock){
+        this.firstStock = firstStock;
+    }
+    
+    public int getStockIn(){
+        return stockIn;
+    }
+    
+    public void setStockIn(int stockIn){
+        this.stockIn = stockIn;
+    }
+    
+    public int getStockOut(){
+        return stockOut;
+    }
+    
+    public void setStockOut(int stockOut){
+        this.stockOut = stockOut;
+    }
+    
+    public int getRemainingStock(){
+        return remainingStock;
+    }
+    
+    public void setRemainingStock(int remainingStock){
+        this.remainingStock = remainingStock;
+    }
+    
+    
+    
     
     // Validasi keseluruhan data
     public boolean isValid() {
