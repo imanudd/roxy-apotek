@@ -28,8 +28,6 @@ public class itemsRepo {
 
         query += " ORDER BY b.id ASC";
 
-        System.out.println("query: " + query);
-
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             if (hasSearch) {
                 stmt.setString(1, "%" + search.trim() + "%");
