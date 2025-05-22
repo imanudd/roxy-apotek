@@ -26,6 +26,7 @@ public class aMainFrame extends javax.swing.JFrame {
       private aDashboard dashboardPanel;
       private BrandManagementGUI brandPanel;
       private ItemManagementGUI itemPanel;
+      private StockManagementGUI stockPanel;
       private Connection conn;
 
     /**
@@ -37,6 +38,7 @@ public class aMainFrame extends javax.swing.JFrame {
         this.supplierPanel = new SupplierManagementGUI(conn);
         this.brandPanel = new BrandManagementGUI(conn);
         this.itemPanel = new ItemManagementGUI(conn);
+        this.stockPanel = new StockManagementGUI(conn);
         
         this.conn = conn;
         
@@ -46,10 +48,12 @@ public class aMainFrame extends javax.swing.JFrame {
         mainPanel.add(supplierPanel);
         mainPanel.add(brandPanel);
         mainPanel.add(itemPanel);
+        mainPanel.add(stockPanel);
         
         supplierPanel.setVisible(false);
         brandPanel.setVisible(false);
         itemPanel.setVisible(false);
+        stockPanel.setVisible(false);
         dashboardPanel.setVisible(true);
         
        
@@ -60,6 +64,7 @@ public class aMainFrame extends javax.swing.JFrame {
         dashboardPanel.setVisible(false);
         brandPanel.setVisible(false);
         itemPanel.setVisible(false);
+        stockPanel.setVisible(false);
     }
 
 
@@ -326,6 +331,8 @@ public class aMainFrame extends javax.swing.JFrame {
 
     private void btnStockBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStockBarangActionPerformed
         // TODO add your handling code here:
+        unvisiblePanel();
+        stockPanel.setVisible(true);
     }//GEN-LAST:event_btnStockBarangActionPerformed
 
     private void btnLogStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogStockActionPerformed

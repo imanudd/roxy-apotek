@@ -12,17 +12,16 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import model.brands;
-import model.items;
+import model.LogStock;
 import model.stock;
+import model.items;
 import usecase.supplierUc;
 import model.suppliers;
-import repository.brandsRepo;
+import repository.LogStockRepo;
+import repository.stocksRepo;
 import repository.supplierRepo;
 import repository.brandsRepo;
 import repository.itemsRepo;
-import repository.stocksRepo;
-import usecase.BrandUC;
 import usecase.itemsUc;
 import usecase.stockUc;
 
@@ -30,43 +29,44 @@ import usecase.stockUc;
  *
  * @author ADMINPUSING-PC
  */
-public class ItemManagementGUI extends javax.swing.JPanel {
+public class StockManagementGUI extends javax.swing.JPanel {
     
-    private final itemsUc itemUc;
-    private final BrandUC brandUc;
+    private final supplierUc supplierUc;
+    private final itemsUc itemsUc;
+    private final stockUc stockUc;
     private DefaultTableModel tableModel;
     private int userId = 1;
     
-     HashMap<String, Integer> brandMap= new HashMap<String,Integer>();
+     HashMap<String, Integer> supplierMap= new HashMap<String,Integer>();
    
     
-    public ItemManagementGUI(Connection conn) {
+    public StockManagementGUI(Connection conn) {
         initComponents();
         
-        this.itemUc = new itemsUc(new itemsRepo(conn), new stocksRepo(conn));
-        this.brandUc = new BrandUC(new brandsRepo(conn), new itemsRepo(conn));
+        this.supplierUc = new supplierUc(new supplierRepo(conn), new brandsRepo(conn));
+        this.itemsUc = new itemsUc(new itemsRepo(conn), new stocksRepo(conn));
+        this.stockUc = new stockUc(new stocksRepo(conn), new itemsRepo(conn));
         
-        this.tableModel = (DefaultTableModel) tItem.getModel();
+        this.tableModel = (DefaultTableModel) tBrand.getModel();
 
         // Initialize the table model
-        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Nama Barang", "Brand" ,"Harga Jual", "Stock Awal", "Stock Masuk", "Stock Keluar", "Sisa Stock", "Status"});
+        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Nama", "Supplier" ,"Status"});
         new JTable(tableModel);
        
-        loadItems();
-        loadCbBrands();
+        loadBrands();
+        loadCbSuppliers();
         
         // Add selection listener to jTable2
-        tItem.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        tBrand.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting() && tItem.getSelectedRow() != -1) {
-                    int selectedRow = tItem.getSelectedRow();
-                    textFieldId.setText(tItem.getValueAt(selectedRow, 0).toString());
-                    textFieldItem.setText(tItem.getValueAt(selectedRow, 1).toString());
-                    cbBrand.setSelectedItem(tItem.getValueAt(selectedRow, 2).toString());
-                    textFieldSellPrice.setText(tItem.getValueAt(selectedRow, 3).toString());
-                    textFieldFirstStock.setText(tItem.getValueAt(selectedRow, 4).toString());
-                    textFieldFirstStock.setEditable(false);
+                if (!e.getValueIsAdjusting() && tBrand.getSelectedRow() != -1) {
+                    int selectedRow = tBrand.getSelectedRow();
+                    textFieldId.setText(tBrand.getValueAt(selectedRow, 0).toString());
+                    textFieldMerk.setText(tBrand.getValueAt(selectedRow, 1).toString());
+                    cbSupplier.setSelectedItem(tBrand.getValueAt(selectedRow, 2).toString());
+                    
+                    loadCbSuppliers();
                 }
             }
         });
@@ -91,20 +91,20 @@ public class ItemManagementGUI extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        textFieldItem = new javax.swing.JTextField();
+        textFieldMerk = new javax.swing.JTextField();
         textFieldId = new javax.swing.JTextField();
         btnCreate = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tItem = new javax.swing.JTable();
+        tBrand = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        cbBrand = new javax.swing.JComboBox<>();
+        cbSupplier = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        textFieldSellPrice = new javax.swing.JTextField();
+        textFielStockIn = new javax.swing.JTextField();
+        textFieldQty = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        textFieldFirstStock = new javax.swing.JTextField();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -126,15 +126,15 @@ public class ItemManagementGUI extends javax.swing.JPanel {
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Gill Sans", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel1.setText("Nama Barang");
+        jLabel1.setText("Supplier");
 
         jLabel2.setFont(new java.awt.Font("Gill Sans", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel2.setText("Brand");
+        jLabel2.setText("Merk");
 
-        textFieldItem.addActionListener(new java.awt.event.ActionListener() {
+        textFieldMerk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldItemActionPerformed(evt);
+                textFieldMerkActionPerformed(evt);
             }
         });
 
@@ -174,7 +174,7 @@ public class ItemManagementGUI extends javax.swing.JPanel {
             }
         });
 
-        tItem.setModel(new javax.swing.table.DefaultTableModel(
+        tBrand.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -185,7 +185,7 @@ public class ItemManagementGUI extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(tItem);
+        jScrollPane2.setViewportView(tBrand);
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setFont(new java.awt.Font("Gill Sans", 0, 14)); // NOI18N
@@ -193,41 +193,33 @@ public class ItemManagementGUI extends javax.swing.JPanel {
 
         jLabel6.setFont(new java.awt.Font("Gill Sans", 0, 36)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel6.setText("ITEM MANAGEMENT");
+        jLabel6.setText("BRAND MANAGEMENT");
 
-        cbBrand.addActionListener(new java.awt.event.ActionListener() {
+        cbSupplier.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbBrandActionPerformed(evt);
+                cbSupplierActionPerformed(evt);
             }
         });
 
-        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Gill Sans", 0, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel3.setText("Sell Price");
+        jLabel3.setText("Stock Masuk");
 
-        textFieldSellPrice.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        textFieldSellPrice.addActionListener(new java.awt.event.ActionListener() {
+        textFielStockIn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldSellPriceActionPerformed(evt);
-            }
-        });
-        textFieldSellPrice.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                textFieldSellPriceKeyTyped(evt);
+                textFielStockInActionPerformed(evt);
             }
         });
 
-        jLabel4.setBackground(new java.awt.Color(255, 255, 255));
+        textFieldQty.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldQtyActionPerformed(evt);
+            }
+        });
+
         jLabel4.setFont(new java.awt.Font("Gill Sans", 0, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel4.setText("Stock Awal");
-
-        textFieldFirstStock.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldFirstStockActionPerformed(evt);
-            }
-        });
+        jLabel4.setText("Kuantitas");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -243,28 +235,30 @@ public class ItemManagementGUI extends javax.swing.JPanel {
                                 .addGap(142, 142, 142)
                                 .addComponent(jLabel5)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(textFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel1)
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel3)
                                     .addComponent(jLabel4))
-                                .addGap(43, 43, 43)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cbBrand, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(textFieldItem, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
-                                    .addComponent(textFieldFirstStock, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(textFieldSellPrice))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 192, Short.MAX_VALUE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(textFieldMerk, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textFielStockIn, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textFieldQty, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29))))
         );
@@ -273,41 +267,41 @@ public class ItemManagementGUI extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(48, 48, 48)
                 .addComponent(jLabel6)
-                .addGap(43, 43, 43)
+                .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(textFieldItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cbBrand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(textFieldMerk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(textFieldSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(textFielStockIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(textFieldFirstStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(44, 44, 44)
+                            .addComponent(textFieldQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(53, 53, 53)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addGap(65, 65, 65)
                         .addComponent(textFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void textFieldItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldItemActionPerformed
+    private void textFieldMerkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldMerkActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldItemActionPerformed
+    }//GEN-LAST:event_textFieldMerkActionPerformed
 
     private void textFieldIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldIdActionPerformed
         // TODO add your handling code here:
@@ -316,90 +310,88 @@ public class ItemManagementGUI extends javax.swing.JPanel {
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
         // TODO add your handling code here:   
         
-        String name = textFieldItem.getText().trim();
+        String name = textFieldMerk.getText().trim();
         if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Nama barang tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nama brand tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         
-        Double sellPrice = Double.parseDouble(textFieldSellPrice.getText().trim());
-        if (sellPrice <= 0) {
-            JOptionPane.showMessageDialog(this, "harga jual tidak boleh 0.", "Error", JOptionPane.ERROR_MESSAGE);
+        int stockIn = Integer.parseInt(textFielStockIn.getText().trim());
+        if (stockIn<=0){
+            JOptionPane.showMessageDialog(this, "Stock masuk tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
-        items item = new items();
-        item.setItemName(name);
-        item.setBrandId(brandMap.get(cbBrand.getSelectedItem().toString()));
-        item.setPrice(sellPrice);
-        item.setStatus(true);
+        int qty = Integer.parseInt(textFieldQty.getText().trim());
+        if(qty<=0){
+            JOptionPane.showMessageDialog(this, "Kuantitas tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         
-        stock stock = new stock();
-        stock.setFirstStock(Integer.parseInt(textFieldFirstStock.getText().trim()));
-        stock.setRemainingStock(stock.getFirstStock());
-        stock.setStockIn(0);
-        stock.setStockOut(0);
+        stock s = new stock();
+        s.setStockIn(stockIn);
+        
+        LogStock lG = new LogStock();
+        lG.setQty(qty);
+        
+        items item = new items();
+        item.setBrandName(name);
+        item.setId(supplierMap.get(cbSupplier.getSelectedItem().toString()));
             
-        boolean success = itemUc.createItem(item,stock);
+        boolean success = stockUc.createdStock(item,s);
         
         JOptionPane.showMessageDialog(this, "CREATE: " + (success ? "Berhasil" : "Gagal"));
         if (success) {
             clearInputFields();
-            loadItems();
-            System.out.println("Registrasi item berhasil!");
+            loadBrands();
+            System.out.println("Registrasi brand berhasil!");
         }           
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
         
-            String idText = textFieldId.getText().trim();
-            if (idText.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Pilih item terlebih dahulu dari tabel.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            int id = Integer.parseInt(idText);
+        String idText = textFieldId.getText().trim();
+        int id = Integer.parseInt(idText);
+        String name = textFieldMerk.getText().trim();
 
-            String name = textFieldItem.getText().trim();
-           
-            
-            items item = new items();
-            item.setId(id);
-            item.setItemName(name);
-            item.setBrandId(brandMap.get(cbBrand.getSelectedItem().toString()));
-            item.setPrice(Double.parseDouble(textFieldSellPrice.getText().trim()));
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nama brand tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-            if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Nama item tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-                       
-            boolean success = itemUc.updateItem(item, item.getId());
-            JOptionPane.showMessageDialog(this, "UPDATE: " + (success ? "Update item berhasil!" : "Gagal"));
-            if(success) {   
-               clearInputFields();
-               textFieldFirstStock.setEditable(true);
-               loadItems();
-            }
-     
+        // Buat objek stock, bukan items
+        stock stc = new stock();
+        stc.setItemName(name);
+        stc.setId(supplierMap.get(cbSupplier.getSelectedItem().toString())); // pastikan method ini ada di class `stock`
+
+        boolean success = stockUc.updateStock(stc, id); // ✅ Panggilan method benar
+
+        JOptionPane.showMessageDialog(this, "UPDATE: " + (success ? "Update brand berhasil!" : "Gagal"));
+
+        if (success) {
+            clearInputFields();
+            loadBrands();
+        }
+
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
             String idText = textFieldId.getText().trim();
             if (idText.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "item belum dipilih atau Nonaktif!.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Brand belum dipilih atau Nonaktif!.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
             int id = Integer.parseInt(idText);
-   
-            boolean deleteItem = itemUc.deleteItem(id);
-            if (deleteItem) {
-                JOptionPane.showMessageDialog(this, "DELETE: " + (deleteItem ? "Berhasil" : "Gagal"));
+            // Menggunakan metode deleteSupplier
+            boolean deleted = stockUc.deleteStock(id);
+            if (deleted) {
+                JOptionPane.showMessageDialog(this, "DELETE: " + (deleted ? "Berhasil" : "Gagal"));
                 clearInputFields();
-                loadItems();
+                loadBrands();
             }
-                      
+            
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -408,6 +400,7 @@ public class ItemManagementGUI extends javax.swing.JPanel {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
 
+        loadCbSuppliers();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
@@ -415,61 +408,48 @@ public class ItemManagementGUI extends javax.swing.JPanel {
     
     }//GEN-LAST:event_jTextField5ActionPerformed
 
-    private void cbBrandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbBrandActionPerformed
+    private void cbSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSupplierActionPerformed
 
-    }//GEN-LAST:event_cbBrandActionPerformed
+    }//GEN-LAST:event_cbSupplierActionPerformed
 
-    private void textFieldSellPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSellPriceActionPerformed
+    private void textFielStockInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFielStockInActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldSellPriceActionPerformed
+    }//GEN-LAST:event_textFielStockInActionPerformed
 
-    private void textFieldFirstStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFirstStockActionPerformed
+    private void textFieldQtyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldQtyActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldFirstStockActionPerformed
-
-    private void textFieldSellPriceKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textFieldSellPriceKeyTyped
-        char c = evt.getKeyChar();
-        if (!Character.isDigit(c)) {
-            evt.consume();
-        }
-
-    }//GEN-LAST:event_textFieldSellPriceKeyTyped
+    }//GEN-LAST:event_textFieldQtyActionPerformed
     
     private void clearInputFields() {
         textFieldId.setText("");
-        textFieldItem.setText("");
-        textFieldSellPrice.setText("");
-        textFieldFirstStock.setText("");
+        textFieldMerk.setText("");
     }
     
-    private void loadItems(){
+    private void loadBrands(){
         tableModel.setRowCount(0);
-        List<items> itemList = itemUc.getAllItems("");
+        List<stock> stockList = stockUc.getList("");
         
-        for (items i : itemList){
+        for (stock s : stockList){
             tableModel.addRow(new Object[]{
-                i.getId(),
-                i.getItemName(),
-                i.getBrandName(),
-                i.getPrice(),
-                i.getFirstStock(),
-                i.getStockIn(),
-                i.getStockOut(),
-                i.getRemainingStock(),
-                i.getStatus() ? "Aktif" : "Nonaktif"
+                s.getId(),
+                s.getItemId(),
+                s.getFirstStock(),
+                s.getStockIn(),
+                s.getStockOut(),
+                s.getRemainingStock()
             });
         }
         
-        tItem.setModel(tableModel);
+        tBrand.setModel(tableModel);
 
-    }
-
-    private void loadCbBrands() {
-       List<brands> brandList = brandUc.listBrands("");
         
-        for (brands b : brandList) {
-            brandMap.put(b.getBrandName(), b.getId());
-            cbBrand.addItem(b.getBrandName());  
+    }
+    private void loadCbSuppliers() {
+        List<suppliers> supplierList = supplierUc.getSuppliersList(""); 
+        
+        for (suppliers s : supplierList) {
+            supplierMap.put(s.getSupplierName(), s.getId());
+            cbSupplier.addItem(s.getSupplierName());  
         }
     }
 
@@ -477,7 +457,7 @@ public class ItemManagementGUI extends javax.swing.JPanel {
     private javax.swing.JButton btnCreate;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnUpdate;
-    private javax.swing.JComboBox<String> cbBrand;
+    private javax.swing.JComboBox<String> cbSupplier;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -487,11 +467,11 @@ public class ItemManagementGUI extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable tItem;
-    private javax.swing.JTextField textFieldFirstStock;
+    private javax.swing.JTable tBrand;
+    private javax.swing.JTextField textFielStockIn;
     private javax.swing.JTextField textFieldId;
-    private javax.swing.JTextField textFieldItem;
-    private javax.swing.JTextField textFieldSellPrice;
+    private javax.swing.JTextField textFieldMerk;
+    private javax.swing.JTextField textFieldQty;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -43,9 +43,12 @@ public class stocksRepo {
             if (hasSearch) {
                 stmt.setString(1, "%" + search.trim() + "%");
             }
-            
             ResultSet rs = stmt.executeQuery();
+            
+            
             while (rs.next()) {
+                Timestamp createdAtTs = rs.getTimestamp("created_at");
+                Timestamp updatedAtTs = rs.getTimestamp("updated_at");
                 stock stock = new stock(
                     rs.getInt("id"),
                     rs.getString("item_name"),
@@ -54,9 +57,9 @@ public class stocksRepo {
                     rs.getInt("stock_in"),
                     rs.getInt("stock_out"),
                     rs.getInt("remaining_stock"),
-                    rs.getTimestamp("created_at").toLocalDateTime(),
+                    createdAtTs != null ? createdAtTs.toLocalDateTime() : null,
                     rs.getInt("created_by"),
-                    rs.getTimestamp("updated_at").toLocalDateTime(),
+                    updatedAtTs != null ? updatedAtTs.toLocalDateTime() : null,
                     rs.getInt("updated_by")
                 );
                 list.add(stock);

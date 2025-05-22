@@ -1,6 +1,8 @@
 package usecase;
 
 import helper.currentUser;
+import model.LogStock;
+import model.stock;
 import java.io.FileOutputStream;
 import java.sql.SQLException;
 import java.util.List;
@@ -12,14 +14,17 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import model.stock;
-import model.suppliers;
+import model.items;
+import repository.itemsRepo;
 import repository.stocksRepo;
 
 public class stockUc {
     private final stocksRepo stocksRepo;
+    private final itemsRepo itemsRepo;
 
-    public stockUc(stocksRepo stocksRepo) {
+    public stockUc(stocksRepo stocksRepo, itemsRepo itemsRepo) {
         this.stocksRepo = stocksRepo;
+        this.itemsRepo = itemsRepo;
     }
     
     //list stock
@@ -31,7 +36,18 @@ public class stockUc {
             return null;
         }
     }
-
+    
+    public boolean createdStock(items itm, stock stc){
+        return true;
+    }
+    
+    public boolean updateStock(stock stc, int id){
+        return true;
+    }
+    
+    public boolean deleteStock(int id){
+        return true;
+    }
     //get stock by item id
     public stock getStockByItemId(int itemId){
         try {
