@@ -17,6 +17,7 @@ import model.user;
 import model.brands;
 import model.items;
 import model.optionBrands;
+import model.optionItems;
 
 import javax.swing.*;
 import java.sql.Connection;
@@ -58,6 +59,7 @@ public class Main {
         System.out.println("28. List stock (Terminal)");
         System.out.println("29. get stock by item id (Terminal)");
         System.out.println("30. export stock (Terminal)");
+        System.out.println("31. option item (Terminal)");
         System.out.print("Pilih mode : ");
         String choice = input.nextLine();
 
@@ -396,8 +398,10 @@ public class Main {
             itemsRepo itemRepo = new itemsRepo(conn);
             BrandUC brandUseCase = new BrandUC(brandsRepo, itemRepo);
 
-            //option brand
-            List<optionBrands> optionBrandsList = brandUseCase.optionBrands();
+            //option 
+            System.out.println("Masukkan id supplier: ");
+            int supplierId = Integer.parseInt(input.nextLine());
+            List<optionBrands> optionBrandsList = brandUseCase.optionBrands(supplierId);
             if (!optionBrandsList.isEmpty()) {
                 for (optionBrands optionBrands : optionBrandsList) {
                     System.out.println("ID: " + optionBrands.getId() + ", Nama Brand: " + optionBrands.getBrandName());
@@ -545,6 +549,19 @@ public class Main {
             boolean success = stockUC.exportStock(search);
             if (success) {
                 System.out.println("Export stock berhasil!");
+            }
+        }else if (choice.equals("31")){
+            itemsRepo itemsRepo = new itemsRepo(conn);
+            itemsUc itemsUC = new itemsUc(itemsRepo);
+
+            //option item
+            System.out.println("Masukkan ID brand: ");
+            int brandId = Integer.parseInt(input.nextLine());
+            List<optionItems> list = itemsUC.optionItems(brandId);
+            if (!list.isEmpty()) {
+                for (optionItems item : list) {
+                    System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName());
+                }
             }
         }else {
                 System.out.println("Pilihan tidak valid!");

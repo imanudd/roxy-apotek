@@ -2,6 +2,7 @@ package usecase;
 
 import model.brands;
 import model.items;
+import model.optionItems;
 import repository.itemsRepo;
 
 import java.io.FileOutputStream;
@@ -164,6 +165,16 @@ public class itemsUc {
         } catch (Exception e) {
             System.err.println("Gagal export Excel: " + e.getMessage());
             return false;
+        }
+    }
+
+    //option item
+    public List<optionItems> optionItems(int brandId) {
+        try{
+            return itemRepo.optionItems(brandId);
+        }catch (SQLException e){
+            System.err.println("Option item error: " + e.getMessage());
+            return new ArrayList<>();
         }
     }
 }

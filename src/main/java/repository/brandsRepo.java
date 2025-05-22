@@ -170,9 +170,9 @@ public class brandsRepo {
         return false;
     }
 
-    public List<optionBrands> OptionBrands() throws SQLException{
+    public List<optionBrands> OptionBrands(int supplierId) throws SQLException{
         String sql;
-        sql = "SELECT * FROM brands where status = true order by id asc";
+        sql = "SELECT * FROM brands where status = true and supplier_id = " + supplierId + " order by id asc";
 
         List<optionBrands> optionbBrands = new ArrayList<>();
 
