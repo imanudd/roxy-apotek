@@ -1,6 +1,9 @@
 package usecase;
 
-// import model.trx;
+// import dto.trx;
+// import dto.trxDetail;
+// import helper.currentUser;
+// import java.sql.SQLException;
 // import model.transaction;
 // import model.TransactionDetail;
 // import model.items;
@@ -34,6 +37,7 @@ package usecase;
 //             System.out.println("Detail is required.");
 //             return false;
 //         }
+
 //         try {
 //             return transactionsRepo.createTrx(trx, currentUser.getId());
 //         } catch (SQLException e) {

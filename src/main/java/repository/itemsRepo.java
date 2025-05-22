@@ -1,6 +1,7 @@
 package repository;
 
 import model.items;
+import model.optionItems;
 import helper.currentUser;
 
 import java.sql.*;
@@ -185,6 +186,25 @@ public class itemsRepo {
                         rs.getBoolean("status"),
                         rs.getInt("deleted_by"),
                         rs.getTimestamp("deteled_at").toLocalDateTime()
+                    );
+                    itm.setId(rs.getInt("id"));
+                    list.add(itm);
+                }
+            }
+        }
+        return list; 
+    }
+    // Get option items by brand ID
+    public List<optionItems> optionItems(int brandId) throws SQLException {
+        String query = "SELECT * FROM items WHERE status = true AND brand_id = ?";
+        List<optionItems> list = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, brandId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    optionItems itm = new optionItems(
+                        rs.getInt("id"),
+                        rs.getString("item_name")
                     );
                     itm.setId(rs.getInt("id"));
                     list.add(itm);

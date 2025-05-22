@@ -1,4 +1,4 @@
-package model;
+package dto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,11 +8,11 @@ public class trx {
     public LocalDateTime date;
     public int totalItem;
     public double grandTotal;
-    public List<TransactionDetail> details = new ArrayList<>();
+    public List<trxDetail> details = new ArrayList<>();
 
     public trx() {}
 
-    public trx(LocalDateTime date, int totalItem, double grandTotal, List<TransactionDetail> details) {
+    public trx(LocalDateTime date, int totalItem, double grandTotal, List<trxDetail> details) {
         this.date = date;
         this.totalItem = totalItem;
         this.grandTotal = grandTotal;
@@ -43,11 +43,11 @@ public class trx {
         this.grandTotal = grandTotal;
     }
 
-    public List<TransactionDetail> getDetails() {
+    public List<trxDetail> getDetails() {
         return details;
     }
 
-    public void setDetails(List<TransactionDetail> details) {
+    public void setDetails(List<trxDetail> details) {
         this.details = details;
     }
 }

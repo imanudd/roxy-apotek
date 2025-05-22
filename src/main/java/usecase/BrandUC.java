@@ -195,9 +195,9 @@ public class BrandUC {
     }
 
     //option brand
-    public List<optionBrands> optionBrands() {
+    public List<optionBrands> optionBrands(int supplierId) {
         try {
-            return brandRepo.OptionBrands();
+            return brandRepo.OptionBrands(supplierId);
         } catch (SQLException e) {
             System.err.println("List brands error: " + e.getMessage());
             return new ArrayList<>();
