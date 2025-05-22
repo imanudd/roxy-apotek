@@ -99,6 +99,7 @@ public class transaction {
         this.updatedBy = updatedBy;
     }
 
+
     // Validasi keseluruhan data
     public boolean isValid() {
         return date != null &&

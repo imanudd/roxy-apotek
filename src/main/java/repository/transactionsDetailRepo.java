@@ -8,8 +8,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionDetailRepo {
-    Connection connection = DatabaseConfig.connect();
+public class transactionsDetailRepo {
+    private final Connection conn;
+    
+    public transactionsDetailRepo(Connection conn) {
+        this.conn = conn;
+    }
 
     // Get List of TransactionDetails
     public List<TransactionDetail> getList() throws SQLException {
@@ -19,7 +23,7 @@ public class TransactionDetailRepo {
                      "FROM transaction_details dt " +
                      "JOIN transactions t ON dt.transaction_id = t.id " +
                      "JOIN items i ON dt.item_id = i.id";
-        try (Statement statement = connection.createStatement();
+        try (Statement statement = conn.createStatement();
              ResultSet rs = statement.executeQuery(sql)) {
             while (rs.next()) {
                 TransactionDetail dt = new TransactionDetail();
@@ -45,7 +49,7 @@ public class TransactionDetailRepo {
     // Insert a new TransactionDetail
     public boolean insert(TransactionDetail dt) throws SQLException {
         String sql = "INSERT INTO transaction_details (transaction_id, item_id, qty, price, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, dt.getTransactionId());
             stmt.setInt(2, dt.getItemId());
             stmt.setInt(3, dt.getQty());
@@ -59,7 +63,7 @@ public class TransactionDetailRepo {
     // Update an existing TransactionDetail
     public boolean update(TransactionDetail dt) throws SQLException {
         String sql = "UPDATE transaction_details SET transaction_id = ?, item_id = ?, qty = ?, price = ?, updated_at = ?, updated_by = ? WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, dt.getTransactionId());
             stmt.setInt(2, dt.getItemId());
             stmt.setInt(3, dt.getQty());
@@ -74,7 +78,7 @@ public class TransactionDetailRepo {
     // Delete a TransactionDetail
     public boolean delete(int id) throws SQLException {
         String sql = "DELETE FROM transaction_details WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             return stmt.executeUpdate() > 0;
         }
