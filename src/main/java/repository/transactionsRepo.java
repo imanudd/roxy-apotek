@@ -1,6 +1,5 @@
 package repository;
 
-import config.DatabaseConfig;
 import model.transaction;
 import helper.currentUser;
 
@@ -9,7 +8,11 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class transactionsRepo {
-    Connection conn = DatabaseConfig.connect();
+    private final Connection conn;
+    
+    public transactionsRepo(Connection conn) {
+        this.conn = conn;
+    }
 
     // Ambil semua transaksi
     public List<transaction> getAllTransaction() {

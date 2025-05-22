@@ -22,6 +22,8 @@ public class stock {
     private int createdBy;
     private LocalDateTime updatedAt;
     private int updatedBy;
+
+    public stock(){}
     
     public stock(int id, String itemName, int itemId, int firstStock, int stockIn, int stockOut, int remainingStock,LocalDateTime createdAt, int createdBy,  LocalDateTime updatedAt, int updatedBy){
         this.id=id;

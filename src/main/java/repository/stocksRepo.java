@@ -16,17 +16,37 @@ import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
 public class stocksRepo {
-    Connection conn = DatabaseConfig.connect();
+    private final Connection conn;
+
+    // Constructor menerima Connection
+    public stocksRepo(Connection conn) {
+        this.conn = conn;
+    }
+
     
     //list stock 
-    public List<stock> getList(){
+    public List<stock> getList(String search) throws SQLException{
         List<stock> list = new ArrayList<>();
-        String query = "SELECT s.id, i.item_name, s.first_stock, s.stock_in, s.stock_out, s.remaining_stock"+
-                "FROM stocks s"+
-                "JOIN items i ON s.item_id=i.id";
-        try (PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()){
-            stock sItem = new stock(
+        boolean hasSearch = search != null && !search.isEmpty();
+
+        String query = "SELECT s.id, s.item_id, i.item_name, s.first_stock, s.stock_in, s.stock_out, " +
+                   "s.remaining_stock, s.created_at, s.created_by, s.updated_at, s.updated_by " +
+                   "FROM stocks s " +
+                   "JOIN items i ON s.item_id = i.id";
+
+        if (search != null && !search.trim().isEmpty()) {
+            query += " WHERE i.item_name ILIKE ?";
+        }
+
+        query += " ORDER BY s.id ASC";
+        try (PreparedStatement stmt = conn.prepareStatement(query)){
+            if (hasSearch) {
+                stmt.setString(1, "%" + search.trim() + "%");
+            }
+            
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                stock stock = new stock(
                     rs.getInt("id"),
                     rs.getString("item_name"),
                     rs.getInt("item_id"),
@@ -39,104 +59,87 @@ public class stocksRepo {
                     rs.getTimestamp("updated_at").toLocalDateTime(),
                     rs.getInt("updated_by")
                 );
-        }catch (SQLException e) {
-            System.out.println("Error getAllSuppliers: " + e.getMessage());
+                list.add(stock);
+            }
         }
         return list;
     }
+
     //create stock
-    public boolean createStock(stock sItem, int itemId) {
+    public boolean createStock(stock sItem, int currentUser) throws SQLException {   
     String query = "INSERT INTO stocks (item_id, first_stock, remaining_stock, created_at, created_by) " +
                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setInt(1, itemId);
+            stmt.setInt(1, sItem.getItemId());
             stmt.setInt(2, sItem.getFirstStock());
             stmt.setInt(3, sItem.getFirstStock());
             stmt.setTimestamp(4, Timestamp.valueOf(sItem.getCreatedAt()));
-            stmt.setInt(5, currentUser.getId());
+            stmt.setInt(5, currentUser);
 
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        } 
     }
+
     //update stock
-    public boolean updateStock(stock sItem) {
-        String selectQuery = "SELECT first_stock, stock_in, stock_out FROM stocks WHERE item_id = ?";
-        String updateQuery = "UPDATE stocks SET stock_in = ?, stock_out = ?, remaining_stock = ?, updated_at = ?, updated_by = ? WHERE item_id = ?";
+    public boolean updateStock(stock sItem, int currentUser) throws SQLException {
+        String query = "UPDATE stocks SET stock_in = ?, stock_out = ?, remaining_stock = ?, updated_at = ?, updated_by = ? WHERE item_id = ?";
 
         try (
-            PreparedStatement selectStmt = conn.prepareStatement(selectQuery)
+            PreparedStatement selectStmt = conn.prepareStatement(query)
         ) {
-            selectStmt.setInt(1, sItem.getItemId());
-            ResultSet rs = selectStmt.executeQuery();
+            selectStmt.setInt(1, sItem.getStockIn());
+            selectStmt.setInt(2, sItem.getStockOut());
+            selectStmt.setInt(3, sItem.getRemainingStock());
+            selectStmt.setTimestamp(4, Timestamp.valueOf(sItem.getUpdatedAt()));
+            selectStmt.setInt(5, currentUser);
+            selectStmt.setInt(6, sItem.getItemId());
 
-            if (rs.next()) {
-                int firstStock = rs.getInt("first_stock");
-                int stockIn = sItem.getStockIn() != -1 ? sItem.getStockIn() : rs.getInt("stock_in");
-                int stockOut = sItem.getStockOut() != -1 ? sItem.getStockOut() : rs.getInt("stock_out");
+            int rows = selectStmt.executeUpdate();
+            return rows > 0;
 
-                int remainingStock = firstStock + stockIn - stockOut;
-
-                try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
-                    updateStmt.setInt(1, stockIn);
-                    updateStmt.setInt(2, stockOut);
-                    updateStmt.setInt(3, remainingStock);
-                    updateStmt.setTimestamp(4, Timestamp.valueOf(sItem.getUpdatedAt()));
-                    updateStmt.setInt(5, currentUser.getId());
-                    updateStmt.setInt(6, sItem.getItemId());
-
-                    return updateStmt.executeUpdate() > 0;
-                }
-
-            } else {
-                System.out.println("Stock dengan item_id tidak ditemukan.");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
+        } 
     }
-    //delete stock
-    public boolean deleteStock(int stockId) {
-    String query = "DELETE FROM stocks WHERE id = ?";
+
+    //delete stock by item id
+    public boolean deleteStock(int stockId) throws SQLException {
+
+        String query = "DELETE FROM stocks WHERE item_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, stockId);
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            int rows = stmt.executeUpdate();
+            return rows > 0;
         }
     }
     
        
-    public boolean isItemsNameExists(String name, int excludeId){
-    String query = excludeId>0
-            ? "SELECT COUNT (*) AS count FROM stocks WHERE item_id=? AND id<>?"
-            : "SELECT COUNT (*) AS count FROM stocks WHERE item_id=?";
-            
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-         
-            ps.setString(1, name);
-            if (excludeId > 0) ps.setInt(2, excludeId);
-
-            try (ResultSet rs = ps.executeQuery()) {
+    //get stock by item id
+    public stock getStockById(int id) throws SQLException {
+        String query = "SELECT s.*, i.item_name FROM stocks s LEFT JOIN items i ON s.item_id = i.id WHERE s.item_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("count") > 0;
+                    return new stock(
+                        rs.getInt("id"),
+                        rs.getString("item_name"),
+                        rs.getInt("item_id"),
+                        rs.getInt("first_stock"),
+                        rs.getInt("stock_in"),
+                        rs.getInt("stock_out"),
+                        rs.getInt("remaining_stock"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getInt("created_by"),
+                        rs.getTimestamp("updated_at").toLocalDateTime(),
+                        rs.getInt("updated_by")
+                    );
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        }    
+        return null;
     }
 }

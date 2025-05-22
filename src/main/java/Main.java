@@ -3,12 +3,15 @@ import repository.brandsRepo;
 import repository.supplierRepo;
 import repository.usersRepo;
 import repository.itemsRepo;
+import repository.stocksRepo;
 import ui.Login1;
 import usecase.BrandUC;
 import usecase.itemsUc;
+import usecase.stockUc;
 import usecase.supplierUc;
 import usecase.userUc;
 import model.optionSupplier;
+import model.stock;
 import model.suppliers;
 import model.user;
 import model.brands;
@@ -52,6 +55,9 @@ public class Main {
         System.out.println("25. get item by id (Terminal)");
         System.out.println("26. export item (Terminal)");
         System.out.println("27. list item (Terminal)");
+        System.out.println("28. List stock (Terminal)");
+        System.out.println("29. get stock by item id (Terminal)");
+        System.out.println("30. export stock (Terminal)");
         System.out.print("Pilih mode : ");
         String choice = input.nextLine();
 
@@ -505,7 +511,42 @@ public class Main {
                 }
             }
         
-        } else {
+        }else if (choice.equals("28")) {
+            stocksRepo stocksRepo = new stocksRepo(conn);
+            stockUc stockUC = new stockUc(stocksRepo);
+
+            //list stock 
+            System.out.println("Masukkan nama item: ");
+            String search = input.nextLine();
+            List<stock> list = stockUC.getList(search);
+            if (!list.isEmpty()) {
+                for (stock stock : list) {
+                    System.out.println("ID: " + stock.getId() + ", Nama Item: " + stock.getItemName() + ", Stok: " + stock.getRemainingStock() + ", Stock in: " + stock.getStockIn() + ", Stock out: " + stock.getStockOut());
+                }
+            }
+        }else if (choice.equals("29")){
+            stocksRepo stocksRepo = new stocksRepo(conn);
+            stockUc stockUC = new stockUc(stocksRepo);
+
+            // get stock by item id
+            System.out.println("Masukkan ID item: ");
+            int id = Integer.parseInt(input.nextLine());
+            stock stock = stockUC.getStockByItemId(id);
+            if (stock != null) {
+                System.out.println(choice + "id Stock: " + stock.getId() + ", id Item: " + stock.getItemId() + ", Stok: " + stock.getRemainingStock() + ", Stock in: " + stock.getStockIn() + ", Stock out: " + stock.getStockOut());
+            }
+        }else if (choice.equals("30")){
+            stocksRepo stocksRepo = new stocksRepo(conn);
+            stockUc stockUC = new stockUc(stocksRepo);
+
+            //export stock
+            System.out.println("Masukkan nama item: ");
+            String search = input.nextLine();
+            boolean success = stockUC.exportStock(search);
+            if (success) {
+                System.out.println("Export stock berhasil!");
+            }
+        }else {
                 System.out.println("Pilihan tidak valid!");
             }
         } catch (Exception e) {
