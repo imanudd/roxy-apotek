@@ -4,11 +4,6 @@
  */
 package repository;
 
-/**
- *
- * @author User
- */
-import config.DatabaseConfig;
 import helper.currentUser;
 import model.LogStock;
 
@@ -17,34 +12,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LogStockRepo {
-    private Connection conn = DatabaseConfig.connect();
+    private final Connection conn;
+
+    // Constructor menerima Connection
+    public LogStockRepo(Connection conn) {
+        this.conn = conn;
+    }
 
     // Get list
-    public List<LogStock> getList() {
+    public List<LogStock> getList(String filter) throws SQLException {
         List<LogStock> list = new ArrayList<>();
-        String query = "SELECT ls.id, ls.activity_name, i.id, ls.ref_id, ls.qty, ls.created_at, ls.created_by, ls.updated_at, ls.updated_by" + 
-                "FROM log_stocks ls"+
-                "JOIN items i ON ls.item_id=i.id";
+        boolean hasFilter = filter != null && !filter.trim().isEmpty();
 
-        try (PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                LogStock log = new LogStock();
-                log.setId(rs.getInt("id"));
-                log.setActivityName(rs.getString("activity_name"));
-                log.setItemId(rs.getInt("item_id"));
-                log.setRefId(rs.getInt("ref_id"));
-                log.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                log.setCreatedBy(rs.getInt("created_by"));
-                Timestamp updatedAt = rs.getTimestamp("updated_at");
-                if (updatedAt != null) {
-                    log.setUpdatedAt(updatedAt.toLocalDateTime());
-                }
-                log.setUpdatedBy(rs.getInt("updated_by"));
-                list.add(log);
+        String query = "SELECT s.activity_name, s.item_id, i.item_name , s.ref_id, u.username, s.qty FROM log_stocks s LEFT JOIN users u ON s.created_by = u.id LEFT JOIN items i ON s.item_id = i.id";
+
+        if (hasFilter) {
+            query += " WHERE s.activity_name = ?";
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)){
+            if (hasFilter) {
+                stmt.setString(1, filter.trim());
             }
-        } catch (SQLException e) {
-            System.out.println("Error getList: " + e.getMessage());
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    LogStock log = new LogStock(
+                        rs.getInt("id"),
+                        rs.getString("activity_name"),
+                        rs.getInt("item_id"),
+                        rs.getString("item_name"),
+                        rs.getInt("ref_id"),
+                        rs.getString("username"),
+                        rs.getInt("qty"),
+                        rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
+                        rs.getInt("created_by"),
+                        rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
+                        rs.getInt("updated_by")
+                    );
+                    list.add(log);
+                }
+            }
         }
 
         return list;

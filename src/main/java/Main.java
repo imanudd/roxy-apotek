@@ -1,4 +1,5 @@
 import config.DatabaseConfig;
+import repository.LogStockRepo;
 import repository.brandsRepo;
 import repository.supplierRepo;
 import repository.usersRepo;
@@ -7,6 +8,7 @@ import repository.stocksRepo;
 import ui.Login1;
 import usecase.BrandUC;
 import usecase.itemsUc;
+import usecase.logStockUc;
 import usecase.stockUc;
 import usecase.supplierUc;
 import usecase.userUc;
@@ -14,6 +16,7 @@ import model.optionSupplier;
 import model.stock;
 import model.suppliers;
 import model.user;
+import model.LogStock;
 import model.brands;
 import model.items;
 import model.optionBrands;
@@ -60,6 +63,8 @@ public class Main {
         System.out.println("29. get stock by item id (Terminal)");
         System.out.println("30. export stock (Terminal)");
         System.out.println("31. option item (Terminal)");
+        System.out.println("32. list log stock (Terminal)");
+        System.out.println("33. export log stock (Terminal)");
         System.out.print("Pilih mode : ");
         String choice = input.nextLine();
 
@@ -562,6 +567,30 @@ public class Main {
                 for (optionItems item : list) {
                     System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName());
                 }
+            }
+        }else if (choice.equals("32")){
+            LogStockRepo logStockRepo = new LogStockRepo(conn);
+            logStockUc logStockUC = new logStockUc(logStockRepo);
+
+            //list log stock
+            System.out.println("Filter (in / out): ");
+            String filter = input.nextLine();
+            List<LogStock> list = logStockUC.getList(filter);
+            if (!list.isEmpty()) {
+                for (LogStock log : list) {
+                    System.out.println("ID: " + log.getId() + ", activity name: " + log.getActivityName() + "item_id" + log.getItemId() + "ref_id" + log.getRefId() + "username" + log.getUsername());
+                }
+            }
+        }else if (choice.equals("33")){
+            LogStockRepo logStockRepo = new LogStockRepo(conn);
+            logStockUc logStockUC = new logStockUc(logStockRepo);   
+
+            //export log stock
+            System.out.println("Filter (in / out): ");
+            String filter = input.nextLine();
+            boolean success = logStockUC.exportLogStock(filter);
+            if (success) {
+                System.out.println("Export log stock berhasil!");
             }
         }else {
                 System.out.println("Pilihan tidak valid!");
