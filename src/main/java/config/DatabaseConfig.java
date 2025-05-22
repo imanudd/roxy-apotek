@@ -24,7 +24,7 @@ public class DatabaseConfig {
                 return null;
             }
 
-            String url = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
+            String url = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName+"?prepareThreshold=0";
             
             System.out.println("url : "+ url);
 

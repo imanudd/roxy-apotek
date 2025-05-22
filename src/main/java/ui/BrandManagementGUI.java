@@ -12,11 +12,14 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import model.brands;
 import usecase.supplierUc;
 import model.suppliers;
 import repository.brandsRepo;
 import repository.supplierRepo;
 import repository.brandsRepo;
+import repository.itemsRepo;
+import usecase.BrandUC;
 
 /**
  *
@@ -25,6 +28,7 @@ import repository.brandsRepo;
 public class BrandManagementGUI extends javax.swing.JPanel {
     
     private final supplierUc supplierUc;
+    private final BrandUC brandUc;
     private DefaultTableModel tableModel;
     private int userId = 1;
     
@@ -33,32 +37,37 @@ public class BrandManagementGUI extends javax.swing.JPanel {
     
     public BrandManagementGUI(Connection conn) {
         initComponents();
+        
         this.supplierUc = new supplierUc(new supplierRepo(conn), new brandsRepo(conn));
-        this.tableModel = (DefaultTableModel) jTable2.getModel();
-        loadSuppliers();
+        this.brandUc = new BrandUC(new brandsRepo(conn), new itemsRepo(conn));
         
-            
+        this.tableModel = (DefaultTableModel) tBrand.getModel();
+
         // Initialize the table model
-        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Nama", "Alamat", "Telepon", "Status"});
+        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Nama", "Supplier" ,"Status"});
         new JTable(tableModel);
-        
-        loadSuppliers();
+       
+        loadBrands();
+        loadCbSuppliers();
         
         // Add selection listener to jTable2
-        jTable2.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        tBrand.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting() && jTable2.getSelectedRow() != -1) {
-                    int selectedRow = jTable2.getSelectedRow();
-                    jTextField4.setText(tableModel.getValueAt(selectedRow, 0).toString());
-                    jTextField1.setText(tableModel.getValueAt(selectedRow, 1).toString());
+                if (!e.getValueIsAdjusting() && tBrand.getSelectedRow() != -1) {
+                    int selectedRow = tBrand.getSelectedRow();
+                    textFieldId.setText(tBrand.getValueAt(selectedRow, 0).toString());
+                    textFieldMerk.setText(tBrand.getValueAt(selectedRow, 1).toString());
+                    cbSupplier.setSelectedItem(tBrand.getValueAt(selectedRow, 2).toString());
+                    
+                    loadCbSuppliers();
                 }
             }
         });
         
       
-        jTextField4.setEditable(false);
-        setVisible(true); 
+        textFieldId.setEditable(false);
+        textFieldId.setVisible(false);
     }
    
     
@@ -76,17 +85,16 @@ public class BrandManagementGUI extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        textFieldMerk = new javax.swing.JTextField();
+        textFieldId = new javax.swing.JTextField();
+        btnCreate = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tBrand = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cbSupplier = new javax.swing.JComboBox<>();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -114,51 +122,49 @@ public class BrandManagementGUI extends javax.swing.JPanel {
         jLabel2.setForeground(new java.awt.Color(102, 102, 102));
         jLabel2.setText("Supplier");
 
-        jLabel4.setText("ID Supplier (Auto-filled)");
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        textFieldMerk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                textFieldMerkActionPerformed(evt);
             }
         });
 
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        textFieldId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                textFieldIdActionPerformed(evt);
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(255, 153, 153));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Create");
-        jButton1.setBorder(null);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnCreate.setBackground(new java.awt.Color(255, 153, 153));
+        btnCreate.setForeground(new java.awt.Color(255, 255, 255));
+        btnCreate.setText("Create");
+        btnCreate.setBorder(null);
+        btnCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCreateActionPerformed(evt);
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(255, 153, 153));
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Update");
-        jButton2.setBorder(null);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdate.setBackground(new java.awt.Color(255, 153, 153));
+        btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
+        btnUpdate.setText("Update");
+        btnUpdate.setBorder(null);
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnUpdateActionPerformed(evt);
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(255, 153, 153));
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Delete");
-        jButton3.setBorder(null);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.setBackground(new java.awt.Color(255, 153, 153));
+        btnDelete.setForeground(new java.awt.Color(255, 255, 255));
+        btnDelete.setText("Delete");
+        btnDelete.setBorder(null);
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
             }
         });
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tBrand.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -169,7 +175,7 @@ public class BrandManagementGUI extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tBrand);
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setFont(new java.awt.Font("Gill Sans", 0, 14)); // NOI18N
@@ -179,9 +185,9 @@ public class BrandManagementGUI extends javax.swing.JPanel {
         jLabel6.setForeground(new java.awt.Color(102, 102, 102));
         jLabel6.setText("BRAND MANAGEMENT");
 
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        cbSupplier.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                cbSupplierActionPerformed(evt);
             }
         });
 
@@ -201,22 +207,21 @@ public class BrandManagementGUI extends javax.swing.JPanel {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
                                     .addComponent(jLabel2))
                                 .addGap(73, 73, 73)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(cbSupplier, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(textFieldMerk, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(18, 61, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29))))
@@ -232,116 +237,111 @@ public class BrandManagementGUI extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(textFieldMerk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
                         .addGap(55, 55, 55)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(44, 44, 44)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(65, 65, 65)
+                        .addComponent(textFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addContainerGap(113, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void textFieldMerkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldMerkActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_textFieldMerkActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void textFieldIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldIdActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_textFieldIdActionPerformed
    
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
         // TODO add your handling code here:   
         
-        String name = jTextField1.getText().trim();
-        
-        suppliers spl = new suppliers();
-            spl.setSupplierName(name);
-    
-            
-
-            if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Nama supplier tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
+        String name = textFieldMerk.getText().trim();
+        if (name.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nama brand tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+        
+        brands brand = new brands();
+        brand.setBrandName(name);
+        brand.setSupplierId(supplierMap.get(cbSupplier.getSelectedItem().toString()));
+            
+        boolean success = brandUc.createBrand(brand);
+        
+        JOptionPane.showMessageDialog(this, "CREATE: " + (success ? "Berhasil" : "Gagal"));
+        if (success) {
+            clearInputFields();
+            loadBrands();
+            System.out.println("Registrasi brand berhasil!");
+        }           
+    }//GEN-LAST:event_btnCreateActionPerformed
 
-            boolean success = supplierUc.createSupplier(spl);
-            JOptionPane.showMessageDialog(this, "CREATE: " + (success ? "Berhasil" : "Gagal"));
-            if (success) {
-                clearInputFields();
-                loadSuppliers();
-                System.out.println("Registrasi supplier berhasil!");
-            }           
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
         
-            String idText = jTextField4.getText().trim();
+            String idText = textFieldId.getText().trim();
             if (idText.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Pilih supplier terlebih dahulu dari tabel.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Pilih brand terlebih dahulu dari tabel.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             int id = Integer.parseInt(idText);
 
-            String name = jTextField1.getText().trim();
+            String name = textFieldMerk.getText().trim();
             
-            suppliers spl = new suppliers();
-            spl.setId(id);
-            spl.setSupplierName(name);      
+            brands brand = new brands();
+            brand.setId(id);
+            brand.setBrandName(name);
+            brand.setSupplierId(supplierMap.get(cbSupplier.getSelectedItem().toString()));
 
             if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Nama supplier tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nama brand tidak boleh kosong.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
                        
-            boolean success = supplierUc.updateSupplier(spl);
-            JOptionPane.showMessageDialog(this, "UPDATE: " + (success ? "Update supplier berhasil!" : "Gagal"));
-            if(success) {               
-                loadSuppliers();
+            boolean success = brandUc.updateBrand(brand.getId(), brand);
+            JOptionPane.showMessageDialog(this, "UPDATE: " + (success ? "Update brand berhasil!" : "Gagal"));
+            if(success) {   
+                clearInputFields();
+                loadBrands();
             }
      
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-            String idText = jTextField4.getText().trim();
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+            String idText = textFieldId.getText().trim();
             if (idText.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Supplier belum dipilih atau Nonaktif!.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Brand belum dipilih atau Nonaktif!.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            
             int id = Integer.parseInt(idText);
             // Menggunakan metode deleteSupplier
-            boolean deleted = supplierUc.DeleteSupplier(id); // Pastikan uc memiliki metode deleteSupplier
+            boolean deleted = brandUc.deleteBrand(id);
             if (deleted) {
                 JOptionPane.showMessageDialog(this, "DELETE: " + (deleted ? "Berhasil" : "Gagal"));
                 clearInputFields();
-                loadSuppliers();
+                loadBrands();
             }
             
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        String search = jTextField4.getText().trim();
-        boolean success = supplierUc.exportSupplierList(search); // Pastikan uc memiliki metode exportSupplierList
-        if (success) {
-        JOptionPane.showMessageDialog(this, "Daftar supplier berhasil diekspor.", "Success", JOptionPane.INFORMATION_MESSAGE);
-    }
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        loadSuppliers();
+
+        loadCbSuppliers();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
@@ -349,51 +349,56 @@ public class BrandManagementGUI extends javax.swing.JPanel {
     
     }//GEN-LAST:event_jTextField5ActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    private void cbSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSupplierActionPerformed
+
+    }//GEN-LAST:event_cbSupplierActionPerformed
     
     private void clearInputFields() {
-        jTextField4.setText("");
-        jTextField1.setText("");
+        textFieldId.setText("");
+        textFieldMerk.setText("");
     }
-    private void loadSuppliers() {
+    
+    private void loadBrands(){
         tableModel.setRowCount(0);
+        List<brands> brandList = brandUc.listBrands("");
         
-        String search = jTextField4.getText().trim();
-        List<suppliers> supplierList = supplierUc.getSuppliersList(search); 
-        
-        for (suppliers s : supplierList) {
-            supplierMap.put(s.getSupplierName(), s.getId());
-            jComboBox1.addItem(s.getSupplierName());
-            
+        for (brands s : brandList){
             tableModel.addRow(new Object[]{
                 s.getId(),
+                s.getBrandName(),
                 s.getSupplierName(),
-                s.getAddress(),
-                s.getPhone(),
                 s.getStatus() ? "Aktif" : "Nonaktif"
             });
         }
-        jTable2.setModel(tableModel);
+        
+        tBrand.setModel(tableModel);
+
+        
+    }
+    private void loadCbSuppliers() {
+        List<suppliers> supplierList = supplierUc.getSuppliersList(""); 
+        
+        for (suppliers s : supplierList) {
+            supplierMap.put(s.getSupplierName(), s.getId());
+            cbSupplier.addItem(s.getSupplierName());  
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnCreate;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.JComboBox<String> cbSupplier;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTable tBrand;
+    private javax.swing.JTextField textFieldId;
+    private javax.swing.JTextField textFieldMerk;
     // End of variables declaration//GEN-END:variables
 
 }
