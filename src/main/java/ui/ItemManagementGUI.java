@@ -496,7 +496,7 @@ public class ItemManagementGUI extends javax.swing.JPanel {
     }
 
     private void loadCbBrands() {
-       List<brands> brandList = brandUc.listBrands("",0);
+       List<brands> brandList = brandUc.listBrands("",0, 0);
         
         for (brands b : brandList) {
             brandMap.put(b.getBrandName(), b.getId());

@@ -5,6 +5,7 @@ import model.optionBrands;
 import model.optionSupplier;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,36 +17,50 @@ public class brandsRepo {
     }
 
     // List semua brand
-    public List<brands> listBrands(String search,Integer supplierId) throws SQLException {
-       List<brands> brandList = new ArrayList<>(); 
-       List<Object> params = new ArrayList<>();
-       
-       String sql = " SELECT b.*, s.supplier_name FROM brands b LEFT JOIN suppliers s ON b.supplier_id = s.id WHERE TRUE ";
-        
-       if (search != null && !search.trim().isEmpty()){
-           sql += " AND b.brand_name ILIKE ? ";
-           params.add( "%" + search.trim() + "%");
-       }
-       
-       if (supplierId != 0){
-           sql += " AND b.supplier_id = ? ";
-           params.add(supplierId);
-       }
-       
-       sql += " ORDER BY b.id ASC ";
+    public List<brands> listBrands(String search, int supplierId, int rangeDay) throws SQLException {
+    StringBuilder sql = new StringBuilder(
+        "SELECT b.*, s.supplier_name FROM brands b LEFT JOIN suppliers s ON b.supplier_id = s.id"
+    );
+    List<brands> brandList = new ArrayList<>();
+    int paramIndex = 1;
 
-       PreparedStatement stmt = conn.prepareStatement(sql);
-        
-        for (int i = 0; i < params.size(); i++) {
-            Object param = params.get(i);
-            if (param instanceof String) {
-                stmt.setString(i + 1, (String) param);
-            } else if (param instanceof Integer) {
-                stmt.setInt(i + 1, (Integer) param);
-            }
+    boolean hasSearch = search != null && !search.trim().isEmpty();
+    boolean hasSupplierId = supplierId > 0;
+    LocalDateTime from = null;
+
+    boolean hasCondition = false;
+
+    // Bangun query
+    if (hasSearch) {
+        sql.append(" WHERE b.brand_name ILIKE ?");
+        hasCondition = true;
+    }
+
+    if (hasSupplierId) {
+        sql.append(hasCondition ? " AND" : " WHERE");
+        sql.append(" b.supplier_id = ?");
+        hasCondition = true;
+    }
+
+    if (rangeDay > 0) {
+        from = LocalDateTime.now().minusDays(rangeDay);
+        sql.append(hasCondition ? " AND" : " WHERE");
+        sql.append(" b.created_at >= ?");
+    }
+
+    sql.append(" ORDER BY b.id ASC");
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+        if (hasSearch) {
+            stmt.setString(paramIndex++, "%" + search.trim() + "%");
+        }
+        if (hasSupplierId) {
+            stmt.setInt(paramIndex++, supplierId);
+        }
+        if (rangeDay > 0 && from != null) {
+            stmt.setTimestamp(paramIndex++, Timestamp.valueOf(from));
         }
 
-        
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
@@ -53,21 +68,21 @@ public class brandsRepo {
                 rs.getInt("id"),
                 rs.getString("brand_name"),
                 rs.getInt("supplier_id"),
-                    rs.getString("supplier_name"),
-                    rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("created_by"),
-                    rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
-                    rs.getInt("updated_by"),
-                    rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null,
-                    rs.getInt("deleted_by"),
-                    rs.getBoolean("status")
-                );
-                brandList.add(b);
-            }
-       
-
-        return brandList;
+                rs.getString("supplier_name"),
+                rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
+                rs.getInt("created_by"),
+                rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
+                rs.getInt("updated_by"),
+                rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null,
+                rs.getInt("deleted_by"),
+                rs.getBoolean("status")
+            );
+            brandList.add(b);
+        }
     }
+
+    return brandList;
+}
 
     // CREATE brand
     public boolean insertBrand(brands b, int currentUser) throws SQLException {

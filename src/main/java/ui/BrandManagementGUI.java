@@ -382,7 +382,7 @@ public class BrandManagementGUI extends javax.swing.JPanel {
     
     private void loadBrands(){
         tableModel.setRowCount(0);
-        List<brands> brandList = brandUc.listBrands("",0);
+        List<brands> brandList = brandUc.listBrands("",0, 0);
         
         for (brands s : brandList){
             tableModel.addRow(new Object[]{
