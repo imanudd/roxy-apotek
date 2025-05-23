@@ -419,7 +419,7 @@ public class StockManagementGUI extends javax.swing.JPanel {
     
     private void loadLogStock(){
         tableModel.setRowCount(0);
-        List<LogStock> listLogStock = logStockUc.getList("");
+        List<LogStock> listLogStock = logStockUc.getList("",0);
         
         for (LogStock s : listLogStock){
             tableModel.addRow(new Object[]{
