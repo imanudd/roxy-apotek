@@ -93,7 +93,20 @@ public class Main {
                 System.out.print("Masukkan username untuk dicari (kosongkan untuk semua): ");
                 String search = input.nextLine();
 
-                List<user> users = userUseCase.listUser(search);
+                System.out.print("Masukkan jumlah hari untuk filter: ");
+                String rangeInput = input.nextLine();
+                int rangeDay = 0;
+
+                if (rangeInput != null && !rangeInput.trim().isEmpty()) {
+                    try {
+                        rangeDay = Integer.parseInt(rangeInput.trim());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input tidak valid, menggunakan filter 0 hari.");
+                        rangeDay = 0;
+                    }
+                }
+
+                List<user> users = userUseCase.listUser(search, rangeDay);
 
                 if (users.isEmpty()) {
                     System.out.println("Tidak ada data user ditemukan.");
@@ -113,7 +126,10 @@ public class Main {
                 System.out.print("Masukkan username untuk filter (kosongkan untuk semua): ");
                 String search = input.nextLine();
 
-                boolean success = userUseCase.exportUserListToExcel(search);
+                System.out.print("Masukkan jumlah hari untuk filter: ");
+                int rangeDay = Integer.parseInt(input.nextLine());
+
+                boolean success = userUseCase.exportUserListToExcel(search, rangeDay);
                 if (!success) {
                     System.out.println("Export PDF gagal.");
                 }
