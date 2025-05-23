@@ -16,30 +16,43 @@ public class brandsRepo {
     }
 
     // List semua brand
-    public List<brands> listBrands(String search) throws SQLException {
-        String sql;
-        boolean hasSearch = search != null && !search.trim().isEmpty();
+    public List<brands> listBrands(String search,Integer supplierId) throws SQLException {
+       List<brands> brandList = new ArrayList<>(); 
+       List<Object> params = new ArrayList<>();
+       
+       String sql = " SELECT b.*, s.supplier_name FROM brands b LEFT JOIN suppliers s ON b.supplier_id = s.id WHERE TRUE ";
+        
+       if (search != null && !search.trim().isEmpty()){
+           sql += " AND b.brand_name ILIKE ? ";
+           params.add( "%" + search.trim() + "%");
+       }
+       
+       if (supplierId != 0){
+           sql += " AND b.supplier_id = ? ";
+           params.add(supplierId);
+       }
+       
+       sql += " ORDER BY b.id ASC ";
 
-        if (hasSearch) {
-            sql = "SELECT b.*, s.supplier_name FROM brands b LEFT JOIN suppliers s ON b.supplier_id = s.id WHERE b.brand_name ILIKE ? ORDER BY b.id ASC";
-        } else {
-            sql = "SELECT b.*, s.supplier_name FROM brands b LEFT JOIN suppliers s ON b.supplier_id = s.id ORDER BY b.id ASC";
+       PreparedStatement stmt = conn.prepareStatement(sql);
+        
+        for (int i = 0; i < params.size(); i++) {
+            Object param = params.get(i);
+            if (param instanceof String) {
+                stmt.setString(i + 1, (String) param);
+            } else if (param instanceof Integer) {
+                stmt.setInt(i + 1, (Integer) param);
+            }
         }
 
-        List<brands> brandList = new ArrayList<>();
+        
+        ResultSet rs = stmt.executeQuery();
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            if (hasSearch) {
-                stmt.setString(1, "%" + search.trim() + "%");
-            }
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                brands b = new brands(
-                    rs.getInt("id"),
-                    rs.getString("brand_name"),
-                    rs.getInt("supplier_id"),
+        while (rs.next()) {
+            brands b = new brands(
+                rs.getInt("id"),
+                rs.getString("brand_name"),
+                rs.getInt("supplier_id"),
                     rs.getString("supplier_name"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
                     rs.getInt("created_by"),
@@ -51,7 +64,7 @@ public class brandsRepo {
                 );
                 brandList.add(b);
             }
-        }
+       
 
         return brandList;
     }

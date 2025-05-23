@@ -6,6 +6,8 @@ import model.stock;
 import java.io.FileOutputStream;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -37,10 +39,15 @@ public class stockUc {
         }
     }
     
-    public boolean createdStock(items itm, stock stc){
-        return true;
+    public boolean updateStockIn(stock stc, int currentUserId){
+        try {
+            return stocksRepo.updateIncreaseStock(stc, currentUserId);
+        } catch (SQLException ex) {
+            Logger.getLogger(stockUc.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
-    
+        
     public boolean updateStock(stock stc, int id){
         return true;
     }

@@ -3,6 +3,8 @@ package usecase;
 import java.io.FileOutputStream;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -18,6 +20,16 @@ public class logStockUc {
     private final LogStockRepo logStockRepo;
     public logStockUc(LogStockRepo logStockRepo) {
         this.logStockRepo = logStockRepo;
+    }
+    
+    public boolean createLogStock(LogStock logStock){
+        try {
+            return logStockRepo.insert(logStock);
+        } catch (SQLException ex) {
+            Logger.getLogger(logStockUc.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }  
+
     }
 
     public List<LogStock> getList(String search) {

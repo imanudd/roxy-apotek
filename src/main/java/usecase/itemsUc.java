@@ -31,9 +31,9 @@ public class itemsUc {
     }
 
     //list item
-    public List<items> getAllItems(String search) {
+    public List<items> getAllItems(String search, Integer brandId) {
         try{
-            return itemRepo.getAllItems(search);
+            return itemRepo.getAllItems(search, brandId);
         }catch (SQLException e){
             System.err.println("List items error: " + e.getMessage());
             return new ArrayList<>();
@@ -140,7 +140,7 @@ public class itemsUc {
     public boolean exportItemsList(String search) {
         try {
             String fileName = "items-list-" + System.currentTimeMillis() + ".xlsx";
-            List<items> items = itemRepo.getAllItems(search);
+            List<items> items = itemRepo.getAllItems(search, 0);
 
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Items");

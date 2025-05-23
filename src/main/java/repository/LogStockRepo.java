@@ -24,7 +24,7 @@ public class LogStockRepo {
         List<LogStock> list = new ArrayList<>();
         boolean hasFilter = filter != null && !filter.trim().isEmpty();
 
-        String query = "SELECT s.activity_name, s.item_id, i.item_name , s.ref_id, u.username, s.qty FROM log_stocks s LEFT JOIN users u ON s.created_by = u.id LEFT JOIN items i ON s.item_id = i.id";
+        String query = "SELECT s.id, s.activity_name, s.item_id, i.item_name , s.ref_id, u.username, s.qty, s.created_at, s.created_by, s.updated_at, s.updated_by FROM log_stocks s LEFT JOIN users u ON s.created_by = u.id LEFT JOIN items i ON s.item_id = i.id";
 
         if (hasFilter) {
             query += " WHERE s.activity_name = ?";
@@ -58,18 +58,20 @@ public class LogStockRepo {
     }
 
     // Insert
-    public void insert(LogStock log) throws SQLException {
+    public boolean insert(LogStock log) throws SQLException {
         validateLogStock(log, false);
 
-        String query = "INSERT INTO log_stocks (activity_name, item_id, ref_id, created_at, created_by) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        String query = "INSERT INTO log_stocks (activity_name, item_id, ref_id, qty, created_at, created_by) VALUES (?, ?, ? ,?, ?, ?)";
+        PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, log.getActivityName());
             stmt.setInt(2, log.getItemId());
             stmt.setInt(3, log.getRefId());
-            stmt.setTimestamp(4, Timestamp.valueOf(log.getCreatedAt()));
-            stmt.setInt(5, currentUser.getId());
-            stmt.executeUpdate();
-        }
+            stmt.setInt(4, log.getQty());
+            stmt.setTimestamp(5, Timestamp.valueOf(log.getCreatedAt()));
+            stmt.setInt(6, currentUser.getId());
+            int rowsInserted = stmt.executeUpdate();
+            
+         return rowsInserted > 0;
     }
 
     // Update
@@ -145,11 +147,11 @@ public class LogStockRepo {
             if (log.getId() <= 0) {
                 throw new IllegalArgumentException("ID tidak valid untuk update.");
             }
-            if (log.getUpdatedAt() == null || log.getUpdatedBy() == 0) {
+            if (log.getUpdatedAt() == null) {
                 throw new IllegalArgumentException("Data update harus diisi.");
             }
         } else {
-            if (log.getCreatedAt() == null || log.getCreatedBy() == 0) {
+            if (log.getCreatedAt() == null) {
                 throw new IllegalArgumentException("Data created harus diisi.");
             }
         }

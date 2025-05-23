@@ -392,7 +392,7 @@ public class Main {
             // list brand
             System.out.println("Masukkan nama brand: ");
             String search = input.nextLine();
-            List<brands> list = brandUseCase.listBrands(search);
+            List<brands> list = brandUseCase.listBrands(search, 0);
             if (!list.isEmpty()) {
                 for (brands brand : list) {
                     System.out.printf("ID: " + brand.getId() + ", Nama Brand: " + brand.getBrandName() + ", ID Supplier: " + brand.getSupplierId() +",Supplier: " + brand.getSupplierName(), ", Status: " + brand.getStatus());
@@ -522,7 +522,8 @@ public class Main {
         
         }else if (choice.equals("28")) {
             stocksRepo stocksRepo = new stocksRepo(conn);
-            stockUc stockUC = new stockUc(stocksRepo);
+             itemsRepo itemsRepo = new itemsRepo(conn);
+            stockUc stockUC = new stockUc(stocksRepo, itemsRepo);
 
             //list stock 
             System.out.println("Masukkan nama item: ");
@@ -535,7 +536,8 @@ public class Main {
             }
         }else if (choice.equals("29")){
             stocksRepo stocksRepo = new stocksRepo(conn);
-            stockUc stockUC = new stockUc(stocksRepo);
+            itemsRepo itemsRepo = new itemsRepo(conn);
+            stockUc stockUC = new stockUc(stocksRepo, itemsRepo);
 
             // get stock by item id
             System.out.println("Masukkan ID item: ");
@@ -546,7 +548,8 @@ public class Main {
             }
         }else if (choice.equals("30")){
             stocksRepo stocksRepo = new stocksRepo(conn);
-            stockUc stockUC = new stockUc(stocksRepo);
+             itemsRepo itemsRepo = new itemsRepo(conn);
+            stockUc stockUC = new stockUc(stocksRepo, itemsRepo);
 
             //export stock
             System.out.println("Masukkan nama item: ");

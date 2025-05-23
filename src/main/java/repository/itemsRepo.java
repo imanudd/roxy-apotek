@@ -16,28 +16,41 @@ public class itemsRepo {
     }
 
     // Ambil semua data item
-    public List<items> getAllItems(String search) throws SQLException {
+    public List<items> getAllItems(String search, Integer brandId) throws SQLException {
         List<items> list = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
 
-        String query = "SELECT i.*, b.brand_name, s.first_stock, s.stock_in, s.stock_out, s.remaining_stock FROM items i LEFT JOIN brands b ON i.brand_id=b.id LEFT JOIN stocks s ON i.id = s.item_id";
-        boolean hasSearch = search != null && !search.trim().isEmpty();
-
-        if (hasSearch) {
-            query += " WHERE b.brand_name ILIKE ?";
+        String query = " SELECT i.*, b.brand_name, s.first_stock, s.stock_in, s.stock_out, s.remaining_stock FROM items i LEFT JOIN brands b ON i.brand_id=b.id LEFT JOIN stocks s ON i.id = s.item_id WHERE TRUE ";
+        
+        if (search != null && !search.trim().isEmpty()) {
+            query += " AND b.brand_name ILIKE ? ";
+            params.add( "%" + search.trim() + "%");
+        }
+        
+        if (brandId != 0) {
+            query += " AND i.brand_id = ? ";
+            params.add(brandId);
         }
 
         query += " ORDER BY b.id ASC";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            if (hasSearch) {
-                stmt.setString(1, "%" + search.trim() + "%");
+        PreparedStatement stmt = conn.prepareStatement(query);
+        
+        for (int i = 0; i < params.size(); i++) {
+            Object param = params.get(i);
+            if (param instanceof String) {
+                stmt.setString(i + 1, (String) param);
+            } else if (param instanceof Integer) {
+                stmt.setInt(i + 1, (Integer) param);
             }
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Timestamp createdAtTs = rs.getTimestamp("created_at");
-                    Timestamp updatedAtTs = rs.getTimestamp("updated_at");
-                    Timestamp deletedAtTs = rs.getTimestamp("deleted_at");
+        }
+        
+        ResultSet rs = stmt.executeQuery();
+        
+        while (rs.next()) {
+            Timestamp createdAtTs = rs.getTimestamp("created_at");
+            Timestamp updatedAtTs = rs.getTimestamp("updated_at");
+            Timestamp deletedAtTs = rs.getTimestamp("deleted_at");
 
                     items itm = new items(
                         rs.getInt("id"),
@@ -58,8 +71,6 @@ public class itemsRepo {
                         rs.getInt("remaining_stock")
                     );
                     list.add(itm);
-                }
-            }
         }
 
     return list;

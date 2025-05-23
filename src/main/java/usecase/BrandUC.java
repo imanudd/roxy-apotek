@@ -29,9 +29,9 @@ public class BrandUC {
     }
 
     // List semua brand
-    public List<brands> listBrands(String search) {
+    public List<brands> listBrands(String search, Integer supplierId) {
         try {
-            return brandRepo.listBrands(search);
+            return brandRepo.listBrands(search, supplierId);
         } catch (SQLException e) {
             System.err.println("List brands error: " + e.getMessage());
             return new ArrayList<>();
@@ -154,7 +154,7 @@ public class BrandUC {
     public boolean exportBrandsList(String search) {
         try {
             String fileName = "brands-list-" + System.currentTimeMillis() + ".xlsx";
-            List<brands> brands = brandRepo.listBrands(search);
+            List<brands> brands = brandRepo.listBrands(search, 0);
 
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Brands");
