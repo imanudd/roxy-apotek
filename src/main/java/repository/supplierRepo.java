@@ -18,45 +18,60 @@ public class supplierRepo {
     }
 
     // Mendapatkan list supplier yang belum dihapus
-    public List<suppliers> ListSupplier(String search) throws SQLException {
-        String sql;
-        boolean hasSearch = search != null && !search.isEmpty();
+    public List<suppliers> listSupplier(String search, int rangeDay) throws SQLException {
+    StringBuilder sql = new StringBuilder("SELECT * FROM suppliers");
+    List<suppliers> suppliers = new ArrayList<>();
+    int paramIndex = 1;
 
-        if (hasSearch) {
-            sql = "SELECT * FROM suppliers WHERE supplier_name ILIKE ? order by id asc";
-        } else {
-            sql = "SELECT * FROM suppliers order by id asc";
-        }
+    boolean hasSearch = search != null && !search.trim().isEmpty();
+    LocalDateTime from = null;
 
-        List<suppliers> suppliers = new ArrayList<>();
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)){
-            if (hasSearch) {
-                stmt.setString(1, "%" + search.trim() + "%");
-            }
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                suppliers spl = new suppliers(
-                        rs.getInt("id"),
-                        rs.getString("supplier_name"),
-                        rs.getString("address"),
-                        rs.getString("phone"),
-                        rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
-                        rs.getInt("created_by"),
-                        rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
-                        rs.getInt("updated_by"),
-                        rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null,
-                        rs.getInt("deleted_by"),
-                        rs.getBoolean("status")
-                );
-                suppliers.add(spl);
-            }
-        
-        }
-        return suppliers;
+    // Bangun query
+    if (hasSearch) {
+        sql.append(" WHERE supplier_name ILIKE ?");
     }
+
+    if (rangeDay > 0) {
+        from = LocalDateTime.now().minusDays(rangeDay);
+        if (hasSearch) {
+            sql.append(" AND created_at >= ?");
+        } else {
+            sql.append(" WHERE created_at >= ?");
+        }
+    }
+
+    sql.append(" ORDER BY id ASC");
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+        if (hasSearch) {
+            stmt.setString(paramIndex++, "%" + search.trim() + "%");
+        }
+        if (rangeDay > 0 && from != null) {
+            stmt.setTimestamp(paramIndex++, Timestamp.valueOf(from));
+        }
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            suppliers spl = new suppliers(
+                rs.getInt("id"),
+                rs.getString("supplier_name"),
+                rs.getString("address"),
+                rs.getString("phone"),
+                rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
+                rs.getInt("created_by"),
+                rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
+                rs.getInt("updated_by"),
+                rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null,
+                rs.getInt("deleted_by"),
+                rs.getBoolean("status")
+            );
+            suppliers.add(spl);
+        }
+    }
+
+    return suppliers;
+}
     public List<optionSupplier> OptionSupplier() throws SQLException {
         String sql;
         sql = "SELECT * FROM suppliers where status = true order by id asc";

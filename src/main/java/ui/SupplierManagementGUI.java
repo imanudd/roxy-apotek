@@ -409,7 +409,8 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
         tableModel.setRowCount(0);
         
         String search = jTextField4.getText().trim();
-        List<suppliers> supplierList = uc.getSuppliersList(search); // memanggil method getList()
+        int rangeDay = Integer.parseInt(jTextField4.getText().trim());
+        List<suppliers> supplierList = uc.getSuppliersList(search, rangeDay); // memanggil method getList()
 
         for (suppliers s : supplierList) {
             tableModel.addRow(new Object[]{

@@ -273,7 +273,20 @@ public class Main {
             System.out.println("Masukkan nama supplier: ");
             String search = input.nextLine();
 
-            List<suppliers> supplierList = supplierUseCase.getSuppliersList(search);
+            System.out.println("Masukkan range hari: ");
+            String rangeInput = input.nextLine();
+                int rangeDay = 0;
+
+                if (rangeInput != null && !rangeInput.trim().isEmpty()) {
+                    try {
+                        rangeDay = Integer.parseInt(rangeInput.trim());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input tidak valid, menggunakan filter 0 hari.");
+                        rangeDay = 0;
+                    }
+                }
+
+            List<suppliers> supplierList = supplierUseCase.getSuppliersList(search, rangeDay );
             if (supplierList.isEmpty()) {
                 System.out.println("Tidak ada supplier yang ditemukan.");
             }else {
@@ -317,7 +330,20 @@ public class Main {
             //export list supplier
             System.out.println("Masukkan nama supplier: ");
             String search = input.nextLine();
-            supplierUseCase.exportSupplierList(search);
+
+            System.out.println("Masukkan range hari: ");
+            String rangeInput = input.nextLine();
+                int rangeDay = 0;
+
+                if (rangeInput != null && !rangeInput.trim().isEmpty()) {
+                    try {
+                        rangeDay = Integer.parseInt(rangeInput.trim());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input tidak valid, menggunakan filter 0 hari.");
+                        rangeDay = 0;
+                    }
+                }
+            supplierUseCase.exportSupplierList(search, rangeDay);
 
             if (true) {
                 System.out.println("Export supplier berhasil!");
