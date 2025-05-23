@@ -562,13 +562,13 @@ public class Main {
             //option item
             System.out.println("Masukkan ID brand: ");
             int brandId = Integer.parseInt(input.nextLine());
-<<<<<<< Updated upstream
-            List<optionItems> list = itemsUC.optionItems(brandId);
-            if (!list.isEmpty()) {
-                for (optionItems item : list) {
-                    System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName());
-                }
-            }
+//
+//            List<optionItems> list = itemsUC.optionItems(brandId);
+//            if (!list.isEmpty()) {
+//                for (optionItems item : list) {
+//                    System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName());
+//                }
+//            }
         }else if (choice.equals("32")){
             LogStockRepo logStockRepo = new LogStockRepo(conn);
             logStockUc logStockUC = new logStockUc(logStockRepo);
@@ -593,14 +593,12 @@ public class Main {
             if (success) {
                 System.out.println("Export log stock berhasil!");
             }
-=======
 //            List<optionItems> list = itemsUC.optionItems(brandId);
 //            if (!list.isEmpty()) {
 //                for (optionItems item : list) {
 //                    System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName());
 //                }
 //            }
->>>>>>> Stashed changes
         }else {
                 System.out.println("Pilihan tidak valid!");
             }
