@@ -614,7 +614,7 @@ public class Main {
             }
         }else if (choice.equals("30")){
             stocksRepo stocksRepo = new stocksRepo(conn);
-             itemsRepo itemsRepo = new itemsRepo(conn);
+            itemsRepo itemsRepo = new itemsRepo(conn);
             stockUc stockUC = new stockUc(stocksRepo, itemsRepo);
 
             //export stock
