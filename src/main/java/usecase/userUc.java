@@ -82,9 +82,9 @@ public class userUc {
     }
 
     //list user
-    public List<user> listUser(String search) {
+    public List<user> listUser(String search, int rangeDay) {
         try {
-            return userRepo.listUser(search);
+            return userRepo.listUser(search, rangeDay);
         } catch (SQLException e) {
             System.err.println("List user error: " + e.getMessage());
             return new ArrayList<>();
@@ -92,10 +92,10 @@ public class userUc {
     }
 
     //export list user
-    public boolean exportUserListToExcel(String search) {
+    public boolean exportUserListToExcel(String search, int rangeDay) {
         try {
             String fileName = "user-list-" + System.currentTimeMillis() + ".xlsx";
-            List<user> users = userRepo.listUser(search);
+            List<user> users = userRepo.listUser(search, rangeDay);
 
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Users");

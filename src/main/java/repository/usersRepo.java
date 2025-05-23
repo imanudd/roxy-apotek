@@ -58,22 +58,38 @@ public class usersRepo {
         return null;
     }
 
-    //list user
-    public List<user> listUser(String search) throws SQLException {
-    String sql;
+public List<user> listUser(String search, int rangeDay) throws SQLException {
+    StringBuilder sql = new StringBuilder("SELECT * FROM users");
+    List<user> users = new ArrayList<>();
+    int paramIndex = 1;
+
+    LocalDateTime from = null;
     boolean hasSearch = search != null && !search.trim().isEmpty();
+    boolean hasWhere = false;
 
     if (hasSearch) {
-        sql = "SELECT * FROM users WHERE username ILIKE ? order by id asc";
-    } else {
-        sql = "SELECT * FROM users order by id asc";
+        sql.append(" WHERE username ILIKE ?");
+        hasWhere = true;
     }
 
-    List<user> users = new ArrayList<>();
+    if (rangeDay > 0) {
+        from = LocalDateTime.now().minusDays(rangeDay);
+        if (hasWhere) {
+            sql.append(" AND");
+        } else {
+            sql.append(" WHERE");
+        }
+        sql.append(" created_at >= ?");
+    }
 
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+    sql.append(" ORDER BY id ASC");
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
         if (hasSearch) {
-            stmt.setString(1, "%" + search.trim() + "%");
+            stmt.setString(paramIndex++, "%" + search.trim() + "%");
+        }
+        if (rangeDay > 0 && from != null) {
+            stmt.setTimestamp(paramIndex++, Timestamp.valueOf(from));
         }
 
         ResultSet rs = stmt.executeQuery();
@@ -99,6 +115,7 @@ public class usersRepo {
 
     return users;
 }
+
 
     //check email
     public boolean isEmailExist(String email) throws SQLException {
