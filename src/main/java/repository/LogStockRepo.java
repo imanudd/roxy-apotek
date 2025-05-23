@@ -8,6 +8,7 @@ import helper.currentUser;
 import model.LogStock;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,43 +20,65 @@ public class LogStockRepo {
         this.conn = conn;
     }
 
-    // Get list
-    public List<LogStock> getList(String filter) throws SQLException {
-        List<LogStock> list = new ArrayList<>();
-        boolean hasFilter = filter != null && !filter.trim().isEmpty();
+    public List<LogStock> getList(String filter, int rangeDay ) throws SQLException {
+    StringBuilder query = new StringBuilder(
+        "SELECT s.id, s.activity_name, s.item_id, i.item_name, s.ref_id, u.username, " +
+        "s.qty, s.created_at, s.created_by, s.updated_at, s.updated_by " +
+        "FROM log_stocks s " +
+        "LEFT JOIN users u ON s.created_by = u.id " +
+        "LEFT JOIN items i ON s.item_id = i.id"
+    );
 
-        String query = "SELECT s.id, s.activity_name, s.item_id, i.item_name , s.ref_id, u.username, s.qty, s.created_at, s.created_by, s.updated_at, s.updated_by FROM log_stocks s LEFT JOIN users u ON s.created_by = u.id LEFT JOIN items i ON s.item_id = i.id";
+    List<LogStock> list = new ArrayList<>();
+    int paramIndex = 1;
+    boolean hasFilter = filter != null && !filter.trim().isEmpty();
+    LocalDateTime from = null;
+    boolean hasWhere = false;
 
-        if (hasFilter) {
-            query += " WHERE s.activity_name = ?";
-        }
-
-        try (PreparedStatement stmt = conn.prepareStatement(query)){
-            if (hasFilter) {
-                stmt.setString(1, filter.trim());
-            }
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    LogStock log = new LogStock(
-                        rs.getInt("id"),
-                        rs.getString("activity_name"),
-                        rs.getInt("item_id"),
-                        rs.getString("item_name"),
-                        rs.getInt("ref_id"),
-                        rs.getString("username"),
-                        rs.getInt("qty"),
-                        rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
-                        rs.getInt("created_by"),
-                        rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
-                        rs.getInt("updated_by")
-                    );
-                    list.add(log);
-                }
-            }
-        }
-
-        return list;
+    // Bangun WHERE clause
+    if (hasFilter) {
+        query.append(" WHERE s.activity_name = ?");
+        hasWhere = true;
     }
+
+    if (rangeDay > 0) {
+        from = LocalDateTime.now().minusDays(rangeDay);
+        query.append(hasWhere ? " AND" : " WHERE");
+        query.append(" s.created_at >= ?");
+    }
+
+    query.append(" ORDER BY s.id ASC");
+
+    try (PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+        if (hasFilter) {
+            stmt.setString(paramIndex++, filter.trim());
+        }
+        if (rangeDay > 0 && from != null) {
+            stmt.setTimestamp(paramIndex++, Timestamp.valueOf(from));
+        }
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                LogStock log = new LogStock(
+                    rs.getInt("id"),
+                    rs.getString("activity_name"),
+                    rs.getInt("item_id"),
+                    rs.getString("item_name"),
+                    rs.getInt("ref_id"),
+                    rs.getString("username"),
+                    rs.getInt("qty"),
+                    rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
+                    rs.getInt("created_by"),
+                    rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
+                    rs.getInt("updated_by")
+                );
+                list.add(log);
+            }
+        }
+    }
+
+    return list;
+}
 
     // Insert
     public boolean insert(LogStock log) throws SQLException {

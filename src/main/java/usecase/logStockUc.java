@@ -32,9 +32,9 @@ public class logStockUc {
 
     }
 
-    public List<LogStock> getList(String search) {
+    public List<LogStock> getList(String filter, int rangeDay) {
         try {
-            return logStockRepo.getList(search);
+            return logStockRepo.getList(filter, rangeDay);
         } catch (SQLException e) {
             System.out.println("Error fetching log stocks: " + e.getMessage());
             return null;
@@ -42,10 +42,10 @@ public class logStockUc {
     }
 
     //export stock
-    public boolean exportLogStock(String search){
+    public boolean exportLogStock(String filter, int rangeDay) {
         try {
             String fileName = "log-stock-list-" + System.currentTimeMillis() + ".xlsx";
-            List<LogStock> logstocks = logStockRepo.getList(search);
+            List<LogStock> logstocks = logStockRepo.getList(filter, rangeDay);
 
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Log Stocks");

@@ -643,9 +643,21 @@ public class Main {
             logStockUc logStockUC = new logStockUc(logStockRepo);
 
             //list log stock
-            System.out.println("Filter (in / out): ");
+            System.out.println("Filter : ");
             String filter = input.nextLine();
-            List<LogStock> list = logStockUC.getList(filter);
+            System.out.println("Range day: ");
+            String rangeInput = input.nextLine();
+            int rangeDay = 0;
+
+                if (rangeInput != null && !rangeInput.trim().isEmpty()) {
+                    try {
+                        rangeDay = Integer.parseInt(rangeInput.trim());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input tidak valid, menggunakan filter 0 hari.");
+                        rangeDay = 0;
+                    }
+                }
+            List<LogStock> list = logStockUC.getList(filter, rangeDay);
             if (!list.isEmpty()) {
                 for (LogStock log : list) {
                     System.out.println("ID: " + log.getId() + ", activity name: " + log.getActivityName() + "item_id" + log.getItemId() + "ref_id" + log.getRefId() + "username" + log.getUsername());
@@ -656,9 +668,21 @@ public class Main {
             logStockUc logStockUC = new logStockUc(logStockRepo);   
 
             //export log stock
-            System.out.println("Filter (in / out): ");
+            System.out.println("Filter: ");
             String filter = input.nextLine();
-            boolean success = logStockUC.exportLogStock(filter);
+            System.out.println("Range day: ");
+            String rangeInput = input.nextLine();
+            int rangeDay = 0;
+
+                if (rangeInput != null && !rangeInput.trim().isEmpty()) {
+                    try {
+                        rangeDay = Integer.parseInt(rangeInput.trim());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input tidak valid, menggunakan filter 0 hari.");
+                        rangeDay = 0;
+                    }
+                }
+            boolean success = logStockUC.exportLogStock(filter, rangeDay);
             if (success) {
                 System.out.println("Export log stock berhasil!");
             }
