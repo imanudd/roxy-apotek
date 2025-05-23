@@ -31,9 +31,9 @@ public class supplierUc {
     }
 
     // Methods get list supplier    
-    public List<suppliers> getSuppliersList(String search) {
+    public List<suppliers> getSuppliersList(String search, int rangeDay) {
         try {
-            return supplierRepo.ListSupplier(search);
+            return supplierRepo.listSupplier(search, rangeDay);
         } catch (SQLException e) {
             System.err.println("List supplier error: " + e.getMessage());
             return new ArrayList<>();
@@ -158,10 +158,10 @@ public class supplierUc {
 
 
     // export supplier
-    public boolean exportSupplierList(String search) {
+    public boolean exportSupplierList(String search, int rangeDay) {
         try {
             String fileName = "supplier-list-" + System.currentTimeMillis() + ".xlsx";
-            List<suppliers> suppliers = supplierRepo.ListSupplier(search);
+            List<suppliers> suppliers = supplierRepo.listSupplier(search, rangeDay);
 
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Suppliers");
