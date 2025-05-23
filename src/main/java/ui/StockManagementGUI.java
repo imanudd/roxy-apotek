@@ -448,7 +448,7 @@ public class StockManagementGUI extends javax.swing.JPanel {
     
     private void loadCbBrands() {
        String supplierName = cbSupplier.getSelectedItem().toString();
-       List<brands> brandList = brandUc.listBrands("",supplierMap.get(supplierName));
+       List<brands> brandList = brandUc.listBrands("",supplierMap.get(supplierName), 0);
         
         for (brands b : brandList) {
             brandMap.put(b.getBrandName(), b.getId());

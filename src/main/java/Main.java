@@ -434,7 +434,19 @@ public class Main {
             // list brand
             System.out.println("Masukkan nama brand: ");
             String search = input.nextLine();
-            List<brands> list = brandUseCase.listBrands(search, 0);
+            System.out.println("Masukkan range hari: ");
+            String rangeInput = input.nextLine();
+            int rangeDay = 0;
+
+                if (rangeInput != null && !rangeInput.trim().isEmpty()) {
+                    try {
+                        rangeDay = Integer.parseInt(rangeInput.trim());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input tidak valid, menggunakan filter 0 hari.");
+                        rangeDay = 0;
+                    }
+                }
+            List<brands> list = brandUseCase.listBrands(search, 0, rangeDay);
             if (!list.isEmpty()) {
                 for (brands brand : list) {
                     System.out.printf("ID: " + brand.getId() + ", Nama Brand: " + brand.getBrandName() + ", ID Supplier: " + brand.getSupplierId() +",Supplier: " + brand.getSupplierName(), ", Status: " + brand.getStatus());
@@ -462,7 +474,19 @@ public class Main {
             //export brand
             System.out.println("Masukkan nama brand: ");
             String search = input.nextLine();
-            boolean success = brandUseCase.exportBrandsList(search);
+            System.out.println("Masukkan range hari: ");
+            String rangeInput = input.nextLine();
+            int rangeDay = 0;
+
+                if (rangeInput != null && !rangeInput.trim().isEmpty()) {
+                    try {
+                        rangeDay = Integer.parseInt(rangeInput.trim());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input tidak valid, menggunakan filter 0 hari.");
+                        rangeDay = 0;
+                    }
+                }
+            boolean success = brandUseCase.exportBrandsList(search, 0, rangeDay);
             if (success) {
                 System.out.println("Export brand berhasil!");
             }else {
