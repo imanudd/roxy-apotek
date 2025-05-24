@@ -209,7 +209,7 @@ public class ReportManagementGUI extends javax.swing.JPanel {
                     data = supplierRepo.listSupplier(search, periode);
                     break;
                 case "DATA TRANSAKSI":
-                    data = transactionsRepo.getAllTransaction();
+                    data = transactionsRepo.getAllTransaction(periode);
                     break;
                 default:
                     JOptionPane.showMessageDialog(this, "Silakan pilih kategori terlebih dahulu.");
