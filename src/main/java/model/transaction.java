@@ -12,11 +12,13 @@ public class transaction {
     private int createdBy;
     private LocalDateTime updatedAt;
     private int updatedBy;
+    private String username;
 
     // Constructor
     public transaction() {}
     
-    public transaction(LocalDate date, double grandTotal, int totalItem, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy) {
+    public transaction(int id,LocalDate date, double grandTotal, int totalItem, LocalDateTime createdAt, int createdBy, LocalDateTime updatedAt, int updatedBy, String username) {
+        setId(id);
         setDate(date);
         setGrandTotal(grandTotal);
         setTotalItem(totalItem);
@@ -24,6 +26,7 @@ public class transaction {
         setCreatedBy(createdBy);
         setUpdatedAt(updatedAt);
         setUpdatedBy(updatedBy);
+        setUsername(username);
     }
 
     // Getter & Setter dengan validasi
@@ -68,7 +71,7 @@ public class transaction {
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
-        if (createdAt == null) throw new IllegalArgumentException("CreatedAt tidak boleh null");
+        // if (createdAt == null) throw new IllegalArgumentException("CreatedAt tidak boleh null");
         this.createdAt = createdAt;
     }
 
@@ -77,7 +80,7 @@ public class transaction {
     }
 
     public void setCreatedBy(int createdBy) {
-        if (createdBy <= 0) throw new IllegalArgumentException("CreatedBy harus lebih dari 0");
+        // if (createdBy <= 0) throw new IllegalArgumentException("CreatedBy harus lebih dari 0");
         this.createdBy = createdBy;
     }
 
@@ -86,7 +89,7 @@ public class transaction {
     }
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
-        if (updatedAt == null) throw new IllegalArgumentException("UpdatedAt tidak boleh null");
+        // if (updatedAt == null) throw new IllegalArgumentException("UpdatedAt tidak boleh null");
         this.updatedAt = updatedAt;
     }
 
@@ -95,8 +98,16 @@ public class transaction {
     }
 
     public void setUpdatedBy(int updatedBy) {
-        if (updatedBy <= 0) throw new IllegalArgumentException("UpdatedBy harus lebih dari 0");
+        // if (updatedBy <= 0) throw new IllegalArgumentException("UpdatedBy harus lebih dari 0");
         this.updatedBy = updatedBy;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
 

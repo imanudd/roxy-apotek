@@ -2,6 +2,8 @@ import config.DatabaseConfig;
 import repository.LogStockRepo;
 import repository.brandsRepo;
 import repository.supplierRepo;
+import repository.transactionsDetailRepo;
+import repository.transactionsRepo;
 import repository.usersRepo;
 import repository.itemsRepo;
 import repository.stocksRepo;
@@ -11,10 +13,12 @@ import usecase.itemsUc;
 import usecase.logStockUc;
 import usecase.stockUc;
 import usecase.supplierUc;
+import usecase.transactionUc;
 import usecase.userUc;
 import model.optionSupplier;
 import model.stock;
 import model.suppliers;
+import model.transaction;
 import model.user;
 import model.LogStock;
 import model.brands;
@@ -65,6 +69,8 @@ public class Main {
         System.out.println("31. option item (Terminal)");
         System.out.println("32. list log stock (Terminal)");
         System.out.println("33. export log stock (Terminal)");
+        System.out.println("34. get list transaksi (Terminal)");
+        System.out.println("35. export list transaksi (Terminal)");
         System.out.print("Pilih mode : ");
         String choice = input.nextLine();
 
@@ -692,7 +698,58 @@ public class Main {
 //                    System.out.println("ID: " + item.getId() + ", Nama Item: " + item.getItemName());
 //                }
 //            }
-        }else {
+        } else if (choice.equals("34")){
+            transactionsRepo transactionsRepo = new transactionsRepo(conn);
+            LogStockRepo logStockRepo = new LogStockRepo(conn);
+            transactionsDetailRepo transactionsDetailRepo = new transactionsDetailRepo(conn);
+            stocksRepo stocksRepo = new stocksRepo(conn);
+            transactionUc transactionsUc = new transactionUc(transactionsRepo, transactionsDetailRepo, stocksRepo, logStockRepo);
+
+            //list transaction
+            System.out.println("Range day: ");
+            String rangeInput = input.nextLine();
+            int rangeDay = 0;
+
+                if (rangeInput != null && !rangeInput.trim().isEmpty()) {
+                    try {
+                        rangeDay = Integer.parseInt(rangeInput.trim());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input tidak valid, menggunakan filter 0 hari.");
+                        rangeDay = 0;
+                    }
+                }
+            List<transaction> list = transactionsUc.getTransactionList(rangeDay);
+            if (!list.isEmpty()) {
+                for (transaction trans : list) {
+                    System.out.println("ID: " + trans.getId() + ", grand total: " + trans.getGrandTotal() + "total item" + trans.getTotalItem() + "username" + trans.getUsername());
+                }
+            }
+        } else if (choice.equals("35")){
+            transactionsRepo transactionsRepo = new transactionsRepo(conn);
+            LogStockRepo logStockRepo = new LogStockRepo(conn);
+            transactionsDetailRepo transactionsDetailRepo = new transactionsDetailRepo(conn);
+            stocksRepo stocksRepo = new stocksRepo(conn);
+            transactionUc transactionsUc = new transactionUc(transactionsRepo, transactionsDetailRepo, stocksRepo, logStockRepo);
+
+            //Export list transaction
+            System.out.println("Range day: ");
+            String rangeInput = input.nextLine();
+            int rangeDay = 0;
+
+                if (rangeInput != null && !rangeInput.trim().isEmpty()) {
+                    try {
+                        rangeDay = Integer.parseInt(rangeInput.trim());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input tidak valid, menggunakan filter 0 hari.");
+                        rangeDay = 0;
+                    }
+                }
+            boolean success = transactionsUc.exportTransactionList(rangeDay);
+            if (success) {
+                System.out.println("Export transaction berhasil!");
+            }
+            
+        } else {
                 System.out.println("Pilihan tidak valid!");
             }
         } catch (Exception e) {

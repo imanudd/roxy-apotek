@@ -4,6 +4,7 @@ import model.transaction;
 import helper.currentUser;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -15,33 +16,44 @@ public class transactionsRepo {
     }
 
     // Ambil semua transaksi
-    public List<transaction> getAllTransaction() {
-        List<transaction> list = new ArrayList<>();
-        String query = "SELECT * FROM transactions";
+    public List<transaction> getAllTransaction(int range) throws SQLException {
+    List<transaction> list = new ArrayList<>();
+    String query = "SELECT t.*, u.username FROM transactions t LEFT JOIN users u ON t.created_by = u.id ";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+    LocalDateTime from = null;
+    if (range > 0) {
+        query += "WHERE t.created_at >= ? ";
+        from = LocalDateTime.now().minusDays(range); // gunakan LocalDateTime sesuai range
+    }
 
+    query += "ORDER BY id ASC";
+
+    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        int paramIndex = 1;
+        if (range > 0 && from != null) {
+            stmt.setTimestamp(paramIndex++, Timestamp.valueOf(from)); // ✅ atur parameter SEBELUM executeQuery
+        }
+
+        try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 transaction t = new transaction(
+                    rs.getInt("id"),
                     rs.getDate("date").toLocalDate(),
                     rs.getDouble("grand_total"),
                     rs.getInt("total_item"),
-                    rs.getTimestamp("created_at").toLocalDateTime(),
+                    rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
                     rs.getInt("created_by"),
-                    rs.getTimestamp("updated_at").toLocalDateTime(),
-                    rs.getInt("updated_by")
+                    rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
+                    rs.getInt("updated_by"),
+                    rs.getString("username")
                 );
-                t.setId(rs.getInt("id"));
                 list.add(t);
             }
-
-        } catch (SQLException e) {
-            System.out.println("Error getAllTransaction: " + e.getMessage());
         }
-
-        return list;
     }
+
+    return list;
+}
 
     // Tambah transaksi baru
     public Integer insert(transaction t) throws SQLException {

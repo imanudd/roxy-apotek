@@ -3,10 +3,21 @@ package usecase;
  import dto.trx;
  import dto.trxDetail;
  import helper.currentUser;
- import java.sql.SQLException;
+
+import java.io.FileOutputStream;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import model.LogStock;
  import model.transaction;
  import model.TransactionDetail;
@@ -74,4 +85,59 @@ import repository.LogStockRepo;
              return false;
          }
      }
+
+     public List<transaction> getTransactionList(int rangeDay) {
+        try {
+            return transactionsRepo.getAllTransaction(rangeDay);
+        } catch (SQLException e) {
+            System.err.println("List transaction error: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    } 
+
+    public boolean exportTransactionList(int rangeDay) {
+        try {
+            String fileName = "transaction-list-" + System.currentTimeMillis() + ".xlsx";
+            List<transaction> transactions = transactionsRepo.getAllTransaction(rangeDay);
+
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("Transactions");
+
+            // Header
+            Row headerRow = sheet.createRow(0);
+            String[] columns = {"ID", "Grand total", "Total item", "Username"};
+            for (int i = 0; i < columns.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+            }
+
+            // Isi data
+            int rowNum = 1;
+            for (transaction s : transactions) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(s.getId());
+                row.createCell(1).setCellValue(s.getGrandTotal());
+                row.createCell(2).setCellValue(s.getTotalItem());
+                row.createCell(3).setCellValue(s.getUsername());
+            }
+
+            // Autosize kolom
+            for (int i = 0; i < columns.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            FileOutputStream fileOut = new FileOutputStream(fileName);
+            workbook.write(fileOut);
+            fileOut.close();
+            workbook.close();
+
+            System.out.println("Excel berhasil dibuat: " + fileName);
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("Gagal export Excel: " + e.getMessage());
+            return false;
+        }
+    }
+
  }
