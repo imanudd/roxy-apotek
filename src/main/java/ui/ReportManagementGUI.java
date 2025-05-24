@@ -130,10 +130,10 @@ public class ReportManagementGUI extends javax.swing.JPanel {
                             .addComponent(btnRiview, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cbKatExport, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(textFieldDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addComponent(textFieldDate, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(hari)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,10 +200,10 @@ public class ReportManagementGUI extends javax.swing.JPanel {
         try {
             switch (kategori) {
                 case "STOCK MASUK":
-                    data = LogStockRepo.getList("STOCK MASUK", periode);
+                    data = LogStockRepo.getList("stock_in", periode);
                     break;
                 case "STOCK KELUAR":
-                    data = LogStockRepo.getList("STOCK KELUAR", periode);
+                    data = LogStockRepo.getList("stock_out", periode);
                     break;
                 case "MASTER SUPPLIER":
                     data = supplierRepo.listSupplier(search, periode);

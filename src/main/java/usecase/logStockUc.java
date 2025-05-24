@@ -52,7 +52,7 @@ public class logStockUc {
 
             // Header
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"ID", "Activity Name", "Item Name", "Reff Id", "Qty", "username"};
+            String[] columns = {"ID", "Activity Name", "Item Name", "Jumlah", "Username","Tanggal"};
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -65,9 +65,9 @@ public class logStockUc {
                 row.createCell(0).setCellValue(s.getId());
                 row.createCell(1).setCellValue(s.getActivityName());
                 row.createCell(2).setCellValue(s.getItemName());
-                row.createCell(3).setCellValue(s.getRefId());
-                row.createCell(4).setCellValue(s.getQty());
-                row.createCell(5).setCellValue(s.getUsername());
+                row.createCell(3).setCellValue(s.getQty());
+                row.createCell(4).setCellValue(s.getUsername());
+                row.createCell(5).setCellValue(s.getCreatedAt());
             }
 
             // Autosize kolom

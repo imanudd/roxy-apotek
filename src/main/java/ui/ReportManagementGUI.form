@@ -62,14 +62,14 @@
                           <Component id="btnRiview" alignment="1" min="-2" pref="135" max="-2" attributes="0"/>
                           <Component id="cbKatExport" min="-2" pref="287" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="textFieldDate" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="textFieldDate" min="-2" pref="76" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="hari" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="77" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

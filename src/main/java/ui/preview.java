@@ -20,6 +20,8 @@ import ui.ReportManagementGUI;
 import model.LogStock;
 import model.suppliers;
 import model.transaction;
+import repository.transactionsDetailRepo;
+import repository.stocksRepo;
 import repository.LogStockRepo;
 import repository.supplierRepo;
 import repository.transactionsRepo;
@@ -140,9 +142,9 @@ public class preview extends javax.swing.JFrame {
                 .addContainerGap(392, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(80, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(18, Short.MAX_VALUE)))
+                    .addGap(80, 80, 80)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
+                    .addGap(18, 18, 18)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -175,26 +177,30 @@ public class preview extends javax.swing.JFrame {
     supplierRepo supplierRepo = new supplierRepo(conn);
     brandsRepo brandsRepo = new brandsRepo(conn);
     transactionsRepo transactionsRepo = new transactionsRepo(conn);
-
+    transactionsDetailRepo transactionsDetailRepo = new transactionsDetailRepo(conn);
+    stocksRepo stocksRepo = new stocksRepo(conn);
+    
     logStockUc logStockUc = new logStockUc(logStockRepo);
     supplierUc supplierUc = new supplierUc(supplierRepo, brandsRepo);
-//    transactionUc transactionUc = new transactionUc(transactionsRepo);
+    transactionUc transactionUc = new transactionUc(transactionsRepo, transactionsDetailRepo, stocksRepo, logStockRepo);
 
     boolean result = false;
 
     try {
         switch (kategori) {
             case "STOCK MASUK":
+                result = logStockUc.exportLogStock("stock_in", 0);
+                break;
             case "STOCK KELUAR":
-//                result = logStockUc.exportLogStock(kategori, periode);
+                result = logStockUc.exportLogStock("stock_out", 0);
                 break;
 
             case "MASTER SUPPLIER":
-//                result = supplierUc.exportSupplierList(search, periode);
+                result = supplierUc.exportSupplierList(search, 0);
                 break;
 
             case "DATA TRANSAKSI":
-//                result = transactionUc.exportTransaktionList(search, periode);
+                result = transactionUc.exportTransactionList(0);
                 break;
 
             default:
@@ -218,30 +224,29 @@ public class preview extends javax.swing.JFrame {
      */
     private void tampilkanDataStock(List<LogStock> data) {
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new String[]{"ID Stock", "Nama Barang", "Jumlah", "Tanggal"});
+        model.setColumnIdentifiers(new String[]{"ID Stock", "Activity Name", "Nama Barang", "Jumlah", "Username", "Tanggal"});
 
         for (LogStock log : data) {
         model.addRow(new Object[]{
-            log.getId(), log.getItemName(), log.getQty(), log.getCreatedAt()
-        });
+            log.getId(), log.getActivityName(), log.getItemName(), log.getQty(), log.getUsername(), log.getCreatedAt()});
+        }
         tablePreview.setModel(model);
-    }
     }
     private void tampilkanDataSupplier(List<suppliers> data) {
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new String[]{"ID Supplier", "Nama Supplier", "Alamat", "Telepon"});
+        model.setColumnIdentifiers(new String[]{"ID Supplier", "Nama Supplier", "Alamat", "Telepon","Status"});
 
         for (suppliers s : data) {
-            model.addRow(new Object[]{s.getId(), s.getSupplierName(), s.getAddress(), s.getPhone()});
+            model.addRow(new Object[]{s.getId(), s.getSupplierName(), s.getAddress(), s.getPhone(), s.getStatus()});
         }
         tablePreview.setModel(model);
     }
     private void tampilkanDataTransaksi(List<transaction> data) {
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new String[]{"ID Transaksi", "Tanggal", "Total Harga", "Total Item"});
+        model.setColumnIdentifiers(new String[]{"ID Transaksi", "Total Harga", "Total Item", "Username"});
 
         for (transaction t : data) {
-            model.addRow(new Object[]{t.getId(), t.getDate(), t.getGrandTotal(), t.getTotalItem()});
+            model.addRow(new Object[]{t.getId(), t.getGrandTotal(), t.getTotalItem(), t.getUsername()});
         }
         tablePreview.setModel(model);
     }

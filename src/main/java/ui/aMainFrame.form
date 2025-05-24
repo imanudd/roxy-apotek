@@ -66,20 +66,20 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btnHome" min="-2" pref="207" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="310" max="-2" attributes="0"/>
-                  <Component id="btnSupplier" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="btnBrand" min="-2" pref="56" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="btnBarang" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="btnStockBarang" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="btnTransaksiPenjualan" min="-2" pref="172" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="btnTransaksiPenjualan1" min="-2" pref="152" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
-                  <Component id="btnTransaksiPenjualan2" min="-2" pref="50" max="-2" attributes="0"/>
+                  <Component id="btnSupplier" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="btnBrand" min="-2" pref="56" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="btnBarang" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="btnStockBarang" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="btnTransaksiPenjualan" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="btnReport" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="btnUser" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -95,8 +95,8 @@
                       <Component id="btnBarang" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
                       <Component id="btnStockBarang" alignment="3" min="-2" pref="55" max="-2" attributes="0"/>
                       <Component id="btnTransaksiPenjualan" alignment="3" min="-2" pref="54" max="-2" attributes="0"/>
-                      <Component id="btnTransaksiPenjualan1" alignment="3" min="-2" pref="54" max="-2" attributes="0"/>
-                      <Component id="btnTransaksiPenjualan2" alignment="3" min="-2" pref="54" max="-2" attributes="0"/>
+                      <Component id="btnReport" alignment="3" min="-2" pref="54" max="-2" attributes="0"/>
+                      <Component id="btnUser" alignment="3" min="-2" pref="54" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               </Group>
@@ -121,7 +121,6 @@
             <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="contentAreaFilled" type="boolean" value="false"/>
             <Property name="focusPainted" type="boolean" value="false"/>
-            <Property name="focusTraversalKeysEnabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="" noResource="true"/>
           </Properties>
           <Events>
@@ -140,7 +139,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="|Brand|"/>
+            <Property name="text" type="java.lang.String" value="| Brand |"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
             </Property>
@@ -162,14 +161,13 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="|Supplier|"/>
+            <Property name="text" type="java.lang.String" value="| Supplier |"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
             </Property>
             <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="contentAreaFilled" type="boolean" value="false"/>
             <Property name="focusPainted" type="boolean" value="false"/>
-            <Property name="focusTraversalKeysEnabled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
           <Events>
@@ -187,7 +185,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="|Barang|"/>
+            <Property name="text" type="java.lang.String" value="| Barang |"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
             </Property>
@@ -209,7 +207,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="|Stock Barang|"/>
+            <Property name="text" type="java.lang.String" value="| Stock Barang |"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
             </Property>
@@ -231,7 +229,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="|Transaksi Penjualan|"/>
+            <Property name="text" type="java.lang.String" value="| Transaksi Penjualan |"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
             </Property>
@@ -242,7 +240,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTransaksiPenjualanActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnTransaksiPenjualan1">
+        <Component class="javax.swing.JButton" name="btnReport">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="99" green="99" red="0" type="rgb"/>
@@ -253,7 +251,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="|Laporan Transaksi|"/>
+            <Property name="text" type="java.lang.String" value="| Report |"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
             </Property>
@@ -261,10 +259,10 @@
             <Property name="contentAreaFilled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTransaksiPenjualan1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReportActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnTransaksiPenjualan2">
+        <Component class="javax.swing.JButton" name="btnUser">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="99" green="99" red="0" type="rgb"/>
@@ -275,7 +273,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="|User|"/>
+            <Property name="text" type="java.lang.String" value="| User |"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
             </Property>
@@ -283,7 +281,7 @@
             <Property name="contentAreaFilled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTransaksiPenjualan2ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUserActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
