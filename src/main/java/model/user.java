@@ -117,4 +117,8 @@ public class user {
     public void setId(int id) {
         this.id = id;
     }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 }

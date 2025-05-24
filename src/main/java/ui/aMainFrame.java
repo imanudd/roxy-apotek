@@ -9,11 +9,13 @@ import java.awt.BorderLayout;
 import java.awt.Image;
 import repository.supplierRepo;
 import usecase.supplierUc;
+import usecase.userUc;
 
 import java.sql.Connection;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import repository.brandsRepo;
+import repository.usersRepo;
 
 
 /**
@@ -28,6 +30,7 @@ public class aMainFrame extends javax.swing.JFrame {
       private ItemManagementGUI itemPanel;
       private StockManagementGUI stockPanel;
       private TransactionManagementGUI transactionPanel;
+      private UserManagement userPanel;
       private Connection conn;
 
     /**
@@ -41,6 +44,7 @@ public class aMainFrame extends javax.swing.JFrame {
         this.itemPanel = new ItemManagementGUI(conn);
         this.stockPanel = new StockManagementGUI(conn);
         this.transactionPanel = new TransactionManagementGUI(conn);
+        this.userPanel = new UserManagement(conn);
         
         this.conn = conn;
         
@@ -52,7 +56,9 @@ public class aMainFrame extends javax.swing.JFrame {
         mainPanel.add(itemPanel);
         mainPanel.add(stockPanel);
         mainPanel.add(transactionPanel);
+        mainPanel.add(userPanel);
         
+        userPanel.setVisible(false);
         transactionPanel.setVisible(false);
         supplierPanel.setVisible(false);
         brandPanel.setVisible(false);
@@ -70,6 +76,7 @@ public class aMainFrame extends javax.swing.JFrame {
         brandPanel.setVisible(false);
         itemPanel.setVisible(false);
         stockPanel.setVisible(false);
+        userPanel.setVisible(false);
     }
 
 
@@ -334,6 +341,9 @@ public class aMainFrame extends javax.swing.JFrame {
 
     private void btnTransaksiPenjualan2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransaksiPenjualan2ActionPerformed
         // TODO add your handling code here:
+        
+        unvisiblePanel();
+        userPanel.setVisible(true);
     }//GEN-LAST:event_btnTransaksiPenjualan2ActionPerformed
 
     
