@@ -89,6 +89,24 @@ public class stocksRepo {
         } 
     }
     
+    public boolean updateDecreaseStock(stock sItem, int currentUser) throws SQLException {
+        String query = "UPDATE stocks SET stock_out = stock_out + ? , remaining_stock = remaining_stock - ? , updated_at = ? , updated_by = ?  WHERE item_id = ?;";
+
+        try (
+            PreparedStatement selectStmt = conn.prepareStatement(query)
+        ) {
+            selectStmt.setInt(1, sItem.getStockOut());
+            selectStmt.setInt(2, sItem.getStockOut());
+            selectStmt.setTimestamp(3, Timestamp.valueOf(sItem.getUpdatedAt()));
+            selectStmt.setInt(4, currentUser);
+            selectStmt.setInt(5, sItem.getItemId());
+
+            int rows = selectStmt.executeUpdate();
+            return rows > 0;
+
+        } 
+    }
+    
     public boolean updateIncreaseStock(stock sItem, int currentUser) throws SQLException {
         String query = "UPDATE stocks SET stock_in = stock_in + ? , remaining_stock = remaining_stock + ? , updated_at = ? , updated_by = ?  WHERE item_id = ?;";
 

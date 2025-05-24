@@ -20,7 +20,7 @@ public class transactionsDetailRepo {
         List<TransactionDetail> transactionDetails = new ArrayList<>();
         String sql = "SELECT dt.id, dt.transaction_id, dt.item_id, dt.qty, dt.price, " +
                      "i.item_name, t.date AS transaction_date, dt.created_at, dt.created_by, dt.updated_at, dt.updated_by " +
-                     "FROM transaction_details dt " +
+                     "FROM detail_transactions dt " +
                      "JOIN transactions t ON dt.transaction_id = t.id " +
                      "JOIN items i ON dt.item_id = i.id";
         try (Statement statement = conn.createStatement();
@@ -48,7 +48,7 @@ public class transactionsDetailRepo {
 
     // Insert a new TransactionDetail
     public boolean insert(TransactionDetail dt) throws SQLException {
-        String sql = "INSERT INTO transaction_details (transaction_id, item_id, qty, price, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO detail_transactions (transaction_id, item_id, qty, price, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, dt.getTransactionId());
             stmt.setInt(2, dt.getItemId());
@@ -62,7 +62,7 @@ public class transactionsDetailRepo {
 
     // Update an existing TransactionDetail
     public boolean update(TransactionDetail dt) throws SQLException {
-        String sql = "UPDATE transaction_details SET transaction_id = ?, item_id = ?, qty = ?, price = ?, updated_at = ?, updated_by = ? WHERE id = ?";
+        String sql = "UPDATE detail_transactions SET transaction_id = ?, item_id = ?, qty = ?, price = ?, updated_at = ?, updated_by = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, dt.getTransactionId());
             stmt.setInt(2, dt.getItemId());
@@ -77,7 +77,7 @@ public class transactionsDetailRepo {
 
     // Delete a TransactionDetail
     public boolean delete(int id) throws SQLException {
-        String sql = "DELETE FROM transaction_details WHERE id = ?";
+        String sql = "DELETE FROM detail_transactions WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             return stmt.executeUpdate() > 0;

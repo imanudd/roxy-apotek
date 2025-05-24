@@ -27,6 +27,7 @@ public class aMainFrame extends javax.swing.JFrame {
       private BrandManagementGUI brandPanel;
       private ItemManagementGUI itemPanel;
       private StockManagementGUI stockPanel;
+      private TransactionManagementGUI transactionPanel;
       private Connection conn;
 
     /**
@@ -39,6 +40,7 @@ public class aMainFrame extends javax.swing.JFrame {
         this.brandPanel = new BrandManagementGUI(conn);
         this.itemPanel = new ItemManagementGUI(conn);
         this.stockPanel = new StockManagementGUI(conn);
+        this.transactionPanel = new TransactionManagementGUI(conn);
         
         this.conn = conn;
         
@@ -49,7 +51,9 @@ public class aMainFrame extends javax.swing.JFrame {
         mainPanel.add(brandPanel);
         mainPanel.add(itemPanel);
         mainPanel.add(stockPanel);
+        mainPanel.add(transactionPanel);
         
+        transactionPanel.setVisible(false);
         supplierPanel.setVisible(false);
         brandPanel.setVisible(false);
         itemPanel.setVisible(false);
@@ -60,6 +64,7 @@ public class aMainFrame extends javax.swing.JFrame {
     }
     
     private void unvisiblePanel(){
+        transactionPanel.setVisible(false);
         supplierPanel.setVisible(false);
         dashboardPanel.setVisible(false);
         brandPanel.setVisible(false);
@@ -83,7 +88,6 @@ public class aMainFrame extends javax.swing.JFrame {
         btnSupplier = new javax.swing.JButton();
         btnBarang = new javax.swing.JButton();
         btnStockBarang = new javax.swing.JButton();
-        btnLogStock = new javax.swing.JButton();
         btnTransaksiPenjualan = new javax.swing.JButton();
         btnTransaksiPenjualan1 = new javax.swing.JButton();
         btnTransaksiPenjualan2 = new javax.swing.JButton();
@@ -177,19 +181,6 @@ public class aMainFrame extends javax.swing.JFrame {
             }
         });
 
-        btnLogStock.setBackground(new java.awt.Color(0, 153, 153));
-        btnLogStock.setFont(new java.awt.Font("PT Mono", 0, 14)); // NOI18N
-        btnLogStock.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogStock.setText("|Log Stock|");
-        btnLogStock.setBorder(null);
-        btnLogStock.setBorderPainted(false);
-        btnLogStock.setContentAreaFilled(false);
-        btnLogStock.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLogStockActionPerformed(evt);
-            }
-        });
-
         btnTransaksiPenjualan.setBackground(new java.awt.Color(0, 153, 153));
         btnTransaksiPenjualan.setFont(new java.awt.Font("PT Mono", 0, 14)); // NOI18N
         btnTransaksiPenjualan.setForeground(new java.awt.Color(255, 255, 255));
@@ -245,14 +236,12 @@ public class aMainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnStockBarang)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnLogStock)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnTransaksiPenjualan, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnTransaksiPenjualan1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnTransaksiPenjualan1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnTransaksiPenjualan2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(82, 82, 82))
+                .addGap(71, 71, 71))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -264,7 +253,6 @@ public class aMainFrame extends javax.swing.JFrame {
                     .addComponent(btnSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBarang, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnStockBarang, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLogStock, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnTransaksiPenjualan, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnTransaksiPenjualan1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnTransaksiPenjualan2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -278,7 +266,7 @@ public class aMainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1421, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1400, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -335,12 +323,9 @@ public class aMainFrame extends javax.swing.JFrame {
         stockPanel.setVisible(true);
     }//GEN-LAST:event_btnStockBarangActionPerformed
 
-    private void btnLogStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogStockActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnLogStockActionPerformed
-
     private void btnTransaksiPenjualanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransaksiPenjualanActionPerformed
-        // TODO add your handling code here:
+        unvisiblePanel();
+        transactionPanel.setVisible(true);
     }//GEN-LAST:event_btnTransaksiPenjualanActionPerformed
 
     private void btnTransaksiPenjualan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransaksiPenjualan1ActionPerformed
@@ -393,7 +378,6 @@ public class aMainFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnBarang;
     private javax.swing.JButton btnBrand;
     private javax.swing.JButton btnHome;
-    private javax.swing.JButton btnLogStock;
     private javax.swing.JButton btnStockBarang;
     private javax.swing.JButton btnSupplier;
     private javax.swing.JButton btnTransaksiPenjualan;

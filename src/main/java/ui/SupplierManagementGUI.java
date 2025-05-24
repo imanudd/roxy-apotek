@@ -279,7 +279,7 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
                 .addComponent(jButtonRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -409,8 +409,8 @@ public class SupplierManagementGUI extends javax.swing.JPanel {
         tableModel.setRowCount(0);
         
         String search = jTextField4.getText().trim();
-        int rangeDay = Integer.parseInt(jTextField4.getText().trim());
-        List<suppliers> supplierList = uc.getSuppliersList(search, rangeDay); // memanggil method getList()
+        
+        List<suppliers> supplierList = uc.getSuppliersList(search, 0); // memanggil method getList()
 
         for (suppliers s : supplierList) {
             tableModel.addRow(new Object[]{

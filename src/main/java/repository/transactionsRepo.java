@@ -44,19 +44,30 @@ public class transactionsRepo {
     }
 
     // Tambah transaksi baru
-    public void insert(transaction t) throws SQLException {
-        String sql = "INSERT INTO transactions (date, grand_total, total_item, created_at, created_by, updated_at, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public Integer insert(transaction t) throws SQLException {
+        String sql = "INSERT INTO transactions (date, grand_total, total_item, created_at, created_by) VALUES (?, ?, ?, ?, ?)";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setDate(1, Date.valueOf(t.getDate()));
-            stmt.setDouble(2, t.getGrandTotal());
-            stmt.setInt(3, t.getTotalItem());
-            stmt.setTimestamp(4, Timestamp.valueOf(t.getCreatedAt()));
-            stmt.setInt(5, currentUser.getId());
-            stmt.setTimestamp(6, Timestamp.valueOf(t.getUpdatedAt()));
-            stmt.setInt(7, currentUser.getId());
-            stmt.executeUpdate();
+        PreparedStatement stmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+        stmt.setDate(1, Date.valueOf(t.getDate()));
+        stmt.setDouble(2, t.getGrandTotal());
+        stmt.setInt(3, t.getTotalItem());
+        stmt.setTimestamp(4, Timestamp.valueOf(t.getCreatedAt()));
+        stmt.setInt(5, currentUser.getId());
+        
+        int rows = stmt.executeUpdate();
+        
+        if (rows == 0) {
+            throw new SQLException("Insert failed, no rows affected.");
         }
+         
+        ResultSet generatedKeys = stmt.getGeneratedKeys();
+        
+        if (generatedKeys.next()) {
+             return generatedKeys.getInt(1); 
+        } else {
+            throw new SQLException("Insert succeeded but no ID obtained.");
+        }
+        
     }
 
     // Update transaksi

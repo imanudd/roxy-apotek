@@ -178,7 +178,7 @@ public class preview extends javax.swing.JFrame {
 
     logStockUc logStockUc = new logStockUc(logStockRepo);
     supplierUc supplierUc = new supplierUc(supplierRepo, brandsRepo);
-    transactionUc transactionUc = new transactionUc(transactionsRepo);
+//    transactionUc transactionUc = new transactionUc(transactionsRepo);
 
     boolean result = false;
 
@@ -186,15 +186,15 @@ public class preview extends javax.swing.JFrame {
         switch (kategori) {
             case "STOCK MASUK":
             case "STOCK KELUAR":
-                result = logStockUc.exportLogStock(kategori, periode);
+//                result = logStockUc.exportLogStock(kategori, periode);
                 break;
 
             case "MASTER SUPPLIER":
-                result = supplierUc.exportSupplierList(search, periode);
+//                result = supplierUc.exportSupplierList(search, periode);
                 break;
 
             case "DATA TRANSAKSI":
-                result = transactionUc.exportTransaktionList(search, periode);
+//                result = transactionUc.exportTransaktionList(search, periode);
                 break;
 
             default:

@@ -324,7 +324,7 @@ public class ItemManagementGUI extends javax.swing.JPanel {
                 .addComponent(btnCreate1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -463,7 +463,8 @@ public class ItemManagementGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldFirstStockKeyPressed
 
     private void btnCreate1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreate1ActionPerformed
-       loadItems();
+        loadItems();
+        loadCbBrands();
     }//GEN-LAST:event_btnCreate1ActionPerformed
     
     private void clearInputFields() {
