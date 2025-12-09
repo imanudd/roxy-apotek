@@ -188,8 +188,8 @@ public class Login1 extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(layout.createSequentialGroup()
+                .addGap(129, 129, 129)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -225,7 +225,7 @@ public class Login1 extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,
                 "Login succes. Welcome, " + result.getUserName() + "!");
             // TODO: lanjut ke halaman utama
-             aMainFrame MainFrame = new aMainFrame(conn);
+             Menu MainFrame = new Menu(conn);
              MainFrame.setLocationRelativeTo(null);
              MainFrame.setVisible(true);
              this.dispose();

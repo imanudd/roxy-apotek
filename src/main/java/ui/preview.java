@@ -89,7 +89,7 @@ public class preview extends javax.swing.JFrame {
         lblPeriode.setText("Periode");
 
         btnExport.setBackground(new java.awt.Color(0, 255, 51));
-        btnExport.setText("EXPPORT");
+        btnExport.setText("EXPORT");
         btnExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExportActionPerformed(evt);

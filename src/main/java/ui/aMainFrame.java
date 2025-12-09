@@ -118,7 +118,7 @@ public class aMainFrame extends javax.swing.JFrame {
 
         btnHome.setBackground(new java.awt.Color(0, 153, 153));
         btnHome.setForeground(new java.awt.Color(0, 153, 153));
-        btnHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/roxy.png"))); // NOI18N
+        btnHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/roxy2.png"))); // NOI18N
         btnHome.setBorder(null);
         btnHome.setBorderPainted(false);
         btnHome.setContentAreaFilled(false);

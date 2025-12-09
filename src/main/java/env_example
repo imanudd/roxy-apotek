@@ -1,7 +1,7 @@
 # Supabase PostgreSQL
-DB_HOST=aws-0-ap-southeast-1.pooler.supabase.com
-DB_PORT=6543 
-DB_USER=postgres.gyppvoqmkauocwlsqyfk
-DB_PASSWORD=uTTpurYmpKmveZF3
-DB_NAME=postgres
+DB_HOST=43.157.224.40
+DB_PORT=5432
+DB_USER=roxy_user
+DB_PASSWORD=roxy_password
+DB_NAME=inventory_roxy
 DB_SSLMODE=require

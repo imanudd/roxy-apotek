@@ -4,12 +4,25 @@
  */
 package ui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -19,26 +32,106 @@ import org.jfree.data.general.DefaultPieDataset;
  */
 public class aDashboard extends javax.swing.JPanel {
     //buildBarChart content = new buildBarChart();
+    //private DefaultTableModel tableModel;
     private DefaultTableModel tableModel;
-
+    //private javax.swing.JTable jTable1;
     /**
      * Creates new form aDashboard
      */
     public aDashboard() {
-        initComponents();
-        
-        jPanel2.add(buildBarChart());
-        jPanel3.add(buildLineChart());
-        jPanel4.add(buildPieChart());
-        
-        tableModel = new DefaultTableModel(new Object[][]{{"1", "Paracetamol", "100", "Strip"},
+//        initComponents();
+//        
+//        jPanel2.add(buildBarChart());
+//        jPanel3.add(buildLineChart());
+//        jPanel4.add(buildPieChart());
+//        
+//        tableModel = new DefaultTableModel(new Object[][]{{"1", "Paracetamol", "100", "Strip"},
+//            {"2", "Vitamin C", "150", "Box"},
+//            {"3", "Obat Batuk", "200", "Botol"}}, new String[]{"ID", "Nama Barang", "Stok", "Satuan"});
+//        new JTable(tableModel);
+// 
+//        jTable1.setModel(tableModel);
+//        
+//        setVisible(true);   
+// Optional global UI tweaks (local to this panel; you can move to main)
+        UIManager.put("Label.font", new Font("Segoe UI", Font.PLAIN, 14));
+        UIManager.put("Button.font", new Font("Segoe UI", Font.PLAIN, 14));
+        UIManager.put("Table.font", new Font("Segoe UI", Font.PLAIN, 13));
+        UIManager.put("TableHeader.font", new Font("Segoe UI", Font.BOLD, 14));
+
+        setLayout(new BorderLayout());
+        setBackground(Color.WHITE);
+        setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+
+        // Create main container panel (white card)
+        JPanel card = new JPanel(new BorderLayout());
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        add(card, BorderLayout.CENTER);
+
+        // top area: three charts in a row
+        JPanel chartsRow = new JPanel();
+        chartsRow.setBackground(Color.WHITE);
+        chartsRow.setLayout(new java.awt.GridLayout(1, 3, 12, 0));
+
+        // build charts (each returns ChartPanel)
+        ChartPanel bar = buildBarChart();
+        ChartPanel line = buildLineChart();
+        ChartPanel pie = buildPieChart();
+
+        // use border layout inside chart containers so charts scale nicely
+        JPanel p1 = new JPanel(new BorderLayout());
+        p1.setBackground(Color.WHITE);
+        p1.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
+                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+        p1.add(bar, BorderLayout.CENTER);
+
+        JPanel p2 = new JPanel(new BorderLayout());
+        p2.setBackground(Color.WHITE);
+        p2.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
+                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+        p2.add(line, BorderLayout.CENTER);
+
+        JPanel p3 = new JPanel(new BorderLayout());
+        p3.setBackground(Color.WHITE);
+        p3.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
+                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+        p3.add(pie, BorderLayout.CENTER);
+
+        chartsRow.add(p1);
+        chartsRow.add(p2);
+        chartsRow.add(p3);
+
+        card.add(chartsRow, BorderLayout.NORTH);
+
+        // bottom area: table inside a light panel
+        JPanel tablePanel = new JPanel(new BorderLayout());
+        tablePanel.setBackground(new Color(245, 246, 248));
+        tablePanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(12, 0, 0, 0),
+                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+
+        // table model: dummy data
+        tableModel = new DefaultTableModel(new Object[][]{
+            {"1", "Paracetamol", "100", "Strip"},
             {"2", "Vitamin C", "150", "Box"},
-            {"3", "Obat Batuk", "200", "Botol"}}, new String[]{"ID", "Nama Barang", "Stok", "Satuan"});
-        new JTable(tableModel);
- 
-        jTable1.setModel(tableModel);
-        
-        setVisible(true);       
+            {"3", "Obat Batuk", "200", "Botol"}
+        }, new String[]{"ID", "Nama Barang", "Stok", "Satuan"});
+
+        jTable1 = new JTable(tableModel);
+        styleTable(jTable1);
+
+        javax.swing.JScrollPane scroll = new javax.swing.JScrollPane(jTable1);
+        scroll.setPreferredSize(new Dimension(0, 260));
+        scroll.setBorder(BorderFactory.createEmptyBorder());
+        tablePanel.add(scroll, BorderLayout.CENTER);
+
+        card.add(tablePanel, BorderLayout.CENTER);
+
+        setPreferredSize(new Dimension(1000, 700));
     }
 
     /**
@@ -139,47 +232,147 @@ public class aDashboard extends javax.swing.JPanel {
 
     
     private ChartPanel buildBarChart() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+//        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+//        dataset.addValue(100, "Obat", "Jan");
+//        dataset.addValue(80, "Obat", "Feb");
+//        dataset.addValue(60, "Obat", "Mar");
+//
+//        JFreeChart chart = ChartFactory.createBarChart(
+//            "Stok Bulanan", "Bulan", "Jumlah", dataset,
+//            PlotOrientation.VERTICAL, true, true, true);
+//
+//        return new ChartPanel(chart);
+ DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         dataset.addValue(100, "Obat", "Jan");
         dataset.addValue(80, "Obat", "Feb");
         dataset.addValue(60, "Obat", "Mar");
 
         JFreeChart chart = ChartFactory.createBarChart(
-            "Stok Bulanan", "Bulan", "Jumlah", dataset,
-            PlotOrientation.VERTICAL, true, true, true);
+                "Stok Bulanan", "Bulan", "Jumlah", dataset);
+        styleChart(chart);
 
-        return new ChartPanel(chart);
+        // nicer renderer
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setBarPainter(new org.jfree.chart.renderer.category.StandardBarPainter());
+        renderer.setShadowVisible(false);
+        renderer.setMaximumBarWidth(0.15);
+
+        // title font
+        chart.getTitle().setFont(new Font("Segoe UI", Font.BOLD, 16));
+        chart.getLegend().setVisible(false);
+
+        ChartPanel panel = new ChartPanel(chart);
+        panel.setPreferredSize(new Dimension(300, 250));
+        panel.setPopupMenu(null);
+        panel.setMouseWheelEnabled(false);
+        return panel;
     }
 
     private ChartPanel buildLineChart() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+//        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+//        dataset.addValue(50, "Penjualan", "Jan");
+//        dataset.addValue(70, "Penjualan", "Feb");
+//        dataset.addValue(90, "Penjualan", "Mar");
+//
+//        JFreeChart chart = ChartFactory.createLineChart(
+//            "Grafik Penjualan", "Bulan", "Transaksi", dataset,
+//            PlotOrientation.VERTICAL, false, true, false);
+//
+//        return new ChartPanel(chart);
+DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         dataset.addValue(50, "Penjualan", "Jan");
         dataset.addValue(70, "Penjualan", "Feb");
         dataset.addValue(90, "Penjualan", "Mar");
 
         JFreeChart chart = ChartFactory.createLineChart(
-            "Grafik Penjualan", "Bulan", "Transaksi", dataset,
-            PlotOrientation.VERTICAL, false, true, false);
+                "Grafik Penjualan", "Bulan", "Transaksi", dataset);
+        styleChart(chart);
 
-        return new ChartPanel(chart);
+        chart.getTitle().setFont(new Font("Segoe UI", Font.BOLD, 16));
+        chart.getLegend().setVisible(false);
+
+        ChartPanel panel = new ChartPanel(chart);
+        panel.setPreferredSize(new Dimension(300, 250));
+        panel.setPopupMenu(null);
+        panel.setMouseWheelEnabled(false);
+        return panel;
     }
 
     private ChartPanel buildPieChart() {
-        DefaultPieDataset dataset = new DefaultPieDataset();
+//        DefaultPieDataset dataset = new DefaultPieDataset();
+//        dataset.setValue("Tablet", 40);
+//        dataset.setValue("Syrup", 30);
+//        dataset.setValue("Kapsul", 20);
+//        dataset.setValue("Salep", 10);
+//
+//        JFreeChart chart1 = ChartFactory.createPieChart("Jenis Produk", dataset, true, true, false);
+//        ChartPanel jPanel2 = new ChartPanel(chart1);
+//        
+//        return new ChartPanel(chart1);
+DefaultPieDataset dataset = new DefaultPieDataset();
         dataset.setValue("Tablet", 40);
         dataset.setValue("Syrup", 30);
         dataset.setValue("Kapsul", 20);
         dataset.setValue("Salep", 10);
 
-        JFreeChart chart1 = ChartFactory.createPieChart("Jenis Produk", dataset, true, true, false);
-        ChartPanel jPanel2 = new ChartPanel(chart1);
-        
-        return new ChartPanel(chart1);
+        JFreeChart chart = ChartFactory.createPieChart("Jenis Produk", dataset, true, false, false);
+        chart.getTitle().setFont(new Font("Segoe UI", Font.BOLD, 16));
+        styleChart(chart);
+
+        PiePlot plot = (PiePlot) chart.getPlot();
+        plot.setLabelFont(new Font("Segoe UI", Font.PLAIN, 12));
+        plot.setBackgroundPaint(new Color(250, 250, 250));
+        plot.setSectionOutlinesVisible(false);
+        plot.setSimpleLabels(true);
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {1} ({2})"));
+
+        ChartPanel panel = new ChartPanel(chart);
+        panel.setPreferredSize(new Dimension(300, 250));
+        panel.setPopupMenu(null);
+        panel.setMouseWheelEnabled(false);
+        return panel;
     }
 
     private void initChart() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         //ChartPanel jPanel2 = new ChartPanel(chart1);
+    }
+
+
+
+    private void styleChart(JFreeChart chart) {
+        chart.setBackgroundPaint(Color.WHITE);
+    chart.getTitle().setPaint(Color.DARK_GRAY);
+
+    // Mengatur plot
+    Plot plot = chart.getPlot();
+    plot.setBackgroundPaint(new Color(230, 230, 250));
+    plot.setOutlinePaint(Color.BLACK);
+
+    // Jika plot adalah CategoryPlot (contoh BarChart)
+    if (plot instanceof CategoryPlot) {
+        CategoryPlot cplot = (CategoryPlot) plot;
+        cplot.setRangeGridlinePaint(Color.GRAY);
+        cplot.setRangeGridlinesVisible(true);
+        cplot.setDomainGridlinesVisible(false);
+    }
+    }
+
+    private void styleTable(JTable jTable1) {
+    jTable1.setRowHeight(25);
+    jTable1.setShowVerticalLines(false);
+    jTable1.setIntercellSpacing(new Dimension(0, 0));
+    jTable1.setSelectionBackground(new Color(51, 153, 255));
+    jTable1.setSelectionForeground(Color.WHITE);
+    jTable1.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+
+    JTableHeader header = jTable1.getTableHeader();
+    header.setReorderingAllowed(false);
+    header.setResizingAllowed(false);
+    header.setBackground(new Color(32, 136, 203));
+    header.setForeground(Color.BLACK);
+    header.setFont(new Font("Segoe UI", Font.BOLD, 14));
     }
     
 }
