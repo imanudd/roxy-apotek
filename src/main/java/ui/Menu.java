@@ -35,49 +35,49 @@ public class Menu extends javax.swing.JFrame {
         
         setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         this.dashboardPanel = new aDashboard();
-//        this.supplierPanel = new SupplierManagementGUI(conn);
-//        this.brandPanel = new BrandManagementGUI(conn);
-//        this.itemPanel = new ItemManagementGUI(conn);
-//        this.stockPanel = new StockManagementGUI(conn);
-//        this.reportPanel = new ReportManagementGUI(conn);
-//        this.transactionPanel = new TransactionManagementGUI(conn);
-//        this.userPanel = new UserManagement(conn);
+       this.supplierPanel = new SupplierManagementGUI(conn);
+       this.brandPanel = new BrandManagementGUI(conn);
+       this.itemPanel = new ItemManagementGUI(conn);
+       this.stockPanel = new StockManagementGUI(conn);
+       this.reportPanel = new ReportManagementGUI(conn);
+       this.transactionPanel = new TransactionManagementGUI(conn);
+       this.userPanel = new UserManagement(conn);
 
         mainPanel.add(dashboardPanel);
-//        mainPanel.add(supplierPanel);
-//        mainPanel.add(brandPanel);
-//        mainPanel.add(itemPanel);
-//        mainPanel.add(stockPanel);
-//        mainPanel.add(transactionPanel);
-//        mainPanel.add(userPanel);
-//        mainPanel.add(reportPanel);
+       mainPanel.add(supplierPanel);
+       mainPanel.add(brandPanel);
+       mainPanel.add(itemPanel);
+       mainPanel.add(stockPanel);
+       mainPanel.add(transactionPanel);
+       mainPanel.add(userPanel);
+       mainPanel.add(reportPanel);
 
-if (supplierPanel != null) mainPanel.add(supplierPanel);
-if (brandPanel != null) mainPanel.add(brandPanel);
-if (itemPanel != null) mainPanel.add(itemPanel);
-if (stockPanel != null) mainPanel.add(stockPanel);
-if (transactionPanel != null) mainPanel.add(transactionPanel);
-if (userPanel != null) mainPanel.add(userPanel);
-if (reportPanel != null) mainPanel.add(reportPanel);
+// if (supplierPanel != null) mainPanel.add(supplierPanel);
+// if (brandPanel != null) mainPanel.add(brandPanel);
+// if (itemPanel != null) mainPanel.add(itemPanel);
+// if (stockPanel != null) mainPanel.add(stockPanel);
+// if (transactionPanel != null) mainPanel.add(transactionPanel);
+// if (userPanel != null) mainPanel.add(userPanel);
+// if (reportPanel != null) mainPanel.add(reportPanel);
         
-//        userPanel.setVisible(false);
-//        transactionPanel.setVisible(false);
-//        supplierPanel.setVisible(false);
-//        brandPanel.setVisible(false);
-//        itemPanel.setVisible(false);
-//        stockPanel.setVisible(false);
-//        reportPanel.setVisible(false);
-//        dashboardPanel.setVisible(true);
+       userPanel.setVisible(false);
+       transactionPanel.setVisible(false);
+       supplierPanel.setVisible(false);
+       brandPanel.setVisible(false);
+       itemPanel.setVisible(false);
+       stockPanel.setVisible(false);
+       reportPanel.setVisible(false);
+       dashboardPanel.setVisible(true);
   
-if (userPanel != null) userPanel.setVisible(false);
-if (transactionPanel != null) transactionPanel.setVisible(false);
-if (supplierPanel != null) supplierPanel.setVisible(false);
-if (brandPanel != null) brandPanel.setVisible(false);
-if (itemPanel != null) itemPanel.setVisible(false);
-if (stockPanel != null) stockPanel.setVisible(false);
-if (reportPanel != null) reportPanel.setVisible(false);
+// if (userPanel != null) userPanel.setVisible(false);
+// if (transactionPanel != null) transactionPanel.setVisible(false);
+// if (supplierPanel != null) supplierPanel.setVisible(false);
+// if (brandPanel != null) brandPanel.setVisible(false);
+// if (itemPanel != null) itemPanel.setVisible(false);
+// if (stockPanel != null) stockPanel.setVisible(false);
+// if (reportPanel != null) reportPanel.setVisible(false);
 
-dashboardPanel.setVisible(true);
+// dashboardPanel.setVisible(true);
 
     }
     private void unvisiblePanel(){
