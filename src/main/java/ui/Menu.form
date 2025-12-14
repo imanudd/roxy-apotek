@@ -113,7 +113,6 @@
                       <Component id="btnBarang" alignment="1" max="32767" attributes="0"/>
                       <Component id="btnStockBarang" alignment="1" max="32767" attributes="0"/>
                       <Component id="btnTransaksi" alignment="1" max="32767" attributes="0"/>
-                      <Component id="btnLogTransaksi" alignment="1" max="32767" attributes="0"/>
                       <Component id="btnReport" alignment="1" max="32767" attributes="0"/>
                       <Component id="btnUser" alignment="0" max="32767" attributes="0"/>
                   </Group>
@@ -135,10 +134,8 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="btnTransaksi" min="-2" pref="34" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="btnLogTransaksi" min="-2" pref="34" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="btnReport" min="-2" pref="34" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="117" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="169" max="-2" attributes="0"/>
                   <Component id="btnUser" min="-2" pref="34" max="-2" attributes="0"/>
                   <EmptySpace pref="16" max="32767" attributes="0"/>
               </Group>
@@ -226,23 +223,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTransaksiActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnLogTransaksi">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="99" green="ff" red="ff" type="rgb"/>
-            </Property>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Segoe UI" size="12" style="1"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="LOG STOCK"/>
-            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[85, 22]"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLogTransaksiActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnReport">

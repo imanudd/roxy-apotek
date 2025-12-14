@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -39,7 +40,7 @@ public class aDashboard extends javax.swing.JPanel {
      * Creates new form aDashboard
      */
     public aDashboard() {
-//        initComponents();
+        initComponents();
 //        
 //        jPanel2.add(buildBarChart());
 //        jPanel3.add(buildLineChart());
@@ -70,9 +71,8 @@ public class aDashboard extends javax.swing.JPanel {
         add(card, BorderLayout.CENTER);
 
         // top area: three charts in a row
-        JPanel chartsRow = new JPanel();
-        chartsRow.setBackground(Color.WHITE);
-        chartsRow.setLayout(new java.awt.GridLayout(1, 3, 12, 0));
+         JPanel chartsRow = new JPanel(new GridLayout(1, 3, 12, 12));
+        chartsRow.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
         // build charts (each returns ChartPanel)
         ChartPanel bar = buildBarChart();
@@ -87,12 +87,8 @@ public class aDashboard extends javax.swing.JPanel {
                 BorderFactory.createEmptyBorder(8, 8, 8, 8)));
         p1.add(bar, BorderLayout.CENTER);
 
-        JPanel p2 = new JPanel(new BorderLayout());
-        p2.setBackground(Color.WHITE);
-        p2.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
-                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
-        p2.add(line, BorderLayout.CENTER);
+        jPanel2.setLayout(new BorderLayout());
+jPanel2.add(buildBarChart(), BorderLayout.CENTER);
 
         JPanel p3 = new JPanel(new BorderLayout());
         p3.setBackground(Color.WHITE);
@@ -131,7 +127,6 @@ public class aDashboard extends javax.swing.JPanel {
 
         card.add(tablePanel, BorderLayout.CENTER);
 
-        setPreferredSize(new Dimension(1000, 700));
     }
 
     /**

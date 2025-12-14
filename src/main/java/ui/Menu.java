@@ -35,49 +35,49 @@ public class Menu extends javax.swing.JFrame {
         
         setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         this.dashboardPanel = new aDashboard();
-//        this.supplierPanel = new SupplierManagementGUI(conn);
-//        this.brandPanel = new BrandManagementGUI(conn);
-//        this.itemPanel = new ItemManagementGUI(conn);
-//        this.stockPanel = new StockManagementGUI(conn);
-//        this.reportPanel = new ReportManagementGUI(conn);
-//        this.transactionPanel = new TransactionManagementGUI(conn);
-//        this.userPanel = new UserManagement(conn);
+        this.supplierPanel = new SupplierManagementGUI(conn);
+        this.brandPanel = new BrandManagementGUI(conn);
+        this.itemPanel = new ItemManagementGUI(conn);
+        this.stockPanel = new StockManagementGUI(conn);
+        this.reportPanel = new ReportManagementGUI(conn);
+        this.transactionPanel = new TransactionManagementGUI(conn);
+        this.userPanel = new UserManagement(conn);
 
         mainPanel.add(dashboardPanel);
-//        mainPanel.add(supplierPanel);
-//        mainPanel.add(brandPanel);
-//        mainPanel.add(itemPanel);
-//        mainPanel.add(stockPanel);
-//        mainPanel.add(transactionPanel);
-//        mainPanel.add(userPanel);
-//        mainPanel.add(reportPanel);
+        mainPanel.add(supplierPanel);
+        mainPanel.add(brandPanel);
+        mainPanel.add(itemPanel);
+        mainPanel.add(stockPanel);
+        mainPanel.add(transactionPanel);
+        mainPanel.add(userPanel);
+        mainPanel.add(reportPanel);
 
-if (supplierPanel != null) mainPanel.add(supplierPanel);
-if (brandPanel != null) mainPanel.add(brandPanel);
-if (itemPanel != null) mainPanel.add(itemPanel);
-if (stockPanel != null) mainPanel.add(stockPanel);
-if (transactionPanel != null) mainPanel.add(transactionPanel);
-if (userPanel != null) mainPanel.add(userPanel);
-if (reportPanel != null) mainPanel.add(reportPanel);
+//if (supplierPanel != null) mainPanel.add(supplierPanel);
+//if (brandPanel != null) mainPanel.add(brandPanel);
+//if (itemPanel != null) mainPanel.add(itemPanel);
+//if (stockPanel != null) mainPanel.add(stockPanel);
+//if (transactionPanel != null) mainPanel.add(transactionPanel);
+//if (userPanel != null) mainPanel.add(userPanel);
+//if (reportPanel != null) mainPanel.add(reportPanel);
         
-//        userPanel.setVisible(false);
-//        transactionPanel.setVisible(false);
-//        supplierPanel.setVisible(false);
-//        brandPanel.setVisible(false);
-//        itemPanel.setVisible(false);
-//        stockPanel.setVisible(false);
-//        reportPanel.setVisible(false);
-//        dashboardPanel.setVisible(true);
+        userPanel.setVisible(false);
+        transactionPanel.setVisible(false);
+        supplierPanel.setVisible(false);
+        brandPanel.setVisible(false);
+        itemPanel.setVisible(false);
+        stockPanel.setVisible(false);
+        reportPanel.setVisible(false);
+        dashboardPanel.setVisible(true);
   
-if (userPanel != null) userPanel.setVisible(false);
-if (transactionPanel != null) transactionPanel.setVisible(false);
-if (supplierPanel != null) supplierPanel.setVisible(false);
-if (brandPanel != null) brandPanel.setVisible(false);
-if (itemPanel != null) itemPanel.setVisible(false);
-if (stockPanel != null) stockPanel.setVisible(false);
-if (reportPanel != null) reportPanel.setVisible(false);
-
-dashboardPanel.setVisible(true);
+//if (userPanel != null) userPanel.setVisible(false);
+//if (transactionPanel != null) transactionPanel.setVisible(false);
+//if (supplierPanel != null) supplierPanel.setVisible(false);
+//if (brandPanel != null) brandPanel.setVisible(false);
+//if (itemPanel != null) itemPanel.setVisible(false);
+//if (stockPanel != null) stockPanel.setVisible(false);
+//if (reportPanel != null) reportPanel.setVisible(false);
+//
+//dashboardPanel.setVisible(true);
 
     }
     private void unvisiblePanel(){
@@ -107,7 +107,6 @@ dashboardPanel.setVisible(true);
         btnBarang = new javax.swing.JButton();
         btnStockBarang = new javax.swing.JButton();
         btnTransaksi = new javax.swing.JButton();
-        btnLogTransaksi = new javax.swing.JButton();
         btnReport = new javax.swing.JButton();
         btnUser = new javax.swing.JButton();
         mainPanel = new javax.swing.JLayeredPane();
@@ -195,16 +194,6 @@ dashboardPanel.setVisible(true);
             }
         });
 
-        btnLogTransaksi.setBackground(new java.awt.Color(255, 255, 153));
-        btnLogTransaksi.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnLogTransaksi.setText("LOG STOCK");
-        btnLogTransaksi.setPreferredSize(new java.awt.Dimension(85, 22));
-        btnLogTransaksi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLogTransaksiActionPerformed(evt);
-            }
-        });
-
         btnReport.setBackground(new java.awt.Color(255, 255, 153));
         btnReport.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnReport.setText("REPORT");
@@ -237,7 +226,6 @@ dashboardPanel.setVisible(true);
                     .addComponent(btnBarang, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnStockBarang, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnTransaksi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnLogTransaksi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnReport, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -256,10 +244,8 @@ dashboardPanel.setVisible(true);
                 .addGap(18, 18, 18)
                 .addComponent(btnTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnLogTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(btnReport, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(117, 117, 117)
+                .addGap(169, 169, 169)
                 .addComponent(btnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(16, Short.MAX_VALUE))
         );
@@ -310,7 +296,7 @@ dashboardPanel.setVisible(true);
     private void btnBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBarangActionPerformed
         // TODO add your handling code here:
         unvisiblePanel();
-       brandPanel.setVisible(true);
+        itemPanel.setVisible(true);
     }//GEN-LAST:event_btnBarangActionPerformed
 
     private void btnStockBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStockBarangActionPerformed
@@ -324,10 +310,6 @@ dashboardPanel.setVisible(true);
         unvisiblePanel();
         transactionPanel.setVisible(true);
     }//GEN-LAST:event_btnTransaksiActionPerformed
-
-    private void btnLogTransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogTransaksiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnLogTransaksiActionPerformed
 
     private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
         // TODO add your handling code here:
@@ -381,7 +363,6 @@ dashboardPanel.setVisible(true);
     private javax.swing.JButton btnBarang;
     private javax.swing.JButton btnBrand;
     private javax.swing.JButton btnHome;
-    private javax.swing.JButton btnLogTransaksi;
     private javax.swing.JButton btnReport;
     private javax.swing.JButton btnStockBarang;
     private javax.swing.JButton btnSupplier;
