@@ -41,20 +41,7 @@ public class aDashboard extends javax.swing.JPanel {
      */
     public aDashboard() {
         initComponents();
-//        
-//        jPanel2.add(buildBarChart());
-//        jPanel3.add(buildLineChart());
-//        jPanel4.add(buildPieChart());
-//        
-//        tableModel = new DefaultTableModel(new Object[][]{{"1", "Paracetamol", "100", "Strip"},
-//            {"2", "Vitamin C", "150", "Box"},
-//            {"3", "Obat Batuk", "200", "Botol"}}, new String[]{"ID", "Nama Barang", "Stok", "Satuan"});
-//        new JTable(tableModel);
-// 
-//        jTable1.setModel(tableModel);
-//        
-//        setVisible(true);   
-// Optional global UI tweaks (local to this panel; you can move to main)
+
         UIManager.put("Label.font", new Font("Segoe UI", Font.PLAIN, 14));
         UIManager.put("Button.font", new Font("Segoe UI", Font.PLAIN, 14));
         UIManager.put("Table.font", new Font("Segoe UI", Font.PLAIN, 13));
@@ -87,8 +74,12 @@ public class aDashboard extends javax.swing.JPanel {
                 BorderFactory.createEmptyBorder(8, 8, 8, 8)));
         p1.add(bar, BorderLayout.CENTER);
 
-        jPanel2.setLayout(new BorderLayout());
-jPanel2.add(buildBarChart(), BorderLayout.CENTER);
+        JPanel p2 = new JPanel(new BorderLayout());
+        p2.setBackground(Color.WHITE);
+        p2.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
+                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+        p2.add(line, BorderLayout.CENTER);
 
         JPanel p3 = new JPanel(new BorderLayout());
         p3.setBackground(Color.WHITE);
