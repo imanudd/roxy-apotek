@@ -9,357 +9,423 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.time.format.DateTimeFormatter;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.JTable;
+import javax.swing.JScrollPane;
 import javax.swing.UIManager;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import java.text.DecimalFormat;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.Plot;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+
+import repository.LogStockRepo;
+import repository.itemsRepo;
+import repository.transactionsRepo;
+import model.items;
+import model.transaction;
+import model.LogStock;
 
 /**
  *
  * @author ADMINPUSING-PC
  */
 public class aDashboard extends javax.swing.JPanel {
-    //buildBarChart content = new buildBarChart();
-    //private DefaultTableModel tableModel;
-    private DefaultTableModel tableModel;
-    //private javax.swing.JTable jTable1;
-    /**
-     * Creates new form aDashboard
-     */
-    public aDashboard() {
-        initComponents();
 
-        UIManager.put("Label.font", new Font("Segoe UI", Font.PLAIN, 14));
-        UIManager.put("Button.font", new Font("Segoe UI", Font.PLAIN, 14));
-        UIManager.put("Table.font", new Font("Segoe UI", Font.PLAIN, 13));
-        UIManager.put("TableHeader.font", new Font("Segoe UI", Font.BOLD, 14));
+        private LogStockRepo logStockRepo;
+        private itemsRepo itemsRepo;
+        private transactionsRepo transactionsRepo;
 
-        setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
-        setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        /**
+         * Creates new form aDashboard
+         */
+        public aDashboard(Connection conn) {
+                this.logStockRepo = new LogStockRepo(conn);
+                this.itemsRepo = new itemsRepo(conn);
+                this.transactionsRepo = new transactionsRepo(conn);
 
-        // Create main container panel (white card)
-        JPanel card = new JPanel(new BorderLayout());
-        card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        add(card, BorderLayout.CENTER);
+                initComponents();
 
-        // top area: three charts in a row
-         JPanel chartsRow = new JPanel(new GridLayout(1, 3, 12, 12));
-        chartsRow.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+                UIManager.put("Label.font", new Font("Segoe UI", Font.PLAIN, 14));
+                UIManager.put("Button.font", new Font("Segoe UI", Font.PLAIN, 14));
+                UIManager.put("Table.font", new Font("Segoe UI", Font.PLAIN, 13));
+                UIManager.put("TableHeader.font", new Font("Segoe UI", Font.BOLD, 14));
 
-        // build charts (each returns ChartPanel)
-        ChartPanel bar = buildBarChart();
-        ChartPanel line = buildLineChart();
-        ChartPanel pie = buildPieChart();
+                setLayout(new BorderLayout());
+                setBackground(new Color(250, 250, 250));
+                setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        // use border layout inside chart containers so charts scale nicely
-        JPanel p1 = new JPanel(new BorderLayout());
-        p1.setBackground(Color.WHITE);
-        p1.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
-                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
-        p1.add(bar, BorderLayout.CENTER);
+                // Create main container panel (white card)
+                JPanel card = new JPanel(new BorderLayout());
+                card.setBackground(new Color(250, 250, 250));
+                card.setBorder(BorderFactory.createEmptyBorder(12, 50, 12, 50));
+                add(card, BorderLayout.CENTER);
 
-        JPanel p2 = new JPanel(new BorderLayout());
-        p2.setBackground(Color.WHITE);
-        p2.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
-                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
-        p2.add(line, BorderLayout.CENTER);
+                // Create charts
+                ChartPanel bar = buildBarChart();
+                ChartPanel line = buildLineChart();
+                ChartPanel pie = buildPieChart();
 
-        JPanel p3 = new JPanel(new BorderLayout());
-        p3.setBackground(Color.WHITE);
-        p3.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
-                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
-        p3.add(pie, BorderLayout.CENTER);
+                // Style chart containers
+                JPanel p1 = createChartContainer(bar);
+                JPanel p2 = createChartContainer(line);
+                JPanel p3 = createChartContainer(pie);
 
-        chartsRow.add(p1);
-        chartsRow.add(p2);
-        chartsRow.add(p3);
+                // Top Area: Stock (Bar) and Sales (Line)
+                JPanel topRow = new JPanel(new GridLayout(1, 2, 12, 12));
+                topRow.setBackground(new Color(250, 250, 250));
+                topRow.add(p1);
+                topRow.add(p2);
 
-        card.add(chartsRow, BorderLayout.NORTH);
+                // Bottom Area: Pie Chart
+                // We wrap p3 in another panel so it doesn't stretch weirdly if we don't want it
+                // to
+                JPanel bottomRow = new JPanel(new BorderLayout());
+                bottomRow.setBackground(new Color(250, 250, 250));
+                bottomRow.add(p3, BorderLayout.CENTER);
 
-        // bottom area: table inside a light panel
-        JPanel tablePanel = new JPanel(new BorderLayout());
-        tablePanel.setBackground(new Color(245, 246, 248));
-        tablePanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(12, 0, 0, 0),
-                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+                // Main Layout
+                JPanel mainContent = new JPanel(new BorderLayout(12, 12));
+                mainContent.setBackground(new Color(250, 250, 250));
+                mainContent.add(topRow, BorderLayout.CENTER);
+                mainContent.add(bottomRow, BorderLayout.SOUTH);
 
-        // table model: dummy data
-        tableModel = new DefaultTableModel(new Object[][]{
-            {"1", "Paracetamol", "100", "Strip"},
-            {"2", "Vitamin C", "150", "Box"},
-            {"3", "Obat Batuk", "200", "Botol"}
-        }, new String[]{"ID", "Nama Barang", "Stok", "Satuan"});
+                card.add(mainContent, BorderLayout.CENTER);
 
-        jTable1 = new JTable(tableModel);
-        styleTable(jTable1);
+                // Wrap the card in a ScrollPane to prevent cutoff
+                JScrollPane scrollPane = new JScrollPane(card);
+                scrollPane.setBorder(null);
+                scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Smoother scrolling
+                scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
 
-        javax.swing.JScrollPane scroll = new javax.swing.JScrollPane(jTable1);
-        scroll.setPreferredSize(new Dimension(0, 260));
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        tablePanel.add(scroll, BorderLayout.CENTER);
+                add(scrollPane, BorderLayout.CENTER);
+        }
 
-        card.add(tablePanel, BorderLayout.CENTER);
+        private JPanel createChartContainer(ChartPanel chartPanel) {
+                JPanel p = new JPanel(new BorderLayout());
+                p.setBackground(Color.WHITE);
+                p.setBorder(BorderFactory.createCompoundBorder(
+                                BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
+                                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+                p.add(chartPanel, BorderLayout.CENTER);
+                return p;
+        }
 
-    }
+        /**
+         * This method is called from within the constructor to initialize the form.
+         * WARNING: Do NOT modify this code. The content of this method is always
+         * regenerated by the Form Editor.
+         */
+        @SuppressWarnings("unchecked")
+        // <editor-fold defaultstate="collapsed" desc="Generated
+        // Code">//GEN-BEGIN:initComponents
+        private void initComponents() {
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+                jPanel1 = new javax.swing.JPanel();
+                jPanel2 = new javax.swing.JPanel();
+                jPanel3 = new javax.swing.JPanel();
+                jPanel4 = new javax.swing.JPanel();
+                jPanel5 = new javax.swing.JPanel();
+                jScrollPane1 = new javax.swing.JScrollPane();
+                jTable1 = new javax.swing.JTable();
 
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+                jPanel1.setBackground(new java.awt.Color(102, 102, 102));
 
-        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
+                jPanel2.setMaximumSize(new java.awt.Dimension(300, 300));
+                jPanel2.setLayout(new java.awt.CardLayout());
 
-        jPanel2.setMaximumSize(new java.awt.Dimension(300, 300));
-        jPanel2.setLayout(new java.awt.CardLayout());
+                jPanel3.setMaximumSize(new java.awt.Dimension(300, 300));
+                jPanel3.setLayout(new java.awt.CardLayout());
 
-        jPanel3.setMaximumSize(new java.awt.Dimension(300, 300));
-        jPanel3.setLayout(new java.awt.CardLayout());
+                jPanel4.setLayout(new java.awt.CardLayout());
 
-        jPanel4.setLayout(new java.awt.CardLayout());
+                jPanel5.setLayout(new java.awt.CardLayout());
 
-        jPanel5.setLayout(new java.awt.CardLayout());
+                jTable1.setModel(new javax.swing.table.DefaultTableModel(
+                                new Object[][] {
+                                                { null, null, null, null },
+                                                { null, null, null, null },
+                                                { null, null, null, null },
+                                                { null, null, null, null }
+                                },
+                                new String[] {
+                                                "Title 1", "Title 2", "Title 3", "Title 4"
+                                }));
+                jScrollPane1.setViewportView(jTable1);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+                jPanel5.add(jScrollPane1, "card2");
 
-        jPanel5.add(jScrollPane1, "card2");
+                javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+                jPanel1.setLayout(jPanel1Layout);
+                jPanel1Layout.setHorizontalGroup(
+                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout
+                                                                .createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addGroup(jPanel1Layout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                                .addComponent(jPanel5,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addGroup(jPanel1Layout
+                                                                                                .createSequentialGroup()
+                                                                                                .addComponent(jPanel2,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                300,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                                .addComponent(jPanel3,
+                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                300,
+                                                                                                                Short.MAX_VALUE)
+                                                                                                .addGap(12, 12, 12)
+                                                                                                .addComponent(jPanel4,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                300,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                                .addGap(16, 16, 16)));
+                jPanel1Layout.setVerticalGroup(
+                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addGroup(jPanel1Layout
+                                                                                .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                false)
+                                                                                .addComponent(jPanel2,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                300,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addComponent(jPanel3,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                300,
+                                                                                                Short.MAX_VALUE)
+                                                                                .addComponent(jPanel4,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                300,
+                                                                                                Short.MAX_VALUE))
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(jPanel5,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                323,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addContainerGap(14, Short.MAX_VALUE)));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                        .addGap(12, 12, 12)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(16, 16, 16))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
+                javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+                this.setLayout(layout);
+                layout.setHorizontalGroup(
+                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                layout.setVerticalGroup(
+                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+        }// </editor-fold>//GEN-END:initComponents
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-    }// </editor-fold>//GEN-END:initComponents
+        // Variables declaration - do not modify//GEN-BEGIN:variables
+        private javax.swing.JPanel jPanel1;
+        private javax.swing.JPanel jPanel2;
+        private javax.swing.JPanel jPanel3;
+        private javax.swing.JPanel jPanel4;
+        private javax.swing.JPanel jPanel5;
+        private javax.swing.JScrollPane jScrollPane1;
+        private javax.swing.JTable jTable1;
+        // End of variables declaration//GEN-END:variables
 
+        private ChartPanel buildBarChart() {
+                DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    // End of variables declaration//GEN-END:variables
+                try {
+                        // Get data for last 365 days (1 year)
+                        System.out.println("Fetching LogStock data for last 365 days...");
+                        List<LogStock> logs = logStockRepo.getList(null, 365, 0, 0);
+                        System.out.println("Fetched " + logs.size() + " logs.");
 
-    
-    private ChartPanel buildBarChart() {
-//        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-//        dataset.addValue(100, "Obat", "Jan");
-//        dataset.addValue(80, "Obat", "Feb");
-//        dataset.addValue(60, "Obat", "Mar");
-//
-//        JFreeChart chart = ChartFactory.createBarChart(
-//            "Stok Bulanan", "Bulan", "Jumlah", dataset,
-//            PlotOrientation.VERTICAL, true, true, true);
-//
-//        return new ChartPanel(chart);
- DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(100, "Obat", "Jan");
-        dataset.addValue(80, "Obat", "Feb");
-        dataset.addValue(60, "Obat", "Mar");
+                        // Format for grouping
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM", java.util.Locale.ENGLISH);
 
-        JFreeChart chart = ChartFactory.createBarChart(
-                "Stok Bulanan", "Bulan", "Jumlah", dataset);
-        styleChart(chart);
+                        // Group by Month and Activity
+                        Map<String, Map<String, Integer>> grouped = logs.stream()
+                                        .filter(l -> l.getCreatedAt() != null)
+                                        .collect(Collectors.groupingBy(
+                                                        l -> l.getCreatedAt().format(formatter),
+                                                        Collectors.groupingBy(LogStock::getActivityName,
+                                                                        Collectors.summingInt(LogStock::getQty))));
 
-        // nicer renderer
-        CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
-        renderer.setBarPainter(new org.jfree.chart.renderer.category.StandardBarPainter());
-        renderer.setShadowVisible(false);
-        renderer.setMaximumBarWidth(0.15);
+                        // Add to dataset (sorted manually)
+                        java.time.LocalDate now = java.time.LocalDate.now();
+                        for (int i = 5; i >= 0; i--) { // Show last 6 months
+                                java.time.LocalDate d = now.minusMonths(i);
+                                String monthLabel = d.format(formatter);
 
-        // title font
-        chart.getTitle().setFont(new Font("Segoe UI", Font.BOLD, 16));
-        chart.getLegend().setVisible(false);
+                                Map<String, Integer> activities = grouped.getOrDefault(monthLabel, Map.of());
 
-        ChartPanel panel = new ChartPanel(chart);
-        panel.setPreferredSize(new Dimension(300, 250));
-        panel.setPopupMenu(null);
-        panel.setMouseWheelEnabled(false);
-        return panel;
-    }
+                                int in = activities.getOrDefault("stock_in", 0);
+                                int out = activities.getOrDefault("stock_out", 0);
+                                dataset.addValue(in, "Stock In", monthLabel);
+                                dataset.addValue(out, "Stock Out", monthLabel);
 
-    private ChartPanel buildLineChart() {
-//        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-//        dataset.addValue(50, "Penjualan", "Jan");
-//        dataset.addValue(70, "Penjualan", "Feb");
-//        dataset.addValue(90, "Penjualan", "Mar");
-//
-//        JFreeChart chart = ChartFactory.createLineChart(
-//            "Grafik Penjualan", "Bulan", "Transaksi", dataset,
-//            PlotOrientation.VERTICAL, false, true, false);
-//
-//        return new ChartPanel(chart);
-DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(50, "Penjualan", "Jan");
-        dataset.addValue(70, "Penjualan", "Feb");
-        dataset.addValue(90, "Penjualan", "Mar");
+                                System.out.println("Month: " + monthLabel + " -> In: " + in + ", Out: " + out);
+                        }
 
-        JFreeChart chart = ChartFactory.createLineChart(
-                "Grafik Penjualan", "Bulan", "Transaksi", dataset);
-        styleChart(chart);
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                }
 
-        chart.getTitle().setFont(new Font("Segoe UI", Font.BOLD, 16));
-        chart.getLegend().setVisible(false);
+                JFreeChart chart = ChartFactory.createBarChart(
+                                "Aktivitas Stok (6 Bulan Terakhir)", "Bulan", "Qty", dataset);
+                styleChart(chart);
 
-        ChartPanel panel = new ChartPanel(chart);
-        panel.setPreferredSize(new Dimension(300, 250));
-        panel.setPopupMenu(null);
-        panel.setMouseWheelEnabled(false);
-        return panel;
-    }
+                CategoryPlot plot = (CategoryPlot) chart.getPlot();
+                BarRenderer renderer = (BarRenderer) plot.getRenderer();
+                renderer.setBarPainter(new org.jfree.chart.renderer.category.StandardBarPainter());
+                renderer.setShadowVisible(false);
+                renderer.setMaximumBarWidth(0.15);
 
-    private ChartPanel buildPieChart() {
-//        DefaultPieDataset dataset = new DefaultPieDataset();
-//        dataset.setValue("Tablet", 40);
-//        dataset.setValue("Syrup", 30);
-//        dataset.setValue("Kapsul", 20);
-//        dataset.setValue("Salep", 10);
-//
-//        JFreeChart chart1 = ChartFactory.createPieChart("Jenis Produk", dataset, true, true, false);
-//        ChartPanel jPanel2 = new ChartPanel(chart1);
-//        
-//        return new ChartPanel(chart1);
-DefaultPieDataset dataset = new DefaultPieDataset();
-        dataset.setValue("Tablet", 40);
-        dataset.setValue("Syrup", 30);
-        dataset.setValue("Kapsul", 20);
-        dataset.setValue("Salep", 10);
+                // Format Axis to Integer
+                NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+                rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+                rangeAxis.setNumberFormatOverride(new DecimalFormat("0"));
 
-        JFreeChart chart = ChartFactory.createPieChart("Jenis Produk", dataset, true, false, false);
-        chart.getTitle().setFont(new Font("Segoe UI", Font.BOLD, 16));
-        styleChart(chart);
+                renderer.setSeriesPaint(0, new Color(46, 204, 113)); // Green for In
+                renderer.setSeriesPaint(1, new Color(231, 76, 60)); // Red for Out
 
-        PiePlot plot = (PiePlot) chart.getPlot();
-        plot.setLabelFont(new Font("Segoe UI", Font.PLAIN, 12));
-        plot.setBackgroundPaint(new Color(250, 250, 250));
-        plot.setSectionOutlinesVisible(false);
-        plot.setSimpleLabels(true);
-        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {1} ({2})"));
+                chart.getTitle().setFont(new Font("Segoe UI", Font.BOLD, 16));
+                chart.getLegend().setVisible(true);
 
-        ChartPanel panel = new ChartPanel(chart);
-        panel.setPreferredSize(new Dimension(300, 250));
-        panel.setPopupMenu(null);
-        panel.setMouseWheelEnabled(false);
-        return panel;
-    }
+                ChartPanel panel = new ChartPanel(chart);
+                panel.setPreferredSize(new Dimension(300, 250));
+                panel.setPopupMenu(null);
+                panel.setMouseWheelEnabled(false);
+                return panel;
+        }
 
-    private void initChart() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        //ChartPanel jPanel2 = new ChartPanel(chart1);
-    }
+        private ChartPanel buildLineChart() {
+                DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
+                try {
+                        // Get sales for last 365 days
+                        System.out.println("Fetching Transactions for last 365 days...");
+                        List<transaction> trans = transactionsRepo.getAllTransaction(365, 0, 0);
+                        System.out.println("Fetched " + trans.size() + " transactions.");
 
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM", java.util.Locale.ENGLISH);
 
-    private void styleChart(JFreeChart chart) {
-        chart.setBackgroundPaint(Color.WHITE);
-    chart.getTitle().setPaint(Color.DARK_GRAY);
+                        Map<String, Double> salesPerMonth = trans.stream()
+                                        .filter(t -> t.getCreatedAt() != null)
+                                        .collect(Collectors.groupingBy(
+                                                        t -> t.getCreatedAt().format(formatter),
+                                                        Collectors.summingDouble(transaction::getGrandTotal)));
 
-    // Mengatur plot
-    Plot plot = chart.getPlot();
-    plot.setBackgroundPaint(new Color(230, 230, 250));
-    plot.setOutlinePaint(Color.BLACK);
+                        java.time.LocalDate now = java.time.LocalDate.now();
+                        for (int i = 5; i >= 0; i--) { // Show last 6 months
+                                java.time.LocalDate d = now.minusMonths(i);
+                                String monthLabel = d.format(formatter);
+                                Double total = salesPerMonth.getOrDefault(monthLabel, 0.0);
+                                dataset.addValue(total, "Penjualan", monthLabel);
 
-    // Jika plot adalah CategoryPlot (contoh BarChart)
-    if (plot instanceof CategoryPlot) {
-        CategoryPlot cplot = (CategoryPlot) plot;
-        cplot.setRangeGridlinePaint(Color.GRAY);
-        cplot.setRangeGridlinesVisible(true);
-        cplot.setDomainGridlinesVisible(false);
-    }
-    }
+                                System.out.println("Month: " + monthLabel + " -> Sales: " + total);
+                        }
 
-    private void styleTable(JTable jTable1) {
-    jTable1.setRowHeight(25);
-    jTable1.setShowVerticalLines(false);
-    jTable1.setIntercellSpacing(new Dimension(0, 0));
-    jTable1.setSelectionBackground(new Color(51, 153, 255));
-    jTable1.setSelectionForeground(Color.WHITE);
-    jTable1.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                }
 
-    JTableHeader header = jTable1.getTableHeader();
-    header.setReorderingAllowed(false);
-    header.setResizingAllowed(false);
-    header.setBackground(new Color(32, 136, 203));
-    header.setForeground(Color.BLACK);
-    header.setFont(new Font("Segoe UI", Font.BOLD, 14));
-    }
-    
+                JFreeChart chart = ChartFactory.createLineChart(
+                                "Penjualan (IDR)", "Bulan", "Rupiah", dataset);
+                styleChart(chart);
+
+                chart.getTitle().setFont(new Font("Segoe UI", Font.BOLD, 16));
+                chart.getLegend().setVisible(false);
+
+                // Format Axis to Currency/Number
+                CategoryPlot plot = (CategoryPlot) chart.getPlot();
+                NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+                rangeAxis.setNumberFormatOverride(new DecimalFormat("#,##0"));
+
+                ChartPanel panel = new ChartPanel(chart);
+                panel.setPreferredSize(new Dimension(300, 250));
+                panel.setPopupMenu(null);
+                panel.setMouseWheelEnabled(false);
+                return panel;
+        }
+
+        private ChartPanel buildPieChart() {
+                DefaultPieDataset dataset = new DefaultPieDataset();
+
+                try {
+                        List<items> allArgs = itemsRepo.getAllItems("", 0, 0, 0);
+                        Map<String, Long> brandCounts = allArgs.stream()
+                                        .collect(Collectors.groupingBy(items::getBrandName, Collectors.counting()));
+
+                        // Top 5 brands
+                        brandCounts.entrySet().stream()
+                                        .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                                        .limit(5)
+                                        .forEach(e -> dataset.setValue(e.getKey(), e.getValue()));
+
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+
+                JFreeChart chart = ChartFactory.createPieChart("Top 5 Brands", dataset, true, false, false);
+                chart.getTitle().setFont(new Font("Segoe UI", Font.BOLD, 16));
+                styleChart(chart);
+
+                // Position legend at bottom to give more room for pie chart
+                chart.getLegend().setPosition(org.jfree.chart.ui.RectangleEdge.BOTTOM);
+
+                PiePlot plot = (PiePlot) chart.getPlot();
+                plot.setLabelFont(new Font("Segoe UI", Font.PLAIN, 11));
+                plot.setBackgroundPaint(new Color(250, 250, 250));
+                plot.setSectionOutlinesVisible(false);
+                plot.setSimpleLabels(true);
+                plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {1}"));
+                plot.setInteriorGap(0.02); // Reduce interior gap to make pie larger
+                plot.setLabelGap(0.02); // Reduce label gap
+
+                ChartPanel panel = new ChartPanel(chart);
+                panel.setPreferredSize(new Dimension(350, 300));
+                panel.setMinimumDrawWidth(300);
+                panel.setMinimumDrawHeight(250);
+                panel.setPopupMenu(null);
+                panel.setMouseWheelEnabled(false);
+                return panel;
+        }
+
+        private void styleChart(JFreeChart chart) {
+                chart.setBackgroundPaint(Color.WHITE);
+                chart.getTitle().setPaint(Color.DARK_GRAY);
+
+                // Mengatur plot
+                Plot plot = chart.getPlot();
+                plot.setBackgroundPaint(new Color(230, 230, 250));
+                plot.setOutlinePaint(Color.BLACK);
+
+                // Jika plot adalah CategoryPlot (contoh BarChart)
+                if (plot instanceof CategoryPlot) {
+                        CategoryPlot cplot = (CategoryPlot) plot;
+                        cplot.setRangeGridlinePaint(Color.GRAY);
+                        cplot.setRangeGridlinesVisible(true);
+                        cplot.setDomainGridlinesVisible(false);
+                }
+        }
+
 }
-

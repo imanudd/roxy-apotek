@@ -24,28 +24,28 @@ public class userUc {
         this.userRepo = userRepo;
     }
 
-    //register
+    // register
     public boolean register(user u) {
         try {
-            //validasi format email
+            // validasi format email
             if (!validasi.isValidGmail(u.getEmail())) {
                 System.out.println("Email must use the @gmail.com domain!");
                 return false;
             }
 
-            //validasi format no hp
+            // validasi format no hp
             if (!validasi.isValidPhoneNumber(u.getPhoneNumber())) {
                 System.out.println("Phone number must be at least 11 digits!");
                 return false;
             }
 
-            //validasi email uniq
+            // validasi email uniq
             if (userRepo.isEmailExist(u.getEmail())) {
                 System.out.println("Email already registered!");
                 return false;
             }
 
-            //validasi no hp uniq
+            // validasi no hp uniq
             if (userRepo.isPhoneNumberExist(u.getPhoneNumber())) {
                 System.out.println("Phone number already registered!");
                 return false;
@@ -64,7 +64,7 @@ public class userUc {
         }
     }
 
-    //login
+    // login
     public user login(String email, String password) {
         try {
             user u = userRepo.findUserByEmail(email);
@@ -81,28 +81,28 @@ public class userUc {
         }
     }
 
-    //list user
-    public List<user> listUser(String search, int rangeDay) {
+    // list user
+    public List<user> listUser(String search, int rangeDay, int limit, int offset) {
         try {
-            return userRepo.listUser(search, rangeDay);
+            return userRepo.listUser(search, rangeDay, limit, offset);
         } catch (SQLException e) {
             System.err.println("List user error: " + e.getMessage());
             return new ArrayList<>();
         }
     }
 
-    //export list user
+    // export list user
     public boolean exportUserListToExcel(String search, int rangeDay) {
         try {
             String fileName = "user-list-" + System.currentTimeMillis() + ".xlsx";
-            List<user> users = userRepo.listUser(search, rangeDay);
+            List<user> users = userRepo.listUser(search, rangeDay, 0, 0);
 
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Users");
 
             // Header
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"ID", "Username", "Email", "Phone Number", "Status"};
+            String[] columns = { "ID", "Username", "Email", "Phone Number", "Status" };
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -152,7 +152,7 @@ public class userUc {
         try {
             // Ambil data user yang sudah ada berdasarkan id
             user existingUser = userRepo.findUserById(id);
-            
+
             if (existingUser == null) {
                 System.out.println("User not found!");
                 return false;
@@ -167,7 +167,7 @@ public class userUc {
 
                 // hanya validasi unik jika user mengganti nomor telepon
                 if (!u.getPhoneNumber().equals(existingUser.getPhoneNumber()) &&
-                    userRepo.isPhoneNumberExist(u.getPhoneNumber())) {
+                        userRepo.isPhoneNumberExist(u.getPhoneNumber())) {
                     System.out.println("Phone number already registered by another user!");
                     return false;
                 }
@@ -182,7 +182,7 @@ public class userUc {
 
                 // hanya validasi unik jika email diubah
                 if (!u.getEmail().equals(existingUser.getEmail()) &&
-                    userRepo.isEmailExist(u.getEmail())) {
+                        userRepo.isEmailExist(u.getEmail())) {
                     System.out.println("Email already registered by another user!");
                     return false;
                 }

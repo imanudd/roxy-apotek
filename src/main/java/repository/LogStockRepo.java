@@ -20,65 +20,73 @@ public class LogStockRepo {
         this.conn = conn;
     }
 
-    public List<LogStock> getList(String filter, int rangeDay ) throws SQLException {
-    StringBuilder query = new StringBuilder(
-        "SELECT s.id, s.activity_name, s.item_id, i.item_name, s.ref_id, u.username, " +
-        "s.qty, s.created_at, s.created_by, s.updated_at, s.updated_by " +
-        "FROM log_stocks s " +
-        "LEFT JOIN users u ON s.created_by = u.id " +
-        "LEFT JOIN items i ON s.item_id = i.id"
-    );
+    public List<LogStock> getList(String filter, int rangeDay, int limit, int offset) throws SQLException {
+        StringBuilder query = new StringBuilder(
+                "SELECT s.id, s.activity_name, s.item_id, i.item_name, s.ref_id, u.username, " +
+                        "s.qty, s.created_at, s.created_by, s.updated_at, s.updated_by " +
+                        "FROM log_stocks s " +
+                        "LEFT JOIN users u ON s.created_by = u.id " +
+                        "LEFT JOIN items i ON s.item_id = i.id");
 
-    List<LogStock> list = new ArrayList<>();
-    int paramIndex = 1;
-    boolean hasFilter = filter != null && !filter.trim().isEmpty();
-    LocalDateTime from = null;
-    boolean hasWhere = false;
+        List<LogStock> list = new ArrayList<>();
+        int paramIndex = 1;
+        boolean hasFilter = filter != null && !filter.trim().isEmpty();
+        LocalDateTime from = null;
+        boolean hasWhere = false;
 
-    // Bangun WHERE clause
-    if (hasFilter) {
-        query.append(" WHERE s.activity_name = ?");
-        hasWhere = true;
-    }
-
-    if (rangeDay > 0) {
-        from = LocalDateTime.now().minusDays(rangeDay);
-        query.append(hasWhere ? " AND" : " WHERE");
-        query.append(" s.created_at >= ?");
-    }
-
-    query.append(" ORDER BY s.id ASC");
-
-    try (PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+        // Bangun WHERE clause
         if (hasFilter) {
-            stmt.setString(paramIndex++, filter.trim());
-        }
-        if (rangeDay > 0 && from != null) {
-            stmt.setTimestamp(paramIndex++, Timestamp.valueOf(from));
+            query.append(" WHERE s.activity_name = ?");
+            hasWhere = true;
         }
 
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                LogStock log = new LogStock(
-                    rs.getInt("id"),
-                    rs.getString("activity_name"),
-                    rs.getInt("item_id"),
-                    rs.getString("item_name"),
-                    rs.getInt("ref_id"),
-                    rs.getString("username"),
-                    rs.getInt("qty"),
-                    rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
-                    rs.getInt("created_by"),
-                    rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
-                    rs.getInt("updated_by")
-                );
-                list.add(log);
+        if (rangeDay > 0) {
+            from = LocalDateTime.now().minusDays(rangeDay);
+            query.append(hasWhere ? " AND" : " WHERE");
+            query.append(" s.created_at >= ?");
+        }
+
+        query.append(" ORDER BY s.id ASC");
+
+        if (limit > 0) {
+            query.append(" LIMIT ? OFFSET ?");
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+            if (hasFilter) {
+                stmt.setString(paramIndex++, filter.trim());
+            }
+            if (rangeDay > 0 && from != null) {
+                stmt.setTimestamp(paramIndex++, Timestamp.valueOf(from));
+            }
+            if (limit > 0) {
+                stmt.setInt(paramIndex++, limit);
+                stmt.setInt(paramIndex++, offset);
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    LogStock log = new LogStock(
+                            rs.getInt("id"),
+                            rs.getString("activity_name"),
+                            rs.getInt("item_id"),
+                            rs.getString("item_name"),
+                            rs.getInt("ref_id"),
+                            rs.getString("username"),
+                            rs.getInt("qty"),
+                            rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime()
+                                    : null,
+                            rs.getInt("created_by"),
+                            rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime()
+                                    : null,
+                            rs.getInt("updated_by"));
+                    list.add(log);
+                }
             }
         }
-    }
 
-    return list;
-}
+        return list;
+    }
 
     // Insert
     public boolean insert(LogStock log) throws SQLException {
@@ -86,15 +94,15 @@ public class LogStockRepo {
 
         String query = "INSERT INTO log_stocks (activity_name, item_id, ref_id, qty, created_at, created_by) VALUES (?, ?, ? ,?, ?, ?)";
         PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, log.getActivityName());
-            stmt.setInt(2, log.getItemId());
-            stmt.setInt(3, log.getRefId());
-            stmt.setInt(4, log.getQty());
-            stmt.setTimestamp(5, Timestamp.valueOf(log.getCreatedAt()));
-            stmt.setInt(6, currentUser.getId());
-            int rowsInserted = stmt.executeUpdate();
-            
-         return rowsInserted > 0;
+        stmt.setString(1, log.getActivityName());
+        stmt.setInt(2, log.getItemId());
+        stmt.setInt(3, log.getRefId());
+        stmt.setInt(4, log.getQty());
+        stmt.setTimestamp(5, Timestamp.valueOf(log.getCreatedAt()));
+        stmt.setInt(6, currentUser.getId());
+        int rowsInserted = stmt.executeUpdate();
+
+        return rowsInserted > 0;
     }
 
     // Update

@@ -16,17 +16,17 @@ public class itemsRepo {
     }
 
     // Ambil semua data item
-    public List<items> getAllItems(String search, Integer brandId) throws SQLException {
+    public List<items> getAllItems(String search, Integer brandId, int limit, int offset) throws SQLException {
         List<items> list = new ArrayList<>();
         List<Object> params = new ArrayList<>();
 
         String query = " SELECT i.*, b.brand_name, s.first_stock, s.stock_in, s.stock_out, s.remaining_stock FROM items i LEFT JOIN brands b ON i.brand_id=b.id LEFT JOIN stocks s ON i.id = s.item_id WHERE TRUE ";
-        
+
         if (search != null && !search.trim().isEmpty()) {
             query += " AND b.brand_name ILIKE ? ";
-            params.add( "%" + search.trim() + "%");
+            params.add("%" + search.trim() + "%");
         }
-        
+
         if (brandId != 0) {
             query += " AND i.brand_id = ? ";
             params.add(brandId);
@@ -34,8 +34,12 @@ public class itemsRepo {
 
         query += " ORDER BY b.id ASC";
 
+        if (limit > 0) {
+            query += " LIMIT ? OFFSET ? ";
+        }
+
         PreparedStatement stmt = conn.prepareStatement(query);
-        
+
         for (int i = 0; i < params.size(); i++) {
             Object param = params.get(i);
             if (param instanceof String) {
@@ -44,39 +48,43 @@ public class itemsRepo {
                 stmt.setInt(i + 1, (Integer) param);
             }
         }
-        
+
+        if (limit > 0) {
+            stmt.setInt(params.size() + 1, limit);
+            stmt.setInt(params.size() + 2, offset);
+        }
+
         ResultSet rs = stmt.executeQuery();
-        
+
         while (rs.next()) {
             Timestamp createdAtTs = rs.getTimestamp("created_at");
             Timestamp updatedAtTs = rs.getTimestamp("updated_at");
             Timestamp deletedAtTs = rs.getTimestamp("deleted_at");
 
-                    items itm = new items(
-                        rs.getInt("id"),
-                        rs.getString("item_name"),
-                        rs.getInt("brand_id"),
-                        rs.getString("brand_name"),
-                        rs.getDouble("sell_price"),
-                        (createdAtTs != null) ? createdAtTs.toLocalDateTime() : null,
-                        rs.getInt("created_by"),
-                        (updatedAtTs != null) ? updatedAtTs.toLocalDateTime() : null,
-                        rs.getInt("updated_by"),
-                        rs.getBoolean("status"),
-                        rs.getInt("deleted_by"),
-                        (deletedAtTs != null) ? deletedAtTs.toLocalDateTime() : null,
-                        rs.getInt("first_stock"),
-                        rs.getInt("stock_in"),
-                        rs.getInt("stock_out"),
-                        rs.getInt("remaining_stock")
-                    );
-                    list.add(itm);
+            items itm = new items(
+                    rs.getInt("id"),
+                    rs.getString("item_name"),
+                    rs.getInt("brand_id"),
+                    rs.getString("brand_name"),
+                    rs.getDouble("sell_price"),
+                    (createdAtTs != null) ? createdAtTs.toLocalDateTime() : null,
+                    rs.getInt("created_by"),
+                    (updatedAtTs != null) ? updatedAtTs.toLocalDateTime() : null,
+                    rs.getInt("updated_by"),
+                    rs.getBoolean("status"),
+                    rs.getInt("deleted_by"),
+                    (deletedAtTs != null) ? deletedAtTs.toLocalDateTime() : null,
+                    rs.getInt("first_stock"),
+                    rs.getInt("stock_in"),
+                    rs.getInt("stock_out"),
+                    rs.getInt("remaining_stock"));
+            list.add(itm);
         }
 
-    return list;
-}
+        return list;
+    }
 
-    //get item by id
+    // get item by id
     public items getItemById(int id) throws SQLException {
         String query = "SELECT i.*, b.brand_name FROM items i LEFT JOIN brands b ON i.brand_id=b.id WHERE i.id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -87,23 +95,22 @@ public class itemsRepo {
                     Timestamp updatedAtTs = rs.getTimestamp("updated_at");
                     Timestamp deletedAtTs = rs.getTimestamp("deleted_at");
                     items itm = new items(
-                        rs.getInt("id"),
-                        rs.getString("item_name"),
-                        rs.getInt("brand_id"),
-                        rs.getString("brand_name"),
-                        rs.getDouble("sell_price"),
-                        (createdAtTs != null) ? createdAtTs.toLocalDateTime() : null,
-                        rs.getInt("created_by"),
-                        (updatedAtTs != null) ? updatedAtTs.toLocalDateTime() : null,
-                        rs.getInt("updated_by"),
-                        rs.getBoolean("status"),
-                        rs.getInt("deleted_by"),
-                        (deletedAtTs != null) ? deletedAtTs.toLocalDateTime() : null,
-                        0,
-                        0,
-                        0,
-                        0
-                    );
+                            rs.getInt("id"),
+                            rs.getString("item_name"),
+                            rs.getInt("brand_id"),
+                            rs.getString("brand_name"),
+                            rs.getDouble("sell_price"),
+                            (createdAtTs != null) ? createdAtTs.toLocalDateTime() : null,
+                            rs.getInt("created_by"),
+                            (updatedAtTs != null) ? updatedAtTs.toLocalDateTime() : null,
+                            rs.getInt("updated_by"),
+                            rs.getBoolean("status"),
+                            rs.getInt("deleted_by"),
+                            (deletedAtTs != null) ? deletedAtTs.toLocalDateTime() : null,
+                            0,
+                            0,
+                            0,
+                            0);
                     return itm;
                 }
             }
@@ -114,8 +121,8 @@ public class itemsRepo {
     // Tambah item baru
     public Integer createItem(items itm, int currentUser) throws SQLException {
         String query = "INSERT INTO items (item_name, brand_id, sell_price,status, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?)";
-        
-        PreparedStatement stmt = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS); 
+
+        PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         stmt.setString(1, itm.getItemName());
         stmt.setInt(2, itm.getBrandId());
         stmt.setDouble(3, itm.getPrice());
@@ -124,15 +131,15 @@ public class itemsRepo {
         stmt.setInt(6, currentUser);
 
         int rows = stmt.executeUpdate();
-        
-         if (rows == 0) {
+
+        if (rows == 0) {
             throw new SQLException("Insert failed, no rows affected.");
         }
-         
+
         ResultSet generatedKeys = stmt.getGeneratedKeys();
-        
+
         if (generatedKeys.next()) {
-             return generatedKeys.getInt(1); 
+            return generatedKeys.getInt(1);
         } else {
             throw new SQLException("Insert succeeded but no ID obtained.");
         }
@@ -173,7 +180,8 @@ public class itemsRepo {
 
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, name);
-            if (excludeId > 0) ps.setInt(2, excludeId);
+            if (excludeId > 0)
+                ps.setInt(2, excludeId);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -184,14 +192,14 @@ public class itemsRepo {
         return false;
     }
 
-    //delete item by brand
-    public boolean deleteItemsByBrand(int brandId)throws SQLException {
+    // delete item by brand
+    public boolean deleteItemsByBrand(int brandId) throws SQLException {
         String query = "DELETE FROM items WHERE brand_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, brandId);
             int rows = stmt.executeUpdate();
             return rows > 0;
-        } 
+        }
     }
 
     // Get items by brand ID
@@ -203,30 +211,30 @@ public class itemsRepo {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     items itm = new items(
-                        rs.getInt("id"),
-                        rs.getString("item_name"),
-                        rs.getInt("brand_id"),
-                        rs.getString("brand_name"),
-                        rs.getDouble("sell_price"),
-                        rs.getTimestamp("created_at").toLocalDateTime(),
-                        rs.getInt("created_by"),
-                        rs.getTimestamp("updated_at").toLocalDateTime(),
-                        rs.getInt("updated_by"),
-                        rs.getBoolean("status"),
-                        rs.getInt("deleted_by"),
-                        rs.getTimestamp("deteled_at").toLocalDateTime(),
-                        0,
-                        0,
-                        0,
-                        0
-                    );
+                            rs.getInt("id"),
+                            rs.getString("item_name"),
+                            rs.getInt("brand_id"),
+                            rs.getString("brand_name"),
+                            rs.getDouble("sell_price"),
+                            rs.getTimestamp("created_at").toLocalDateTime(),
+                            rs.getInt("created_by"),
+                            rs.getTimestamp("updated_at").toLocalDateTime(),
+                            rs.getInt("updated_by"),
+                            rs.getBoolean("status"),
+                            rs.getInt("deleted_by"),
+                            rs.getTimestamp("deteled_at").toLocalDateTime(),
+                            0,
+                            0,
+                            0,
+                            0);
                     itm.setId(rs.getInt("id"));
                     list.add(itm);
                 }
             }
         }
-        return list; 
+        return list;
     }
+
     // Get option items by brand ID
     public List<optionItems> optionItems(int brandId) throws SQLException {
         String query = "SELECT * FROM items WHERE status = true AND brand_id = ?";
@@ -236,15 +244,14 @@ public class itemsRepo {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     optionItems itm = new optionItems(
-                        rs.getInt("id"),
-                        rs.getString("item_name")
-                    );
+                            rs.getInt("id"),
+                            rs.getString("item_name"));
                     itm.setId(rs.getInt("id"));
                     list.add(itm);
                 }
             }
         }
-        return list; 
+        return list;
     }
 
 }

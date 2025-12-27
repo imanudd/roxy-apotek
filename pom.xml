@@ -67,6 +67,13 @@
             <version>SNAPSHOT</version>
         </dependency>
         
+        <!-- FlatLaf for modern look and feel -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        
     </dependencies>
     
     <build>

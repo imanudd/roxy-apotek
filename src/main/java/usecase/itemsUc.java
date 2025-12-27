@@ -30,11 +30,11 @@ public class itemsUc {
         this.stockRepo = stockRepo;
     }
 
-    //list item
-    public List<items> getAllItems(String search, Integer brandId) {
-        try{
-            return itemRepo.getAllItems(search, brandId);
-        }catch (SQLException e){
+    // list item
+    public List<items> getAllItems(String search, Integer brandId, int limit, int offset) {
+        try {
+            return itemRepo.getAllItems(search, brandId, limit, offset);
+        } catch (SQLException e) {
             System.err.println("List items error: " + e.getMessage());
             return new ArrayList<>();
         }
@@ -42,43 +42,42 @@ public class itemsUc {
 
     // create item
     public boolean createItem(items itm, stock stc) {
-        try{
-        if (itm.getItemName() == null || itm.getItemName().isEmpty()) {
-            System.out.println("Nama item tidak boleh kosong");
-            return false;
-        }
+        try {
+            if (itm.getItemName() == null || itm.getItemName().isEmpty()) {
+                System.out.println("Nama item tidak boleh kosong");
+                return false;
+            }
 
-        if (itm.getPrice() <= 0) {
-            System.out.println("Harga item tidak boleh nol atau negatif");
-            return false;
-        }
+            if (itm.getPrice() <= 0) {
+                System.out.println("Harga item tidak boleh nol atau negatif");
+                return false;
+            }
 
-        itm.setCreatedAt(LocalDateTime.now());
+            itm.setCreatedAt(LocalDateTime.now());
 
-        Integer itemId = itemRepo.createItem(itm, currentUser.getId());
-       
-        stc.setItemId(itemId);
-        stc.setCreatedAt(LocalDateTime.now());
-        
-        boolean success = stockRepo.createStock(stc, currentUser.getId());
-        if (!success){
-            System.err.println("create stock error : ");
-            return false;
-        }
-        
-        }catch (SQLException e){
+            Integer itemId = itemRepo.createItem(itm, currentUser.getId());
+
+            stc.setItemId(itemId);
+            stc.setCreatedAt(LocalDateTime.now());
+
+            boolean success = stockRepo.createStock(stc, currentUser.getId());
+            if (!success) {
+                System.err.println("create stock error : ");
+                return false;
+            }
+
+        } catch (SQLException e) {
             System.err.println("Create item error: " + e.getMessage());
             return false;
         }
-        
+
         return true;
     }
-
 
     // update item
     public boolean updateItem(items itm, int id) {
         System.out.println("ID: " + id);
-        try{
+        try {
             // Set id ke object itm
             // itm.setId(id);
 
@@ -94,7 +93,7 @@ public class itemsUc {
                 return false;
             }
 
-            //gunakan existing apabila inputan kosong
+            // gunakan existing apabila inputan kosong
             if (itm.getItemName() == null || itm.getItemName().isEmpty()) {
                 itm.setItemName(existingiItems.getItemName());
             }
@@ -106,7 +105,7 @@ public class itemsUc {
 
             itm.setUpdatedAt(LocalDateTime.now());
             return itemRepo.updateItem(itm, currentUser.getId(), id);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println("Update item error: " + e.getMessage());
             return false;
         }
@@ -114,40 +113,40 @@ public class itemsUc {
 
     // delete item
     public boolean deleteItem(int id) {
-        try{
+        try {
             if (id <= 0) {
                 System.out.println("ID item tidak valid");
                 return false;
             }
             return itemRepo.deleteItem(id, currentUser.getId());
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println("Delete item error: " + e.getMessage());
             return false;
         }
     }
 
-    //get item by id
-    public items getItemById (int id){
-        try{
+    // get item by id
+    public items getItemById(int id) {
+        try {
             return itemRepo.getItemById(id);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println("Get item by ID error: " + e.getMessage());
             return null;
         }
     }
 
-    //export excel
+    // export excel
     public boolean exportItemsList(String search) {
         try {
             String fileName = "items-list-" + System.currentTimeMillis() + ".xlsx";
-            List<items> items = itemRepo.getAllItems(search, 0);
+            List<items> items = itemRepo.getAllItems(search, 0, 0, 0);
 
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Items");
 
             // Header
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"ID","Item Name", "Brand Name", "Sell Price", "Status"};
+            String[] columns = { "ID", "Item Name", "Brand Name", "Sell Price", "Status" };
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -183,11 +182,11 @@ public class itemsUc {
         }
     }
 
-    //option item
+    // option item
     public List<optionItems> optionItems(int brandId) {
-        try{
+        try {
             return itemRepo.optionItems(brandId);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println("Option item error: " + e.getMessage());
             return new ArrayList<>();
         }

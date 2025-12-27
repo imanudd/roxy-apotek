@@ -18,41 +18,42 @@ import repository.LogStockRepo;
 
 public class logStockUc {
     private final LogStockRepo logStockRepo;
+
     public logStockUc(LogStockRepo logStockRepo) {
         this.logStockRepo = logStockRepo;
     }
-    
-    public boolean createLogStock(LogStock logStock){
+
+    public boolean createLogStock(LogStock logStock) {
         try {
             return logStockRepo.insert(logStock);
         } catch (SQLException ex) {
             Logger.getLogger(logStockUc.class.getName()).log(Level.SEVERE, null, ex);
             return false;
-        }  
+        }
 
     }
 
-    public List<LogStock> getList(String filter, int rangeDay) {
+    public List<LogStock> getList(String filter, int rangeDay, int limit, int offset) {
         try {
-            return logStockRepo.getList(filter, rangeDay);
+            return logStockRepo.getList(filter, rangeDay, limit, offset);
         } catch (SQLException e) {
             System.out.println("Error fetching log stocks: " + e.getMessage());
             return null;
         }
     }
 
-    //export stock
+    // export stock
     public boolean exportLogStock(String filter, int rangeDay) {
         try {
             String fileName = "log-stock-list-" + System.currentTimeMillis() + ".xlsx";
-            List<LogStock> logstocks = logStockRepo.getList(filter, rangeDay);
+            List<LogStock> logstocks = logStockRepo.getList(filter, rangeDay, 0, 0);
 
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Log Stocks");
 
             // Header
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"ID", "Activity Name", "Item Name", "Jumlah", "Username","Tanggal"};
+            String[] columns = { "ID", "Activity Name", "Item Name", "Jumlah", "Username", "Tanggal" };
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -88,5 +89,5 @@ public class logStockUc {
             return false;
         }
     }
-    
+
 }

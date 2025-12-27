@@ -30,10 +30,10 @@ public class supplierUc {
         this.brandsRepo = brandsRepo;
     }
 
-    // Methods get list supplier    
-    public List<suppliers> getSuppliersList(String search, int rangeDay) {
+    // Methods get list supplier
+    public List<suppliers> getSuppliersList(String search, int rangeDay, int limit, int offset) {
         try {
-            return supplierRepo.listSupplier(search, rangeDay);
+            return supplierRepo.listSupplier(search, rangeDay, limit, offset);
         } catch (SQLException e) {
             System.err.println("List supplier error: " + e.getMessage());
             return new ArrayList<>();
@@ -69,7 +69,7 @@ public class supplierUc {
         }
     }
 
-    //update supplier
+    // update supplier
     public boolean updateSupplier(suppliers spl) {
         try {
             // Ambil data existing
@@ -81,15 +81,18 @@ public class supplierUc {
 
             // Gunakan data existing jika field kosong
             String newName = (spl.getSupplierName() == null || spl.getSupplierName().trim().isEmpty())
-                    ? existing.getSupplierName() : spl.getSupplierName();
+                    ? existing.getSupplierName()
+                    : spl.getSupplierName();
             String newAddress = (spl.getAddress() == null || spl.getAddress().trim().isEmpty())
-                    ? existing.getAddress() : spl.getAddress();
+                    ? existing.getAddress()
+                    : spl.getAddress();
             String newPhone = (spl.getPhone() == null || spl.getPhone().trim().isEmpty())
-                    ? existing.getPhone() : spl.getPhone();
+                    ? existing.getPhone()
+                    : spl.getPhone();
 
             // Validasi nama supplier jika berubah
             if (!newName.equals(existing.getSupplierName()) &&
-                supplierRepo.isSupplierNameExists(newName, spl.getId())) {
+                    supplierRepo.isSupplierNameExists(newName, spl.getId())) {
                 System.out.println("Supplier name already exists.");
                 return false;
             }
@@ -107,8 +110,7 @@ public class supplierUc {
         }
     }
 
-
-    //get supplier by id
+    // get supplier by id
     public suppliers getSupplierById(int id) {
         try {
             return supplierRepo.getSupplierById(id);
@@ -119,7 +121,7 @@ public class supplierUc {
     }
 
     // delete supplier
-   public boolean DeleteSupplier(int id) {
+    public boolean DeleteSupplier(int id) {
         try {
             // Cek apakah supplier ada
             suppliers existingSupplier = supplierRepo.getSupplierById(id);
@@ -156,19 +158,18 @@ public class supplierUc {
         }
     }
 
-
     // export supplier
     public boolean exportSupplierList(String search, int rangeDay) {
         try {
             String fileName = "supplier-list-" + System.currentTimeMillis() + ".xlsx";
-            List<suppliers> suppliers = supplierRepo.listSupplier(search, rangeDay);
+            List<suppliers> suppliers = supplierRepo.listSupplier(search, rangeDay, 0, 0);
 
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Suppliers");
 
             // Header
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"ID", "Supplier Name", "address", "Phone Number", "status"};
+            String[] columns = { "ID", "Supplier Name", "address", "Phone Number", "status" };
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -204,7 +205,7 @@ public class supplierUc {
         }
     }
 
-    //option supplier
+    // option supplier
     public List<optionSupplier> OptionSupplier() {
         try {
             return supplierRepo.OptionSupplier();

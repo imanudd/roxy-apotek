@@ -29,9 +29,9 @@ public class BrandUC {
     }
 
     // List semua brand
-    public List<brands> listBrands(String search, Integer supplierId, Integer rangeDay) {
+    public List<brands> listBrands(String search, Integer supplierId, Integer rangeDay, int limit, int offset) {
         try {
-            return brandRepo.listBrands(search, supplierId, rangeDay);
+            return brandRepo.listBrands(search, supplierId, rangeDay, limit, offset);
         } catch (SQLException e) {
             System.err.println("List brands error: " + e.getMessage());
             return new ArrayList<>();
@@ -65,8 +65,8 @@ public class BrandUC {
                 System.out.println("ID tidak valid");
                 return false;
             }
-            
-            if (brd.getBrandName().isEmpty()){
+
+            if (brd.getBrandName().isEmpty()) {
                 System.out.println("Nama Brand tidak boleh kosong");
                 return false;
             }
@@ -76,8 +76,8 @@ public class BrandUC {
                 System.out.println("Brand tidak ditemukan");
                 return false;
             }
-            
-            if (existingBrand.getStatus() == false){
+
+            if (existingBrand.getStatus() == false) {
                 System.out.println("Brand sudah tidak aktif");
                 return false;
             }
@@ -91,7 +91,6 @@ public class BrandUC {
             return false;
         }
     }
-
 
     // Delete brand (soft delete)
     public boolean deleteBrand(int id) {
@@ -138,8 +137,6 @@ public class BrandUC {
         }
     }
 
-
-
     // Get brand by ID
     public brands getBrandById(int id) {
         try {
@@ -154,14 +151,15 @@ public class BrandUC {
     public boolean exportBrandsList(String search, int supplierId, int rangeDay) {
         try {
             String fileName = "brands-list-" + System.currentTimeMillis() + ".xlsx";
-            List<brands> brands = brandRepo.listBrands(search, supplierId, rangeDay);
+            // No limit for export
+            List<brands> brands = brandRepo.listBrands(search, supplierId, rangeDay, 0, 0);
 
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Brands");
 
             // Header
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"ID","Brand Name", "Supplier Name", "Status"};
+            String[] columns = { "ID", "Brand Name", "Supplier Name", "Status" };
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -196,7 +194,7 @@ public class BrandUC {
         }
     }
 
-    //option brand
+    // option brand
     public List<optionBrands> optionBrands(int supplierId) {
         try {
             return brandRepo.OptionBrands(supplierId);
