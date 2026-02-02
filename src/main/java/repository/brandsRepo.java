@@ -162,7 +162,7 @@ public class brandsRepo {
     }
 
     public brands getBrandsBySupplier(int id) throws SQLException {
-        String sql = "SELECT * FROM brands WHERE supplier_id = ? and status = true";
+        String sql = "SELECT b.*, s.supplier_name FROM brands b LEFT JOIN suppliers s ON b.supplier_id = s.id WHERE b.supplier_id = ? and b.status = true";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -172,7 +172,7 @@ public class brandsRepo {
                         rs.getString("brand_name"),
                         rs.getInt("supplier_id"),
                         rs.getString("supplier_name"),
-                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
                         rs.getInt("created_by"),
                         rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
                         rs.getInt("updated_by"),

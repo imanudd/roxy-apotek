@@ -91,49 +91,31 @@ public class userUc {
         }
     }
 
-    // export list user
-    public boolean exportUserListToExcel(String search, int rangeDay) {
+    // export list user to PDF
+    public boolean exportUserList(String search, int rangeDay, String filePath) {
         try {
-            String fileName = "user-list-" + System.currentTimeMillis() + ".xlsx";
             List<user> users = userRepo.listUser(search, rangeDay, 0, 0);
 
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Users");
-
-            // Header
-            Row headerRow = sheet.createRow(0);
-            String[] columns = { "ID", "Username", "Email", "Phone Number", "Status" };
-            for (int i = 0; i < columns.length; i++) {
-                Cell cell = headerRow.createCell(i);
-                cell.setCellValue(columns[i]);
-            }
-
-            // Isi data
-            int rowNum = 1;
+            String[] headers = { "ID", "Username", "Email", "Phone Number", "Status" };
+            List<Object[]> data = new ArrayList<>();
             for (user u : users) {
-                Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(u.getId());
-                row.createCell(1).setCellValue(u.getUserName());
-                row.createCell(2).setCellValue(u.getEmail());
-                row.createCell(3).setCellValue(u.getPhoneNumber());
-                row.createCell(4).setCellValue(u.isStatus() ? "Aktif" : "Nonaktif"); // Status ditampilkan sebagai teks
+                data.add(new Object[] {
+                        u.getId(),
+                        u.getUserName(),
+                        u.getEmail(),
+                        u.getPhoneNumber(),
+                        u.isStatus() ? "Aktif" : "Nonaktif"
+                });
             }
 
-            // Autosize kolom
-            for (int i = 0; i < columns.length; i++) {
-                sheet.autoSizeColumn(i);
+            boolean success = helper.PdfGenerator.generateFormalReport("Laporan Data User", headers, data, filePath);
+            if (success) {
+                System.out.println("PDF berhasil dibuat: " + filePath);
             }
-
-            FileOutputStream fileOut = new FileOutputStream(fileName);
-            workbook.write(fileOut);
-            fileOut.close();
-            workbook.close();
-
-            System.out.println("Excel berhasil dibuat: " + fileName);
-            return true;
+            return success;
 
         } catch (Exception e) {
-            System.err.println("Gagal export Excel: " + e.getMessage());
+            System.err.println("Gagal export PDF: " + e.getMessage());
             return false;
         }
     }

@@ -133,13 +133,54 @@ public class UserManagement extends javax.swing.JPanel {
         }
 
         private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {
-                // TODO: Implement update logic
-                JOptionPane.showMessageDialog(this, "Feature not implemented yet");
+                String idStr = textFieldId.getText().trim();
+                String name = textFieldName.getText().trim();
+                String email = textFieldEmail.getText().trim();
+                String phone = textFieldPhone.getText().trim();
+                String password = new String(textFieldPassword.getPassword()).trim();
+
+                if (idStr.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "ID user tidak boleh kosong.", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                        return;
+                }
+
+                if (name.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Nama user tidak boleh kosong.", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                        return;
+                }
+
+                user updateUser = new user();
+                updateUser.setId(Integer.parseInt(idStr));
+                updateUser.setUserName(name);
+                updateUser.setEmail(email);
+                updateUser.setPhoneNumber(phone);
+                updateUser.setPassword(password);
+
+                boolean success = uc.updateUser(Integer.parseInt(idStr), updateUser);
+                JOptionPane.showMessageDialog(this, "UPDATE: " + (success ? "Berhasil" : "Gagal"));
+                if (success) {
+                        clearInputFields();
+                        loadUsers();
+                }
         }
 
         private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {
-                // TODO: Implement delete logic
-                JOptionPane.showMessageDialog(this, "Feature not implemented yet");
+                String idStr = textFieldId.getText().trim();
+
+                if (idStr.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "ID user tidak boleh kosong.", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                        return;
+                }
+
+                boolean success = uc.softDeleteUser(Integer.parseInt(idStr));
+                JOptionPane.showMessageDialog(this, "DELETE: " + (success ? "Berhasil" : "Gagal"));
+                if (success) {
+                        clearInputFields();
+                        loadUsers();
+                }
         }
 
         private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {

@@ -142,9 +142,12 @@ public class Main {
                 System.out.print("Masukkan jumlah hari untuk filter: ");
                 int rangeDay = Integer.parseInt(input.nextLine());
 
-                boolean success = userUseCase.exportUserListToExcel(search, rangeDay);
+                String filePath = "user-list-" + System.currentTimeMillis() + ".pdf";
+                boolean success = userUseCase.exportUserList(search, rangeDay, filePath);
                 if (!success) {
                     System.out.println("Export PDF gagal.");
+                } else {
+                    System.out.println("Export PDF berhasil: " + filePath);
                 }
             } else if (choice.equals("4")) {
                 usersRepo userRepo = new usersRepo(conn);
@@ -358,10 +361,11 @@ public class Main {
                         rangeDay = 0;
                     }
                 }
-                supplierUseCase.exportSupplierList(search, rangeDay);
+                String filePath = "supplier-list-" + System.currentTimeMillis() + ".pdf";
+                supplierUseCase.exportSupplierList(search, rangeDay, filePath);
 
                 if (true) {
-                    System.out.println("Export supplier berhasil!");
+                    System.out.println("Export supplier berhasil: " + filePath);
                 } else {
                     System.out.println("Export supplier gagal!");
                 }
@@ -716,9 +720,10 @@ public class Main {
                         rangeDay = 0;
                     }
                 }
-                boolean success = logStockUC.exportLogStock(filter, rangeDay);
+                String filePath = "log-stock-list-" + System.currentTimeMillis() + ".pdf";
+                boolean success = logStockUC.exportLogStock(filter, rangeDay, filePath);
                 if (success) {
-                    System.out.println("Export log stock berhasil!");
+                    System.out.println("Export log stock berhasil: " + filePath);
                 }
                 // List<optionItems> list = itemsUC.optionItems(brandId);
                 // if (!list.isEmpty()) {
@@ -776,9 +781,10 @@ public class Main {
                         rangeDay = 0;
                     }
                 }
-                boolean success = transactionsUc.exportTransactionList(rangeDay);
+                String filePath = "transaction-list-" + System.currentTimeMillis() + ".pdf";
+                boolean success = transactionsUc.exportTransactionList(rangeDay, filePath);
                 if (success) {
-                    System.out.println("Export transaction berhasil!");
+                    System.out.println("Export transaction berhasil: " + filePath);
                 }
 
             } else {

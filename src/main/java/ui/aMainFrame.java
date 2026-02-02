@@ -108,7 +108,23 @@ public class aMainFrame extends javax.swing.JFrame {
             }
         });
 
-        jPanel2.setBackground(new java.awt.Color(0, 153, 153));
+        jPanel2 = new javax.swing.JPanel() {
+            @Override
+            protected void paintComponent(java.awt.Graphics g) {
+                super.paintComponent(g);
+                java.awt.Graphics2D g2d = (java.awt.Graphics2D) g;
+                g2d.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING,
+                        java.awt.RenderingHints.VALUE_RENDER_QUALITY);
+                java.awt.Color color1 = new java.awt.Color(0, 153, 153);
+                java.awt.Color color2 = new java.awt.Color(0, 102, 102);
+                java.awt.GradientPaint gp = new java.awt.GradientPaint(0, 0, color1, 0, getHeight(), color2);
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 3, 0, new java.awt.Color(255, 204, 102))); // Gold/Orange
+                                                                                                                       // accent
+                                                                                                                       // line
         jPanel2.setForeground(new java.awt.Color(204, 255, 153));
         jPanel2.setPreferredSize(new java.awt.Dimension(1400, 115));
 
@@ -119,6 +135,7 @@ public class aMainFrame extends javax.swing.JFrame {
         btnHome.setBorderPainted(false);
         btnHome.setContentAreaFilled(false);
         btnHome.setFocusPainted(false);
+        btnHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnHome.setName(""); // NOI18N
         btnHome.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -132,12 +149,13 @@ public class aMainFrame extends javax.swing.JFrame {
         });
 
         btnBrand.setBackground(new java.awt.Color(0, 153, 153));
-        btnBrand.setFont(new java.awt.Font("PT Mono", 0, 14)); // NOI18N
+        btnBrand.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnBrand.setForeground(new java.awt.Color(255, 255, 255));
-        btnBrand.setText("| Brand |");
+        btnBrand.setText("BRAND");
         btnBrand.setBorder(null);
         btnBrand.setBorderPainted(false);
         btnBrand.setContentAreaFilled(false);
+        btnBrand.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBrand.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBrandActionPerformed(evt);
@@ -145,14 +163,15 @@ public class aMainFrame extends javax.swing.JFrame {
         });
 
         btnSupplier.setBackground(new java.awt.Color(0, 153, 153));
-        btnSupplier.setFont(new java.awt.Font("PT Mono", 0, 14)); // NOI18N
+        btnSupplier.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnSupplier.setForeground(new java.awt.Color(255, 255, 255));
-        btnSupplier.setText("| Supplier |");
+        btnSupplier.setText("SUPPLIER");
         btnSupplier.setBorder(null);
         btnSupplier.setBorderPainted(false);
         btnSupplier.setContentAreaFilled(false);
         btnSupplier.setFocusPainted(false);
         btnSupplier.setFocusable(false);
+        btnSupplier.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSupplier.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSupplierActionPerformed(evt);
@@ -160,12 +179,13 @@ public class aMainFrame extends javax.swing.JFrame {
         });
 
         btnBarang.setBackground(new java.awt.Color(0, 153, 153));
-        btnBarang.setFont(new java.awt.Font("PT Mono", 0, 14)); // NOI18N
+        btnBarang.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnBarang.setForeground(new java.awt.Color(255, 255, 255));
-        btnBarang.setText("| Barang |");
+        btnBarang.setText("ITEM");
         btnBarang.setBorder(null);
         btnBarang.setBorderPainted(false);
         btnBarang.setContentAreaFilled(false);
+        btnBarang.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBarang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBarangActionPerformed(evt);
@@ -173,12 +193,13 @@ public class aMainFrame extends javax.swing.JFrame {
         });
 
         btnStockBarang.setBackground(new java.awt.Color(0, 153, 153));
-        btnStockBarang.setFont(new java.awt.Font("PT Mono", 0, 14)); // NOI18N
+        btnStockBarang.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnStockBarang.setForeground(new java.awt.Color(255, 255, 255));
-        btnStockBarang.setText("| Stock Barang |");
+        btnStockBarang.setText("STOCK");
         btnStockBarang.setBorder(null);
         btnStockBarang.setBorderPainted(false);
         btnStockBarang.setContentAreaFilled(false);
+        btnStockBarang.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnStockBarang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStockBarangActionPerformed(evt);
@@ -186,12 +207,13 @@ public class aMainFrame extends javax.swing.JFrame {
         });
 
         btnTransaksiPenjualan.setBackground(new java.awt.Color(0, 153, 153));
-        btnTransaksiPenjualan.setFont(new java.awt.Font("PT Mono", 0, 14)); // NOI18N
+        btnTransaksiPenjualan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnTransaksiPenjualan.setForeground(new java.awt.Color(255, 255, 255));
-        btnTransaksiPenjualan.setText("| Transaksi Penjualan |");
+        btnTransaksiPenjualan.setText("TRANSACTION");
         btnTransaksiPenjualan.setBorder(null);
         btnTransaksiPenjualan.setBorderPainted(false);
         btnTransaksiPenjualan.setContentAreaFilled(false);
+        btnTransaksiPenjualan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnTransaksiPenjualan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTransaksiPenjualanActionPerformed(evt);
@@ -199,12 +221,13 @@ public class aMainFrame extends javax.swing.JFrame {
         });
 
         btnReport.setBackground(new java.awt.Color(0, 153, 153));
-        btnReport.setFont(new java.awt.Font("PT Mono", 0, 14)); // NOI18N
+        btnReport.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnReport.setForeground(new java.awt.Color(255, 255, 255));
-        btnReport.setText("| Report |");
+        btnReport.setText("REPORT");
         btnReport.setBorder(null);
         btnReport.setBorderPainted(false);
         btnReport.setContentAreaFilled(false);
+        btnReport.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReportActionPerformed(evt);
@@ -212,15 +235,32 @@ public class aMainFrame extends javax.swing.JFrame {
         });
 
         btnUser.setBackground(new java.awt.Color(0, 153, 153));
-        btnUser.setFont(new java.awt.Font("PT Mono", 0, 14)); // NOI18N
+        btnUser.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnUser.setForeground(new java.awt.Color(255, 255, 255));
-        btnUser.setText("| User |");
+        btnUser.setText("USER");
         btnUser.setBorder(null);
         btnUser.setBorderPainted(false);
         btnUser.setContentAreaFilled(false);
+        btnUser.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUserActionPerformed(evt);
+            }
+        });
+
+        btnLogout = new javax.swing.JButton();
+        btnLogout.setBackground(new java.awt.Color(0, 153, 153));
+        btnLogout.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogout.setText("LOGOUT");
+        btnLogout.setBorder(null);
+        btnLogout.setBorderPainted(false);
+        btnLogout.setContentAreaFilled(false);
+        btnLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dispose();
+                new Login1(conn).setVisible(true);
             }
         });
 
@@ -235,20 +275,21 @@ public class aMainFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnSupplier)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnBrand, javax.swing.GroupLayout.PREFERRED_SIZE, 56,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(20, 20, 20)
+                                .addComponent(btnBrand)
+                                .addGap(20, 20, 20)
                                 .addComponent(btnBarang)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(20, 20, 20)
                                 .addComponent(btnStockBarang)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(20, 20, 20)
                                 .addComponent(btnTransaksiPenjualan)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(20, 20, 20)
                                 .addComponent(btnReport)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(20, 20, 20)
                                 .addComponent(btnUser)
-                                .addGap(71, 71, 71)));
+                                .addGap(20, 20, 20)
+                                .addComponent(btnLogout)
+                                .addGap(40, 40, 40)));
         jPanel2Layout.setVerticalGroup(
                 jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(btnHome, javax.swing.GroupLayout.Alignment.TRAILING,
@@ -270,6 +311,8 @@ public class aMainFrame extends javax.swing.JFrame {
                                         .addComponent(btnReport, javax.swing.GroupLayout.PREFERRED_SIZE, 54,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(btnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 54,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 54,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(26, 26, 26)));
 
@@ -405,6 +448,7 @@ public class aMainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnBarang;
     private javax.swing.JButton btnBrand;
     private javax.swing.JButton btnHome;

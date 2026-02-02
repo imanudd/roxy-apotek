@@ -202,32 +202,34 @@ public class itemsRepo {
         }
     }
 
-    // Get items by brand ID
     public List<items> getItemByBrandId(int brandId) throws SQLException {
-        String query = "SELECT * FROM items WHERE brand_id = ?";
+        String query = "SELECT i.*, b.brand_name FROM items i LEFT JOIN brands b ON i.brand_id = b.id WHERE i.brand_id = ?";
         List<items> list = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, brandId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
+                    Timestamp createdAtTs = rs.getTimestamp("created_at");
+                    Timestamp updatedAtTs = rs.getTimestamp("updated_at");
+                    Timestamp deletedAtTs = rs.getTimestamp("deleted_at");
+
                     items itm = new items(
                             rs.getInt("id"),
                             rs.getString("item_name"),
                             rs.getInt("brand_id"),
                             rs.getString("brand_name"),
                             rs.getDouble("sell_price"),
-                            rs.getTimestamp("created_at").toLocalDateTime(),
+                            (createdAtTs != null) ? createdAtTs.toLocalDateTime() : null,
                             rs.getInt("created_by"),
-                            rs.getTimestamp("updated_at").toLocalDateTime(),
+                            (updatedAtTs != null) ? updatedAtTs.toLocalDateTime() : null,
                             rs.getInt("updated_by"),
                             rs.getBoolean("status"),
                             rs.getInt("deleted_by"),
-                            rs.getTimestamp("deteled_at").toLocalDateTime(),
+                            (deletedAtTs != null) ? deletedAtTs.toLocalDateTime() : null,
                             0,
                             0,
                             0,
                             0);
-                    itm.setId(rs.getInt("id"));
                     list.add(itm);
                 }
             }

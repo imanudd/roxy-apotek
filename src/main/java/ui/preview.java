@@ -167,13 +167,25 @@ public class preview extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnExportActionPerformed
-        // TODO add your handling code here:
-        String search = "";
-        int periode;
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {
+        javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+        fileChooser.setDialogTitle("Simpan Laporan");
+        fileChooser.setSelectedFile(
+                new java.io.File(kategori.toLowerCase().replace(" ", "-") + "-" + System.currentTimeMillis() + ".pdf"));
+
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection != javax.swing.JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        java.io.File fileToSave = fileChooser.getSelectedFile();
+        String filePath = fileToSave.getAbsolutePath();
+        if (!filePath.toLowerCase().endsWith(".pdf")) {
+            filePath += ".pdf";
+        }
 
         Connection conn = DatabaseConfig.connect();
-
         LogStockRepo logStockRepo = new LogStockRepo(conn);
         supplierRepo supplierRepo = new supplierRepo(conn);
         brandsRepo brandsRepo = new brandsRepo(conn);
@@ -191,27 +203,24 @@ public class preview extends javax.swing.JFrame {
         try {
             switch (kategori) {
                 case "STOCK MASUK":
-                    result = logStockUc.exportLogStock("stock_in", 0);
+                    result = logStockUc.exportLogStock("stock_in", periode, filePath);
                     break;
                 case "STOCK KELUAR":
-                    result = logStockUc.exportLogStock("stock_out", 0);
+                    result = logStockUc.exportLogStock("stock_out", periode, filePath);
                     break;
-
                 case "MASTER SUPPLIER":
-                    result = supplierUc.exportSupplierList(search, 0);
+                    result = supplierUc.exportSupplierList("", periode, filePath);
                     break;
-
                 case "DATA TRANSAKSI":
-                    result = transactionUc.exportTransactionList(0);
+                    result = transactionUc.exportTransactionList(periode, filePath);
                     break;
-
                 default:
                     JOptionPane.showMessageDialog(this, "Pilih kategori yang valid!");
                     return;
             }
 
             if (result) {
-                JOptionPane.showMessageDialog(this, "Export berhasil disimpan.");
+                JOptionPane.showMessageDialog(this, "Export berhasil disimpan ke: " + filePath);
             } else {
                 JOptionPane.showMessageDialog(this, "Export gagal. Coba periksa kembali.");
             }
@@ -219,7 +228,7 @@ public class preview extends javax.swing.JFrame {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat export: " + e.getMessage());
         }
-    }// GEN-LAST:event_btnExportActionPerformed
+    }
 
     /**
      * @param args the command line arguments

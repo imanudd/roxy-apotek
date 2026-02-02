@@ -6,19 +6,13 @@ import model.suppliers;
 import repository.supplierRepo;
 import repository.brandsRepo;
 
-import java.io.FileOutputStream;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import helper.currentUser;
+import helper.PdfGenerator;
 
 public class supplierUc {
     private final supplierRepo supplierRepo;
@@ -159,48 +153,30 @@ public class supplierUc {
     }
 
     // export supplier
-    public boolean exportSupplierList(String search, int rangeDay) {
+    public boolean exportSupplierList(String search, int rangeDay, String filePath) {
         try {
-            String fileName = "supplier-list-" + System.currentTimeMillis() + ".xlsx";
             List<suppliers> suppliers = supplierRepo.listSupplier(search, rangeDay, 0, 0);
 
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Suppliers");
-
-            // Header
-            Row headerRow = sheet.createRow(0);
-            String[] columns = { "ID", "Supplier Name", "address", "Phone Number", "status" };
-            for (int i = 0; i < columns.length; i++) {
-                Cell cell = headerRow.createCell(i);
-                cell.setCellValue(columns[i]);
-            }
-
-            // Isi data
-            int rowNum = 1;
+            String[] headers = { "ID", "Supplier Name", "Address", "Phone Number", "Status" };
+            List<Object[]> data = new ArrayList<>();
             for (suppliers s : suppliers) {
-                Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(s.getId());
-                row.createCell(1).setCellValue(s.getSupplierName());
-                row.createCell(2).setCellValue(s.getAddress());
-                row.createCell(3).setCellValue(s.getPhone());
-                row.createCell(4).setCellValue(s.getStatus() ? "Aktif" : "Nonaktif");
+                data.add(new Object[] {
+                        s.getId(),
+                        s.getSupplierName(),
+                        s.getAddress(),
+                        s.getPhone(),
+                        s.getStatus() ? "Aktif" : "Nonaktif"
+                });
             }
 
-            // Autosize kolom
-            for (int i = 0; i < columns.length; i++) {
-                sheet.autoSizeColumn(i);
+            boolean success = PdfGenerator.generateFormalReport("Laporan Data Supplier", headers, data, filePath);
+            if (success) {
+                System.out.println("PDF berhasil dibuat: " + filePath);
             }
-
-            FileOutputStream fileOut = new FileOutputStream(fileName);
-            workbook.write(fileOut);
-            fileOut.close();
-            workbook.close();
-
-            System.out.println("Excel berhasil dibuat: " + fileName);
-            return true;
+            return success;
 
         } catch (Exception e) {
-            System.err.println("Gagal export Excel: " + e.getMessage());
+            System.err.println("Gagal export PDF: " + e.getMessage());
             return false;
         }
     }

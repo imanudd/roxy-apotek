@@ -67,8 +67,6 @@ public class BrandManagementGUI extends javax.swing.JPanel {
                                         textFieldId.setText(tBrand.getValueAt(selectedRow, 0).toString());
                                         textFieldMerk.setText(tBrand.getValueAt(selectedRow, 1).toString());
                                         cbSupplier.setSelectedItem(tBrand.getValueAt(selectedRow, 2).toString());
-
-                                        loadCbSuppliers();
                                 }
                         }
                 });
@@ -483,6 +481,9 @@ public class BrandManagementGUI extends javax.swing.JPanel {
         private void clearInputFields() {
                 textFieldId.setText("");
                 textFieldMerk.setText("");
+                if (cbSupplier.getItemCount() > 0) {
+                        cbSupplier.setSelectedIndex(0);
+                }
         }
 
         private void loadBrands() {
@@ -517,6 +518,9 @@ public class BrandManagementGUI extends javax.swing.JPanel {
         }
 
         private void loadCbSuppliers() {
+                cbSupplier.removeAllItems();
+                cbSupplier.addItem("-- Semua Supplier --");
+
                 List<suppliers> supplierList = supplierUc.getSuppliersList("", 0, 0, 0);
 
                 for (suppliers s : supplierList) {
